@@ -14,22 +14,115 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
+"@esbuild/android-arm64@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/android-arm64/-/android-arm64-0.17.17.tgz#164b054d58551f8856285f386e1a8f45d9ba3a31"
+  integrity sha1-FksFTVhVH4hWKF84bhqPRdm6OjE=
+
+"@esbuild/android-arm@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/android-arm/-/android-arm-0.17.17.tgz#1b3b5a702a69b88deef342a7a80df4c894e4f065"
+  integrity sha1-GztacCppuI3u80KnqA30yJTk8GU=
+
+"@esbuild/android-x64@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/android-x64/-/android-x64-0.17.17.tgz#6781527e3c4ea4de532b149d18a2167f06783e7f"
+  integrity sha1-Z4FSfjxOpN5TKxSdGKIWfwZ4Pn8=
+
+"@esbuild/darwin-arm64@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/darwin-arm64/-/darwin-arm64-0.17.17.tgz#c5961ef4d3c1cc80dafe905cc145b5a71d2ac196"
+  integrity sha1-xZYe9NPBzIDa/pBcwUW1px0qwZY=
+
 "@esbuild/darwin-x64@0.17.17":
   version "0.17.17"
   resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/darwin-x64/-/darwin-x64-0.17.17.tgz"
   integrity sha1-uB8yWcw0lpH2euMPezM6U4mbPCA=
 
-"@types/lodash@^4.14.194":
-  version "4.14.194"
-  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@types/lodash/-/lodash-4.14.194.tgz"
-  integrity sha1-tx6296D/Eb/1n8mHE0oJMCklinY=
+"@esbuild/freebsd-arm64@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/freebsd-arm64/-/freebsd-arm64-0.17.17.tgz#db846ad16cf916fd3acdda79b85ea867cb100e87"
+  integrity sha1-24Rq0Wz5Fv06zdp5uF6oZ8sQDoc=
 
-"@types/vue@^2.0.0":
-  version "2.0.0"
-  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@types/vue/-/vue-2.0.0.tgz"
-  integrity sha1-7Hez2JWR3rnKXLBSNoqpwyvgiOc=
-  dependencies:
-    vue "*"
+"@esbuild/freebsd-x64@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/freebsd-x64/-/freebsd-x64-0.17.17.tgz#4dd99acbaaba00949d509e7c144b1b6ef9e1815b"
+  integrity sha1-Tdmay6q6AJSdUJ58FEsbbvnhgVs=
+
+"@esbuild/linux-arm64@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/linux-arm64/-/linux-arm64-0.17.17.tgz#7f9274140b2bb9f4230dbbfdf5dc2761215e30f6"
+  integrity sha1-f5J0FAsrufQjDbv99dwnYSFeMPY=
+
+"@esbuild/linux-arm@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/linux-arm/-/linux-arm-0.17.17.tgz#5c8e44c2af056bb2147cf9ad13840220bcb8948b"
+  integrity sha1-XI5Ewq8Fa7IUfPmtE4QCILy4lIs=
+
+"@esbuild/linux-ia32@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/linux-ia32/-/linux-ia32-0.17.17.tgz#18a6b3798658be7f46e9873fa0c8d4bec54c9212"
+  integrity sha1-GKazeYZYvn9G6Yc/oMjUvsVMkhI=
+
+"@esbuild/linux-loong64@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/linux-loong64/-/linux-loong64-0.17.17.tgz#a8d93514a47f7b4232716c9f02aeb630bae24c40"
+  integrity sha1-qNk1FKR/e0IycWyfAq62MLriTEA=
+
+"@esbuild/linux-mips64el@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/linux-mips64el/-/linux-mips64el-0.17.17.tgz#4784efb1c3f0eac8133695fa89253d558149ee1b"
+  integrity sha1-R4TvscPw6sgTNpX6iSU9VYFJ7hs=
+
+"@esbuild/linux-ppc64@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/linux-ppc64/-/linux-ppc64-0.17.17.tgz#ef6558ec5e5dd9dc16886343e0ccdb0699d70d3c"
+  integrity sha1-72VY7F5d2dwWiGND4MzbBpnXDTw=
+
+"@esbuild/linux-riscv64@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/linux-riscv64/-/linux-riscv64-0.17.17.tgz#13a87fdbcb462c46809c9d16bcf79817ecf9ce6f"
+  integrity sha1-E6h/28tGLEaAnJ0WvPeYF+z5zm8=
+
+"@esbuild/linux-s390x@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/linux-s390x/-/linux-s390x-0.17.17.tgz#83cb16d1d3ac0dca803b3f031ba3dc13f1ec7ade"
+  integrity sha1-g8sW0dOsDcqAOz8DG6PcE/Hset4=
+
+"@esbuild/linux-x64@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/linux-x64/-/linux-x64-0.17.17.tgz#7bc400568690b688e20a0c94b2faabdd89ae1a79"
+  integrity sha1-e8QAVoaQtojiCgyUsvqr3YmuGnk=
+
+"@esbuild/netbsd-x64@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/netbsd-x64/-/netbsd-x64-0.17.17.tgz#1b5dcfbc4bfba80e67a11e9148de836af5b58b6c"
+  integrity sha1-G13PvEv7qA5noR6RSN6DavW1i2w=
+
+"@esbuild/openbsd-x64@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/openbsd-x64/-/openbsd-x64-0.17.17.tgz#e275098902291149a5dcd012c9ea0796d6b7adff"
+  integrity sha1-4nUJiQIpEUml3NASyeoHlta3rf8=
+
+"@esbuild/sunos-x64@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/sunos-x64/-/sunos-x64-0.17.17.tgz#10603474866f64986c0370a2d4fe5a2bb7fee4f5"
+  integrity sha1-EGA0dIZvZJhsA3Ci1P5aK7f+5PU=
+
+"@esbuild/win32-arm64@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/win32-arm64/-/win32-arm64-0.17.17.tgz#521a6d97ee0f96b7c435930353cc4e93078f0b54"
+  integrity sha1-Uhptl+4PlrfENZMDU8xOkwePC1Q=
+
+"@esbuild/win32-ia32@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/win32-ia32/-/win32-ia32-0.17.17.tgz#56f88462ebe82dad829dc2303175c0e0ccd8e38e"
+  integrity sha1-VviEYuvoLa2CncIwMXXA4MzY444=
+
+"@esbuild/win32-x64@0.17.17":
+  version "0.17.17"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@esbuild/win32-x64/-/win32-x64-0.17.17.tgz#2b577b976e6844106715bbe0cdc57cd1528063f9"
+  integrity sha1-K1d7l25oRBBnFbvgzcV80VKAY/k=
 
 "@vitejs/plugin-vue@^4.1.0":
   version "4.1.0"
@@ -90,7 +183,7 @@
     estree-walker "^2.0.2"
     source-map "^0.6.1"
 
-"@vue/compiler-dom@^3.2.0", "@vue/compiler-dom@3.2.47":
+"@vue/compiler-dom@3.2.47", "@vue/compiler-dom@^3.2.0":
   version "3.2.47"
   resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@vue/compiler-dom/-/compiler-dom-3.2.47.tgz"
   integrity sha1-oLBsr373BWk55WPcqpy94weU8wU=
@@ -98,7 +191,7 @@
     "@vue/compiler-core" "3.2.47"
     "@vue/shared" "3.2.47"
 
-"@vue/compiler-sfc@^3.2.0", "@vue/compiler-sfc@3.2.47":
+"@vue/compiler-sfc@3.2.47", "@vue/compiler-sfc@^3.2.0":
   version "3.2.47"
   resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@vue/compiler-sfc/-/compiler-sfc-3.2.47.tgz"
   integrity sha1-G9w29s3BZD9y4sOX6xo5j1AErT0=
@@ -122,6 +215,11 @@
     "@vue/compiler-dom" "3.2.47"
     "@vue/shared" "3.2.47"
 
+"@vue/devtools-api@^6.4.5":
+  version "6.5.0"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@vue/devtools-api/-/devtools-api-6.5.0.tgz#98b99425edee70b4c992692628fa1ea2c1e57d07"
+  integrity sha1-mLmUJe3ucLTJkmkmKPoeosHlfQc=
+
 "@vue/reactivity-transform@3.2.47":
   version "3.2.47"
   resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@vue/reactivity-transform/-/reactivity-transform-3.2.47.tgz"
@@ -133,7 +231,7 @@
     estree-walker "^2.0.2"
     magic-string "^0.25.7"
 
-"@vue/reactivity@^3.2.0", "@vue/reactivity@3.2.47":
+"@vue/reactivity@3.2.47", "@vue/reactivity@^3.2.0":
   version "3.2.47"
   resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@vue/reactivity/-/reactivity-3.2.47.tgz"
   integrity sha1-HWOZB06t/D7TXHJ+L9cH1ogRQLY=
@@ -165,7 +263,7 @@
     "@vue/compiler-ssr" "3.2.47"
     "@vue/shared" "3.2.47"
 
-"@vue/shared@^3.2.0", "@vue/shared@3.2.47":
+"@vue/shared@3.2.47", "@vue/shared@^3.2.0":
   version "3.2.47"
   resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@vue/shared/-/shared-3.2.47.tgz"
   integrity sha1-5ZfvdQhsbolv9UeKa/wKeqS70Uw=
@@ -341,12 +439,12 @@ sourcemap-codec@^1.4.8:
   resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/sourcemap-codec/-/sourcemap-codec-1.4.8.tgz"
   integrity sha1-6oBL2UhXQC5pktBaOO8a41qatMQ=
 
-typescript@*, typescript@^5.0.2:
+typescript@^5.0.2:
   version "5.0.4"
   resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/typescript/-/typescript-5.0.4.tgz"
   integrity sha1-shf9IBGb1hqU1AESdOCrNpBY2js=
 
-vite@^4.0.0, vite@^4.3.0:
+vite@^4.3.0:
   version "4.3.1"
   resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/vite/-/vite-4.3.1.tgz"
   integrity sha1-m62xN3+ZVjLNzwXzIQNBTbb7uVo=
@@ -356,6 +454,13 @@ vite@^4.0.0, vite@^4.3.0:
     rollup "^3.20.2"
   optionalDependencies:
     fsevents "~2.3.2"
+
+vue-router@^4.1.6:
+  version "4.1.6"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/vue-router/-/vue-router-4.1.6.tgz#b70303737e12b4814578d21d68d21618469375a1"
+  integrity sha1-twMDc34StIFFeNIdaNIWGEaTdaE=
+  dependencies:
+    "@vue/devtools-api" "^6.4.5"
 
 vue-template-compiler@^2.7.14:
   version "2.7.14"
@@ -374,7 +479,7 @@ vue-tsc@^1.2.0:
     "@volar/vue-typescript" "1.4.2"
     semver "^7.3.8"
 
-vue@*, vue@^3.2.25, vue@^3.2.47, vue@3.2.47:
+vue@^3.2.47:
   version "3.2.47"
   resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/vue/-/vue-3.2.47.tgz"
   integrity sha1-Prc2y8YG/IcDjbumoVRwfIo0z/A=

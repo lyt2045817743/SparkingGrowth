@@ -6,7 +6,6 @@ let instance;
 
 async function render(props = {}) {
   const { container } = props;
-  console.log('container', container);
   instance = createApp(App);
   instance.mount(container ? container.querySelector('#app') : '#app');
 }

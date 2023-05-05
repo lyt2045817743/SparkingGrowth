@@ -1,17 +1,12 @@
 import { createApp } from 'vue'
 import './style.css'
 import App from './App.vue'
+import router from './router';
 import { registerMicroApps, start } from 'qiankun';
+import { microConfigs } from './constant/micro'
 
-registerMicroApps([
-  {
-    name: 'vue练习',
-    entry: '//localhost:60001',
-    container: '#container',
-    activeRule: '/vue_practice',
-  }
-]);
+registerMicroApps(microConfigs);
 
 start();
 
-createApp(App).mount('#main-app')
+createApp(App).use(router).mount('#main-app')
