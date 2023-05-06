@@ -4,15 +4,13 @@ const { name } = require('./package.json');
 const port = 60001;
 
 // 资源文件路径处理
-// 开发环境默认 '/'
-const _isDEV = process.env.NODE_ENV === 'development';
-let publicPath = _isDEV ? '/' : `/${name}/`;
+let publicPath = `//localhost:${port}`;
 
 module.exports = {
   publicPath,
   configureWebpack: {
     output: {
-      library: `${name}`,
+      library: `${name}-[name]`,
       libraryTarget: 'umd',
       jsonpFunction: `webpackJsonp_${name}`
     },

@@ -14,7 +14,14 @@
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0",
+    "babel-eslint": "^10.1.0",
     "@vitejs/plugin-vue": "^4.1.0",
+    "eslint": "^8.40.0",
+    "eslint-plugin-vue": "^9.11.0",
     "typescript": "^5.0.2",
     "vite": "^4.3.0",
     "vue-tsc": "^1.2.0"

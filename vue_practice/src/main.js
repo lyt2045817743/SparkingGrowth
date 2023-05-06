@@ -12,7 +12,7 @@ async function render(props = {}) {
 
 // 单独调试子应用时挂载
 if (!window.__POWERED_BY_QIANKUN__) {
-  console.log('window.__POWERED_BY_QIANKUN__: ', window.__POWERED_BY_QIANKUN__);
+  // console.log('window.__POWERED_BY_QIANKUN__: ', window.__POWERED_BY_QIANKUN__);
   render();
 }
 
