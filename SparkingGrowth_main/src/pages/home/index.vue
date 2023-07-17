@@ -44,6 +44,7 @@ const goPage = (to) => {
   background-color: #ADD8E6;
   border-radius: 40px;
   cursor: pointer;
+  margin-right: 15px;
 }
 .sub-apps__item:hover {
   transform: scale(1.1);
