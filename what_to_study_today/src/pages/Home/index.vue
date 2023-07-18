@@ -3,10 +3,13 @@
       <article>
         <div class="title">今天学什么？</div>
         <div class="random-box">
-          <div v-if="partNo" class="random-info-box">
+          <div v-if="partNo || isCustomer" class="random-info-box">
             <div class="random-info-item">
               <div class="rii-title">
-                第{{ partNo }}部分-
+                第
+                <input v-if="isCustomer" type="number" v-model="partNo" />
+                <span v-else>{{ partNo }}</span>
+                部分-
               </div>
               <div class="rii-des">
                 <input v-model="courseTitleMap[`Part${partNo}`]" @blur="(value) => updateCourseTitleMap(value, `Part${partNo}`)" />
@@ -14,7 +17,10 @@
             </div>
             <div class="random-info-item">
               <div class="rii-title">
-                第{{ chapterNo }}章-
+                第
+                <input v-if="isCustomer" type="number" v-model="chapterNo" />
+                <span v-else>{{ chapterNo }}</span>
+                章-
               </div>
               <div class="rii-des">
                 <input v-model="courseTitleMap[`Part${partNo}.${chapterNo}`]" @blur="(value) => updateCourseTitleMap(value, `Part${partNo}.${chapterNo}`)" />
@@ -22,7 +28,10 @@
             </div>
             <div class="random-info-item">
               <div class="rii-title">
-                第{{ sectionNo }}节-
+                第
+                <input v-if="isCustomer" type="number" v-model="sectionNo" />
+                <span v-else>{{ sectionNo }}</span>
+                节-
               </div>
               <div class="rii-des">
                 <input v-model="courseTitleMap[`Part${partNo}.${chapterNo}.${sectionNo}`]" @blur="(value) => updateCourseTitleMap(value, `Part${partNo}.${chapterNo}.${sectionNo}`)" />
@@ -30,8 +39,10 @@
             </div>
           </div>
           <div class="btn-box">
-            <button class="startBtn" @click="onStart">开始随机生成课表</button>
-            <button v-if="partNo" class="startBtn finishStudyBtn" @click="onFinish">完成学习</button>
+            <button v-if="!isStudying" class="startBtn" @click="onRandom">开始生成随机课程</button>
+            <button v-if="!isStudying" class="startBtn" @click="onEditCustomerCourse">学习自定义课程</button>
+            <button v-if="allTitle && !isStudying" class="startBtn" @click="onStartStudy">开始学习</button>
+            <button v-if="isStudying" class="startBtn finishStudyBtn" @click="onFinish">完成学习</button>
           </div>
         </div>
       </article>
@@ -40,20 +51,22 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import dayjs from 'dayjs';
 import { PartArr } from '../../data/javascriptInfo';
 
 const partNo = ref(null);
 const chapterNo = ref(null);
 const sectionNo = ref(null);
+const isCustomer = ref(false);
+const isStudying = ref(false);
 const courseTitleMap = localStorage.getItem('courseTitleMap') ? JSON.parse(localStorage.getItem('courseTitleMap')) : {};
 
 function generatorRandom (max) {
   return Math.floor(Math.random(0, 1) * max) + 1;
 }
 
-function onStart() {
+function onRandom() {
   const currentPartNo = generatorRandom(PartArr.length); 
   partNo.value = currentPartNo;
   const currentPartItem = PartArr.find(item => item.id === currentPartNo);
@@ -65,7 +78,20 @@ function onStart() {
   sectionNo.value = generatorRandom(currentChapterNo);
 }
 
-function onFinish() {
+function onEditCustomerCourse() {
+  isCustomer.value = true;
+  partNo.value = null;
+  chapterNo.value = null;
+  sectionNo.value = null;
+}
+
+function onStartStudy() {
+  isStudying.value = true;
+  const inputs = document.querySelectorAll('input');
+  Array.from(inputs).map((item) => item.disabled = true);
+}
+
+const allTitle = computed(() => {
   const thirdTitleKey = `Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`;
   const thirdTitle = courseTitleMap[thirdTitleKey];
 
@@ -75,15 +101,22 @@ function onFinish() {
   const firstTitleKey = `Part${partNo.value}`;
   const firstTitle = courseTitleMap[firstTitleKey];
 
-  const allTitle = `${thirdTitleKey}：${firstTitle}.${secondTitle}.${thirdTitle}`;
+  return thirdTitle && secondTitle && firstTitle ? `${thirdTitleKey}：${firstTitle}.${secondTitle}.${thirdTitle}` : '';
+})
 
+function onFinish() {
+  isStudying.value = false;
+  updateStudyLog();
+}
+
+function updateStudyLog() {
   if (!courseTitleMap[`Part${partNo.value}`] || !courseTitleMap[`Part${partNo.value}.${chapterNo.value}`] || !courseTitleMap[`Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`]) {
     alert('请先输入课程名称');
   } else {
     const studyLog = localStorage.getItem('studyLog') ? JSON.parse(localStorage.getItem('studyLog')) : {};
     const todayStr = dayjs().format('YYYY-MM-DD');
     const courseItem = {
-      title: allTitle,
+      title: allTitle.value,
     }
     if (!studyLog[todayStr]) {
       studyLog[todayStr] = {};
@@ -152,6 +185,16 @@ input {
   font-size: 20px;
   margin-top: 5px;
 }
+.rii-title {
+  display: flex;
+  align-items: center;
+}
+.rii-title input {
+  width: 40px;
+  height: 35px;
+  font-size: 20px;
+  margin-top: 0;
+}
 .btn-box {
   display: flex;
 }
@@ -161,7 +204,8 @@ input {
   font-size: 18px;
   border-radius: 20px;
 }
-.finishStudyBtn {
+.startBtn:nth-child(odd) {
   margin-left: 10px;
+  margin-right: 10px;
 }
 </style>

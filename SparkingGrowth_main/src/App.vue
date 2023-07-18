@@ -1,7 +1,7 @@
 <template>
   <header>
     <img width="40" height="40" class="home-logo" src="./assets/logo.png" @click="goHome" />
-    <span class="home-title">婷的博客</span>
+    <span class="home-title">婷的空间</span>
   </header>
   <router-view v-show="route.name" />
   <div v-show="!route.name" id="container" />
