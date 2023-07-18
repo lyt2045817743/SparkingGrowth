@@ -9,7 +9,7 @@
                 第
                 <input v-if="isCustomer" type="number" v-model="partNo" />
                 <span v-else>{{ partNo }}</span>
-                部分-
+                部分
               </div>
               <div class="rii-des">
                 <input v-model="courseTitleMap[`Part${partNo}`]" @blur="(value) => updateCourseTitleMap(value, `Part${partNo}`)" />
@@ -20,7 +20,7 @@
                 第
                 <input v-if="isCustomer" type="number" v-model="chapterNo" />
                 <span v-else>{{ chapterNo }}</span>
-                章-
+                章
               </div>
               <div class="rii-des">
                 <input v-model="courseTitleMap[`Part${partNo}.${chapterNo}`]" @blur="(value) => updateCourseTitleMap(value, `Part${partNo}.${chapterNo}`)" />
@@ -31,7 +31,7 @@
                 第
                 <input v-if="isCustomer" type="number" v-model="sectionNo" />
                 <span v-else>{{ sectionNo }}</span>
-                节-
+                节
               </div>
               <div class="rii-des">
                 <input v-model="courseTitleMap[`Part${partNo}.${chapterNo}.${sectionNo}`]" @blur="(value) => updateCourseTitleMap(value, `Part${partNo}.${chapterNo}.${sectionNo}`)" />
@@ -142,6 +142,8 @@ function updateCourseTitleMap(event, key) {
 .title {
   font-size: 110px;
   font-weight: bolder;
+  font-family: cursive;
+  margin-top: 20px;
 }
 .main {
   display: flex;
@@ -181,13 +183,15 @@ input {
   width: 300px;
   height: 35px;
   margin-left: 5px;
-  border: none;
   font-size: 20px;
   margin-top: 5px;
 }
 .rii-title {
+  width: 140px;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  margin-right: 20px;
 }
 .rii-title input {
   width: 40px;
