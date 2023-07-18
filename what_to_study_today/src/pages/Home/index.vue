@@ -38,7 +38,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { PartArr } from '../data/javascriptInfo';
+import { PartArr } from '../../data/javascriptInfo';
 
 const partNo = ref(null);
 const chapterNo = ref(null);
