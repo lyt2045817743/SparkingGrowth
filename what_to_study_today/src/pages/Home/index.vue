@@ -29,7 +29,10 @@
               </div>
             </div>
           </div>
-          <button id="startBtn" @click="onStart">开始随机生成课表</button>
+          <div class="btn-box">
+            <button class="startBtn" @click="onStart">开始随机生成课表</button>
+            <button v-if="partNo" class="startBtn startStudyBtn" @click="onSave">开始学习</button>
+          </div>
         </div>
       </article>
       <aside></aside>
@@ -38,6 +41,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import dayjs from 'dayjs';
 import { PartArr } from '../../data/javascriptInfo';
 
 const partNo = ref(null);
@@ -59,6 +63,42 @@ function onStart() {
 
   const currentChapterNo = currentPartItem.grandsonNumArr[curChapterNo - 1];
   sectionNo.value = generatorRandom(currentChapterNo);
+}
+
+function onSave() {
+  console.log(partNo.value, chapterNo.value, sectionNo.value);
+  console.log(courseTitleMap, courseTitleMap[`Part${partNo.value}`], courseTitleMap[`Part${partNo.value}.${chapterNo.value}`], courseTitleMap[`Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`]);
+
+  const thirdTitleKey = `Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`;
+  const thirdTitle = courseTitleMap[thirdTitleKey];
+
+  const secondTitleKey = `Part${partNo.value}.${chapterNo.value}`;
+  const secondTitle = courseTitleMap[secondTitleKey];
+
+  const firstTitleKey = `Part${partNo.value}`;
+  const firstTitle = courseTitleMap[firstTitleKey];
+
+  const allTitle = `${thirdTitleKey}：${firstTitle}.${secondTitle}.${thirdTitle}`;
+
+  if (!courseTitleMap[`Part${partNo.value}`] || !courseTitleMap[`Part${partNo.value}.${chapterNo.value}`] || !courseTitleMap[`Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`]) {
+    alert('请先输入课程名称');
+  } else {
+    const studyLog = localStorage.getItem('studyLog') ? JSON.parse(localStorage.getItem('studyLog')) : {};
+    const todayStr = dayjs().format('YYYY-MM-DD');
+    const courseItem = {
+      title: allTitle,
+    }
+    if (!studyLog[todayStr]) {
+      studyLog[todayStr] = {};
+      studyLog[todayStr].courseList = [courseItem];
+    } else {
+      if (!studyLog[todayStr].courseList) {
+        studyLog[todayStr].courseList = [];
+      }
+      studyLog[todayStr].courseList.push(courseItem);
+    }
+    localStorage.setItem('studyLog', JSON.stringify(studyLog));
+  }
 }
 
 function updateCourseTitleMap(event, key) {
@@ -115,10 +155,16 @@ input {
   font-size: 20px;
   margin-top: 5px;
 }
-#startBtn {
+.btn-box {
+  display: flex;
+}
+.startBtn {
   width: 180px;
   height: 50px;
   font-size: 18px;
   border-radius: 20px;
+}
+.startStudyBtn {
+  margin-left: 10px;
 }
 </style>

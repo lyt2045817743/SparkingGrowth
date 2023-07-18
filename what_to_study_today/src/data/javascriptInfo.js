@@ -15,7 +15,7 @@ const PartArr = [
   {
     id: 3,
     title: '附加文章',
-    grandsonNumArr: [3, 4, 12, 3, 7, 17],
+    grandsonNumArr: [3, 4, 12, 3, 3, 7, 17],
     parentId: 0
   }
 ]
