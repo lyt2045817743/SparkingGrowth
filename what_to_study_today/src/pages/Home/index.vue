@@ -31,7 +31,7 @@
           </div>
           <div class="btn-box">
             <button class="startBtn" @click="onStart">开始随机生成课表</button>
-            <button v-if="partNo" class="startBtn startStudyBtn" @click="onSave">开始学习</button>
+            <button v-if="partNo" class="startBtn finishStudyBtn" @click="onFinish">完成学习</button>
           </div>
         </div>
       </article>
@@ -65,10 +65,7 @@ function onStart() {
   sectionNo.value = generatorRandom(currentChapterNo);
 }
 
-function onSave() {
-  console.log(partNo.value, chapterNo.value, sectionNo.value);
-  console.log(courseTitleMap, courseTitleMap[`Part${partNo.value}`], courseTitleMap[`Part${partNo.value}.${chapterNo.value}`], courseTitleMap[`Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`]);
-
+function onFinish() {
   const thirdTitleKey = `Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`;
   const thirdTitle = courseTitleMap[thirdTitleKey];
 
@@ -164,7 +161,7 @@ input {
   font-size: 18px;
   border-radius: 20px;
 }
-.startStudyBtn {
+.finishStudyBtn {
   margin-left: 10px;
 }
 </style>
