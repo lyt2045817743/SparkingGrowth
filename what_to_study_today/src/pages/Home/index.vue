@@ -46,7 +46,21 @@
           </div>
         </div>
       </article>
-      <aside></aside>
+      <aside>
+        <div class="study-log-outer">
+          <div class="slo-title">学习记录</div>
+          <div class="study-log-inner">
+            <div class="sli-item" v-for="item in Object.keys(studyLog)" :key="item">
+              <div class="sli-date">{{ item }}</div>
+              <div class="sli-courses">
+                <div class="sli-course-item" v-for="course in studyLog[item].courseList" :key="course">
+                  {{ course.title }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
     </div>
 </template>
 
@@ -61,6 +75,7 @@ const sectionNo = ref(null);
 const isCustomer = ref(false);
 const isStudying = ref(false);
 const courseTitleMap = localStorage.getItem('courseTitleMap') ? reactive(JSON.parse(localStorage.getItem('courseTitleMap'))) : reactive({});
+const studyLog = localStorage.getItem('studyLog') ? reactive(JSON.parse(localStorage.getItem('studyLog'))) : reactive({});
 
 function generatorRandom (max) {
   return Math.floor(Math.random(0, 1) * max) + 1;
@@ -113,7 +128,6 @@ function updateStudyLog() {
   if (!courseTitleMap[`Part${partNo.value}`] || !courseTitleMap[`Part${partNo.value}.${chapterNo.value}`] || !courseTitleMap[`Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`]) {
     alert('请先输入课程名称');
   } else {
-    const studyLog = localStorage.getItem('studyLog') ? JSON.parse(localStorage.getItem('studyLog')) : {};
     const todayStr = dayjs().format('YYYY-MM-DD');
     const courseItem = {
       title: allTitle.value,
@@ -211,5 +225,29 @@ input {
 .startBtn:nth-child(odd) {
   margin-left: 10px;
   margin-right: 10px;
+}
+.study-log-outer {
+  margin: 15px;
+}
+.slo-title {
+  color: #666666;
+  font-weight: bolder;
+  margin-bottom: 10px;
+  border-bottom: 1px solid gray;
+  padding-bottom: 10px;
+}
+.sli-date {
+  font-size: 17px;
+  color: cadetblue;
+}
+.sli-courses {
+  margin-top: 8px;
+}
+.sli-course-item {
+  margin-left: 25px;
+  border: 1px solid gray;
+  padding: 10px;
+  border-radius: 15px;
+  font-size: 14px;
 }
 </style>
