@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, reactive } from 'vue';
 import dayjs from 'dayjs';
 import { PartArr } from '../../data/javascriptInfo';
 
@@ -60,7 +60,7 @@ const chapterNo = ref(null);
 const sectionNo = ref(null);
 const isCustomer = ref(false);
 const isStudying = ref(false);
-const courseTitleMap = localStorage.getItem('courseTitleMap') ? JSON.parse(localStorage.getItem('courseTitleMap')) : {};
+const courseTitleMap = localStorage.getItem('courseTitleMap') ? reactive(JSON.parse(localStorage.getItem('courseTitleMap'))) : reactive({});
 
 function generatorRandom (max) {
   return Math.floor(Math.random(0, 1) * max) + 1;
