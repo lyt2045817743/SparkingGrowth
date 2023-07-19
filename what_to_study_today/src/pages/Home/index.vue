@@ -116,7 +116,7 @@ const allTitle = computed(() => {
   const firstTitleKey = `Part${partNo.value}`;
   const firstTitle = courseTitleMap[firstTitleKey];
 
-  return thirdTitle && secondTitle && firstTitle ? `${thirdTitleKey}：${firstTitle}.${secondTitle}.${thirdTitle}` : '';
+  return thirdTitle && secondTitle && firstTitle ? `${thirdTitleKey}：【${firstTitle}】.【${secondTitle}】.【${thirdTitle}】` : '';
 })
 
 function onFinish() {
