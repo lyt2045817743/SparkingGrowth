@@ -187,7 +187,7 @@ input {
   margin-top: 5px;
 }
 .rii-title {
-  width: 140px;
+  width: 160px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
