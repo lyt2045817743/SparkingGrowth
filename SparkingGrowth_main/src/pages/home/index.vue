@@ -2,7 +2,7 @@
   <div class="home">
     <div class="tip">以一点点火花为起点，开启下一个大的想法</div>
     <div class="sub-apps__box">
-      <div v-for="item in microConfigs" class="sub-apps__item" @click="() => goPage(item.activeRule)">
+      <div v-for="item in microConfigs" class="sub-apps__item" :key="item.activeRule" @click="() => goPage(item.activeRule)">
         {{ item.name }}
       </div>
     </div>

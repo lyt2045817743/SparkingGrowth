@@ -26,5 +26,5 @@ export async function mount(props) {
 }
 
 export async function unmount() {
-  instance.unmount('#app');
+  instance?.unmount('#app');
 }
