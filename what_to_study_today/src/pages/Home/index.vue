@@ -12,7 +12,7 @@
                 部分
               </div>
               <div class="rii-des">
-                <input v-model="courseTitleMap[`Part${partNo}`]" @blur="(value) => updateCourseTitleMap(value, `Part${partNo}`)" />
+                <input v-model="courseTitleMap[`Part${partNo}`]" placeholder="请补充本部分名称" @blur="(value) => updateCourseTitleMap(value, `Part${partNo}`)" />
               </div>
             </div>
             <div class="random-info-item">
@@ -23,8 +23,8 @@
                 章
               </div>
               <div class="rii-des">
-                <input v-model="courseTitleMap[`Part${partNo}.${chapterNo}`]" @blur="(value) => updateCourseTitleMap(value, `Part${partNo}.${chapterNo}`)" />
-              </div>  
+                <input v-model="courseTitleMap[`Part${partNo}.${chapterNo}`]" placeholder="请补充本章名称" @blur="(value) => updateCourseTitleMap(value, `Part${partNo}.${chapterNo}`)" />
+              </div>
             </div>
             <div class="random-info-item">
               <div class="rii-title">
@@ -34,16 +34,22 @@
                 节
               </div>
               <div class="rii-des">
-                <input v-model="courseTitleMap[`Part${partNo}.${chapterNo}.${sectionNo}`]" @blur="(value) => updateCourseTitleMap(value, `Part${partNo}.${chapterNo}.${sectionNo}`)" />
+                <input v-model="courseTitleMap[`Part${partNo}.${chapterNo}.${sectionNo}`]" placeholder="请补充本节名称" @blur="(value) => updateCourseTitleMap(value, `Part${partNo}.${chapterNo}.${sectionNo}`)" />
               </div>
             </div>
           </div>
           <div class="btn-box">
-            <button v-if="!isStudying" class="startBtn" @click="onRandom">开始生成随机课程</button>
-            <button v-if="!isStudying" class="startBtn" @click="onEditCustomerCourse">学习自定义课程</button>
+            <button v-if="!isStudying" class="startBtn" @click="onRandom">开始生成随机章节</button>
+            <button v-if="!isStudying" class="startBtn" @click="onEditCustomerCourse">学习自定义章节</button>
             <button v-if="allTitle && !isStudying" class="startBtn" @click="onStartStudy">开始学习</button>
             <button v-if="isStudying" class="startBtn finishStudyBtn" @click="onFinish">完成学习</button>
           </div>
+        </div>
+        <div class="current-course">
+          <span class="cc-title">当前课程：</span>
+          <a v-if="courseInfo.url" :href="courseInfo.url">{{ courseInfo.name }}</a>
+          <span v-else class="cc-name">{{ courseInfo.name }}</span>
+          <span class="change-course-link link-text" @click="changeCourse">切换课程</span>
         </div>
       </article>
       <aside>
@@ -76,6 +82,11 @@ const isCustomer = ref(false);
 const isStudying = ref(false);
 const courseTitleMap = localStorage.getItem('courseTitleMap') ? reactive(JSON.parse(localStorage.getItem('courseTitleMap'))) : reactive({});
 const studyLog = localStorage.getItem('studyLog') ? reactive(JSON.parse(localStorage.getItem('studyLog'))) : reactive({});
+const courseInfo = {
+  name: '现代 JavaScript 教程',
+  url: 'https://zh.javascript.info/',
+  type: 1,
+};
 
 function generatorRandom (max) {
   return Math.floor(Math.random(0, 1) * max) + 1;
@@ -150,6 +161,10 @@ function updateCourseTitleMap(event, key) {
   localStorage.setItem('courseTitleMap', JSON.stringify(courseTitleMap));
 }
 
+function changeCourse() {
+  alert('即将开放，敬请期待');
+}
+
 </script>
 
 <style>
@@ -161,6 +176,7 @@ function updateCourseTitleMap(event, key) {
 }
 .main {
   display: flex;
+  min-height: 750px;
 }
 article {
   flex: 1;
@@ -249,5 +265,16 @@ input {
   padding: 10px;
   border-radius: 15px;
   font-size: 14px;
+}
+.current-course {
+  margin-bottom: 20px;
+}
+.change-course-link {
+  margin-left: 10px;
+  color: blue;
+  font-size: 10px;
+}
+.link-text {
+  cursor: pointer;
 }
 </style>
