@@ -17,11 +17,11 @@ if (!window.__POWERED_BY_QIANKUN__) {
 }
 
 export async function bootstrap() {
-  console.log('vue app bootStrap');
+  // console.log('vue app bootStrap');
 }
 // 主应用挂载
 export async function mount(props) {
-  console.log('mount');
+  // console.log('mount');
   instance = await render(props);
 }
 
