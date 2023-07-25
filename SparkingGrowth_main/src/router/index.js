@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { routes } from './routes';
 
-const activeRule = 'vue_practice';
+const activeRule = 'course_config';
 const router = createRouter({
   history: createWebHistory(window.__POWERED_BY_QIANKUN__ ? `/${activeRule}` : '/'),
   routes

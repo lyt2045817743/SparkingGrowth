@@ -1,4 +1,4 @@
-# vue_practice
+# course_config
 
 ## Project setup
 ```
