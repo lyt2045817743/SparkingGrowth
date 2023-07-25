@@ -9,10 +9,10 @@
                 第
                 <input v-if="isCustomer" type="number" v-model="partNo" />
                 <span v-else>{{ partNo }}</span>
-                部分
+                篇
               </div>
               <div class="rii-des">
-                <input v-model="courseTitleMap[`Part${partNo}`]" placeholder="请补充本部分名称" @blur="(value) => updateCourseTitleMap(value, `Part${partNo}`)" />
+                <input v-model="courseTitleMap[`Part${partNo}`]" placeholder="请补充本篇名称" @blur="(value) => updateCourseTitleMap(value, `Part${partNo}`)" />
               </div>
             </div>
             <div class="random-info-item">
@@ -83,6 +83,7 @@ const isStudying = ref(false);
 const courseTitleMap = localStorage.getItem('courseTitleMap') ? reactive(JSON.parse(localStorage.getItem('courseTitleMap'))) : reactive({});
 const studyLog = localStorage.getItem('studyLog') ? reactive(JSON.parse(localStorage.getItem('studyLog'))) : reactive({});
 const courseInfo = {
+  id: 1,
   name: '现代 JavaScript 教程',
   url: 'https://zh.javascript.info/',
   type: 1,
@@ -137,7 +138,7 @@ function onFinish() {
 
 function updateStudyLog() {
   if (!courseTitleMap[`Part${partNo.value}`] || !courseTitleMap[`Part${partNo.value}.${chapterNo.value}`] || !courseTitleMap[`Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`]) {
-    alert('请先输入课程名称');
+    alert('请先输入章节名称');
   } else {
     const todayStr = dayjs().format('YYYY-MM-DD');
     const courseItem = {
@@ -176,7 +177,7 @@ function changeCourse() {
 }
 .main {
   display: flex;
-  min-height: 750px;
+  min-height: 700px;
 }
 article {
   flex: 1;
