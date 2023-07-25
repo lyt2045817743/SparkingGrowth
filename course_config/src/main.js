@@ -1,5 +1,5 @@
 import { createApp } from 'vue';
-// import router from './router/index';
+import router from './router/index';
 import App from './App.vue';
 
 let instance;
@@ -7,7 +7,7 @@ let instance;
 async function render(props = {}) {
   const { container } = props;
   instance = createApp(App);
-  instance.mount(container ? container.querySelector('#app') : '#app');
+  instance.use(router).mount(container ? container.querySelector('#app') : '#app');
 }
 
 // 单独调试子应用时挂载

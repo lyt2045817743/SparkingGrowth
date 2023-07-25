@@ -4,7 +4,7 @@ import { routes } from './routes';
 const activeRule = 'what_to_study_today';
 
 const router = createRouter({
-  history: createWebHistory(window.__POWERED_BY_QIANKUN__ ? `/${activeRule}` : '/'),
+  history: createWebHistory(`/${activeRule}`),
   routes
 });
 
