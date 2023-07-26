@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <h1>test Page</h1>
+    <h1>功能开发中...</h1>
   </div>
 </template>
 
