@@ -28,6 +28,6 @@ cd ../course_config
 yarn serve
 
 # 5. 启动主应用
-cd ../
+cd ../sparkingGrowth_main
 yarn serve
 ```
