@@ -18,16 +18,16 @@ git clone https://github.com/lyt2045817743/SparkingGrowth.git
 cd SparkingGrowth
 
 # 3. install dependency
-npm install
+yarn install
 
-# 4. 启动子应用
+# 4. 分别启动子应用
 cd what_to_study_today
 yarn serve
 
-cd ../course_config
+cd course_config
 yarn serve
 
 # 5. 启动主应用
-cd ../sparkingGrowth_main
+cd sparkingGrowth_main
 yarn serve
 ```
