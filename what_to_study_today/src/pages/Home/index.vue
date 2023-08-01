@@ -54,7 +54,12 @@
       </article>
       <aside>
         <div class="study-log-outer">
-          <div class="slo-title">学习记录</div>
+          <div class="slo-title">
+            <span>学习记录</span>
+            <Tooltip content="记录规则：学习前点击【开始学习】按钮并在学习完成后点击【结束学习】按钮才会被记录">
+              <img src="@/assets/icons/help-filling.png" width="15" height="15" class="help-icon" />
+            </Tooltip>
+          </div>
           <div class="study-log-inner">
             <div class="sli-item" v-for="item in Object.keys(studyLog)" :key="item">
               <div class="sli-date">{{ item }}</div>
@@ -74,6 +79,7 @@
 import { computed, ref, reactive } from 'vue';
 import dayjs from 'dayjs';
 import { PartArr } from '../../data/javascriptInfo';
+import Tooltip from '@/components/Tooltip';
 
 const partNo = ref(null);
 const chapterNo = ref(null);
@@ -247,6 +253,7 @@ input {
   margin: 15px;
 }
 .slo-title {
+  display: flex;
   color: #666666;
   font-weight: bolder;
   margin-bottom: 10px;
@@ -277,5 +284,10 @@ input {
 }
 .link-text {
   cursor: pointer;
+}
+.help-icon {
+  margin-left: 5px;
+  cursor: pointer;
+  align-self: center;
 }
 </style>
