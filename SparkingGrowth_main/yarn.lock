@@ -5090,6 +5090,11 @@ icss-utils@^4.0.0, icss-utils@^4.1.1:
   dependencies:
     postcss "^7.0.14"
 
+idb@^7.1.1:
+  version "7.1.1"
+  resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/idb/-/idb-7.1.1.tgz#d910ded866d32c7ced9befc5bfdf36f572ced72b"
+  integrity sha1-2RDe2GbTLHztm+/Fv9829XLO1ys=
+
 ieee754@^1.1.4:
   version "1.2.1"
   resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/ieee754/-/ieee754-1.2.1.tgz#8eb7a10a63fff25d15a57b001586d177d1b0d352"

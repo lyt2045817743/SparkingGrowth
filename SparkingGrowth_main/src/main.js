@@ -4,9 +4,12 @@ import App from './App.vue'
 import router from './router';
 import { registerMicroApps, start } from 'qiankun';
 import { microConfigs } from './constant/micro';
+import { initDatabase } from './database';
 
 registerMicroApps(microConfigs);
 
 start();
 
-createApp(App).use(router).mount('#main-app')
+createApp(App).use(router).mount('#main-app');
+
+initDatabase();
