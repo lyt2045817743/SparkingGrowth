@@ -47,7 +47,7 @@
         </div>
         <div class="current-course">
           <span class="cc-title">当前课程：</span>
-          <a v-if="courseInfo.url" :href="courseInfo.url">{{ courseInfo.name }}</a>
+          <a v-if="courseInfo.url" :href="courseInfo.url" target="_blank">{{ courseInfo.name }}</a>
           <span v-else class="cc-name">{{ courseInfo.name }}</span>
           <span class="change-course-link link-text" @click="changeCourse">切换课程</span>
         </div>
@@ -120,8 +120,7 @@ function onEditCustomerCourse() {
 
 function onStartStudy() {
   isStudying.value = true;
-  const inputs = document.querySelectorAll('input');
-  Array.from(inputs).map((item) => item.disabled = true);
+  changeDisable(true);
 }
 
 const allTitle = computed(() => {
@@ -137,8 +136,14 @@ const allTitle = computed(() => {
   return thirdTitle && secondTitle && firstTitle ? `${thirdTitleKey}：【${firstTitle}】.【${secondTitle}】.【${thirdTitle}】` : '';
 })
 
+function changeDisable(flag) {
+  const inputs = document.querySelectorAll('input');
+  Array.from(inputs).map((item) => item.disabled = flag);
+}
+
 function onFinish() {
   isStudying.value = false;
+  changeDisable(false);
   updateStudyLog();
 }
 
@@ -273,6 +278,7 @@ input {
   padding: 10px;
   border-radius: 15px;
   font-size: 14px;
+  margin-bottom: 10px;
 }
 .current-course {
   margin-bottom: 20px;
