@@ -189,6 +189,7 @@ function changeCourse() {
 .main {
   display: flex;
   min-height: 700px;
+  overflow: hidden;
 }
 article {
   flex: 1;
@@ -257,11 +258,15 @@ input {
 .study-log-outer {
   margin: 15px;
 }
+.study-log-inner {
+  overflow: scroll;
+  height: calc(100vh - 110px);
+  padding-top: 15px;
+}
 .slo-title {
   display: flex;
   color: #666666;
   font-weight: bolder;
-  margin-bottom: 10px;
   border-bottom: 1px solid gray;
   padding-bottom: 10px;
 }
