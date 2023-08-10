@@ -79,14 +79,14 @@
 import { computed, ref, reactive, onMounted } from 'vue';
 import dayjs from 'dayjs';
 import Tooltip from '@/components/Tooltip';
-import { getCurrentCourseInfo } from './server'
+import { getCurrentCourseInfo, updateCourseTitleMapById } from './server'
 
 const partNo = ref(null);
 const chapterNo = ref(null);
 const sectionNo = ref(null);
 const isCustomer = ref(false);
 const isStudying = ref(false);
-const courseTitleMap = localStorage.getItem('courseTitleMap') ? reactive(JSON.parse(localStorage.getItem('courseTitleMap'))) : reactive({});
+const courseTitleMap = ref({});
 const studyLog = localStorage.getItem('studyLog') ? reactive(JSON.parse(localStorage.getItem('studyLog'))) : reactive({});
 const courseInfo = ref({});
 let partInfoList;
@@ -98,6 +98,7 @@ onMounted(() => {
 async function init() {
   courseInfo.value = await getCurrentCourseInfo();
   partInfoList = courseInfo.value.partInfoList;
+  courseTitleMap.value = courseInfo.value.titleMap;
 }
 
 function generatorRandom (max) {
@@ -129,14 +130,16 @@ function onStartStudy() {
 }
 
 const allTitle = computed(() => {
+  if(!partNo.value || !chapterNo.value || !sectionNo.value) return '';
+
   const thirdTitleKey = `Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`;
-  const thirdTitle = courseTitleMap[thirdTitleKey];
+  const thirdTitle = courseTitleMap.value[thirdTitleKey];
 
   const secondTitleKey = `Part${partNo.value}.${chapterNo.value}`;
-  const secondTitle = courseTitleMap[secondTitleKey];
+  const secondTitle = courseTitleMap.value[secondTitleKey];
 
   const firstTitleKey = `Part${partNo.value}`;
-  const firstTitle = courseTitleMap[firstTitleKey];
+  const firstTitle = courseTitleMap.value[firstTitleKey];
 
   return thirdTitle && secondTitle && firstTitle ? `${thirdTitleKey}：【${firstTitle}】.【${secondTitle}】.【${thirdTitle}】` : '';
 })
@@ -153,7 +156,7 @@ function onFinish() {
 }
 
 function updateStudyLog() {
-  if (!courseTitleMap[`Part${partNo.value}`] || !courseTitleMap[`Part${partNo.value}.${chapterNo.value}`] || !courseTitleMap[`Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`]) {
+  if (!courseTitleMap.value[`Part${partNo.value}`] || !courseTitleMap.value[`Part${partNo.value}.${chapterNo.value}`] || !courseTitleMap.value[`Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`]) {
     alert('请先输入章节名称');
   } else {
     const todayStr = dayjs().format('YYYY-MM-DD');
@@ -174,8 +177,8 @@ function updateStudyLog() {
 }
 
 function updateCourseTitleMap(event, key) {
-  courseTitleMap[key] = event.target.value;
-  localStorage.setItem('courseTitleMap', JSON.stringify(courseTitleMap));
+  courseTitleMap.value[key] = event.target.value;
+  updateCourseTitleMapById(courseInfo.value.id, key,  event.target.value);
 }
 
 function changeCourse() {

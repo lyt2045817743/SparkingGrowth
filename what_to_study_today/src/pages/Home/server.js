@@ -6,9 +6,17 @@ async function getCurrentCourseInfo() {
   const courseStore = transaction.objectStore('course');
   const { value: currentCourseId } = await configStore.get('currentCourseId');
   const currentCourseInfo = await courseStore.get(currentCourseId);
+  await transaction.done;
   return Promise.resolve(currentCourseInfo);
 }
 
+async function updateCourseTitleMapById(id, newKey, newValue) {
+  const value = await db.get('course', id);
+  value.titleMap[newKey] = newValue;
+  await db.put('course', value);
+}
+
 export {
-  getCurrentCourseInfo
+  getCurrentCourseInfo,
+  updateCourseTitleMapById
 }
