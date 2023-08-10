@@ -11,6 +11,7 @@ export async function initDatabase() {
       curTransaction = transaction;
       initCourseStore();
       initStudyLogStore();
+      initConfigStore();
     },
   })
 }
@@ -32,6 +33,14 @@ function initStudyLogStore() {
   }
   studyLogStore.createIndex('date_idx', 'date');
   studyLogStore.createIndex('courseId_idx', 'courseId');
+}
+
+function initConfigStore() {
+  let configStore;
+  if (!db.objectStoreNames.contains('config')) {
+    configStore = db.createObjectStore('config', { keyPath: 'key' });
+    configStore.add({ key: 'currentCourseId', value: DefaultCourseInfo.id });
+  }
 }
 
 export {
