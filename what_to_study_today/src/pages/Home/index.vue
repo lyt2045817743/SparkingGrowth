@@ -76,10 +76,10 @@
 </template>
 
 <script setup>
-import { computed, ref, reactive } from 'vue';
+import { computed, ref, reactive, onMounted } from 'vue';
 import dayjs from 'dayjs';
-import { partInfoList } from '../../data/javascriptInfo';
 import Tooltip from '@/components/Tooltip';
+import { getCurrentCourseInfo } from './server'
 
 const partNo = ref(null);
 const chapterNo = ref(null);
@@ -88,12 +88,17 @@ const isCustomer = ref(false);
 const isStudying = ref(false);
 const courseTitleMap = localStorage.getItem('courseTitleMap') ? reactive(JSON.parse(localStorage.getItem('courseTitleMap'))) : reactive({});
 const studyLog = localStorage.getItem('studyLog') ? reactive(JSON.parse(localStorage.getItem('studyLog'))) : reactive({});
-const courseInfo = {
-  id: 1,
-  name: '现代 JavaScript 教程',
-  url: 'https://zh.javascript.info/',
-  type: 1,
-};
+const courseInfo = ref({});
+let partInfoList;
+
+onMounted(() => {
+  init();
+})
+
+async function init() {
+  courseInfo.value = await getCurrentCourseInfo();
+  partInfoList = courseInfo.value.partInfoList;
+}
 
 function generatorRandom (max) {
   return Math.floor(Math.random(0, 1) * max) + 1;
