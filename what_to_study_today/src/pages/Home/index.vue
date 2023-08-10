@@ -78,7 +78,7 @@
 <script setup>
 import { computed, ref, reactive } from 'vue';
 import dayjs from 'dayjs';
-import { PartArr } from '../../data/javascriptInfo';
+import { partInfoList } from '../../data/javascriptInfo';
 import Tooltip from '@/components/Tooltip';
 
 const partNo = ref(null);
@@ -100,14 +100,14 @@ function generatorRandom (max) {
 }
 
 function onRandom() {
-  const currentPartNo = generatorRandom(PartArr.length); 
+  const currentPartNo = generatorRandom(partInfoList.length); 
   partNo.value = currentPartNo;
-  const currentPartItem = PartArr.find(item => item.id === currentPartNo);
+  const currentPartItem = partInfoList.find(item => item.id === currentPartNo);
 
-  const curChapterNo = generatorRandom(currentPartItem.grandsonNumArr.length);
+  const curChapterNo = generatorRandom(currentPartItem.sectionNumPerChapterList.length);
   chapterNo.value = curChapterNo;
 
-  const currentChapterNo = currentPartItem.grandsonNumArr[curChapterNo - 1];
+  const currentChapterNo = currentPartItem.sectionNumPerChapterList[curChapterNo - 1];
   sectionNo.value = generatorRandom(currentChapterNo);
 }
 

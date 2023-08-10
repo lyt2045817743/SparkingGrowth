@@ -19,7 +19,6 @@ function initCourseStore() {
   let courseStore;
   if (!db.objectStoreNames.contains('course')) {
     courseStore = db.createObjectStore('course', { keyPath: 'id', autoIncrement: true });
-    console.log(courseStore, 'courseStore');
     courseStore.add(DefaultCourseInfo);
   }
 }
@@ -31,7 +30,6 @@ function initStudyLogStore() {
   }  else {
     studyLogStore = curTransaction.objectStore('studyLog');
   }
-  console.log(studyLogStore, 'studyLogStore');
   studyLogStore.createIndex('date_idx', 'date');
   studyLogStore.createIndex('courseId_idx', 'courseId');
 }
