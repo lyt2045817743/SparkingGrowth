@@ -79,7 +79,7 @@
 import { computed, ref, reactive, onMounted } from 'vue';
 import dayjs from 'dayjs';
 import Tooltip from '@/components/Tooltip';
-import { getCurrentCourseInfo, updateCourseTitleMapById } from './server'
+import { getCurrentCourseInfo, updateCourseTitleMapById, initStudyLog } from './server'
 
 const partNo = ref(null);
 const chapterNo = ref(null);
