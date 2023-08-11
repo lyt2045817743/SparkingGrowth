@@ -1,4 +1,6 @@
 import { createApp } from 'vue';
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 import router from './router/index';
 import App from './App.vue';
 
@@ -7,7 +9,7 @@ let instance;
 async function render(props = {}) {
   const { container } = props;
   instance = createApp(App);
-  instance.use(router).mount(container ? container.querySelector('#app') : '#app');
+  instance.use(router).use(ElementPlus).mount(container ? container.querySelector('#app') : '#app');
 }
 
 // 单独调试子应用时挂载

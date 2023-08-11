@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { routes } from './routes';
+import { projectName } from '../utils';
 
-const activeRule = 'course_config';
 const router = createRouter({
-  history: createWebHistory(`/${activeRule}/`),
+  history: createWebHistory(projectName),
   routes
 });
 
