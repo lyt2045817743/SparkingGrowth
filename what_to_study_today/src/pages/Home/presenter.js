@@ -1,4 +1,4 @@
-import { getStudyLogList } from './server';
+import { getStudyLogListById } from './server';
 
 class StudyLogManager {
   constructor(titleMap, courseId) {
@@ -7,7 +7,7 @@ class StudyLogManager {
   }
 
   async getStudyLogMap() {
-    let studyLogList = await getStudyLogList();
+    let studyLogList = await getStudyLogListById(this.currentCourseId);
     const studyLogMap = {};
     studyLogList.forEach((item) => {
       const { date, titleKey } = item;

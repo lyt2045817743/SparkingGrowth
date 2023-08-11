@@ -19,8 +19,8 @@ async function updateCourseTitleMapById(id, newKey, newValue) {
 }
 
 // 获取学习记录数据
-async function getStudyLogList() {
-  const studyLog = await db.getAll('studyLog');
+async function getStudyLogListById(courseId) {
+  const studyLog = await db.getAllFromIndex('studyLog', 'courseId_idx', courseId);
   return Promise.resolve(studyLog);
 }
 
@@ -55,7 +55,7 @@ async function initStudyLog() {
 export {
   getCurrentCourseInfo,
   updateCourseTitleMapById,
-  getStudyLogList,
+  getStudyLogListById,
   initStudyLog,
   addStudyLog
 }
