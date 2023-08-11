@@ -9,4 +9,9 @@ export const routes = [
     },
     component: Home,
   },
+  {
+    path: '/:w+',
+    name: '',
+    component: Home,
+  },
 ];
