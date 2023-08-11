@@ -7,7 +7,7 @@
             <div class="random-info-item">
               <div class="rii-title">
                 第
-                <input v-if="isCustomer" type="number" v-model="partNo" />
+                <input v-if="isCustomer" class="numberInput" type="number" v-model="partNo" />
                 <span v-else>{{ partNo }}</span>
                 篇
               </div>
@@ -18,7 +18,7 @@
             <div class="random-info-item">
               <div class="rii-title">
                 第
-                <input v-if="isCustomer" type="number" v-model="chapterNo" />
+                <input v-if="isCustomer" class="numberInput" type="number" v-model="chapterNo" />
                 <span v-else>{{ chapterNo }}</span>
                 章
               </div>
@@ -29,7 +29,7 @@
             <div class="random-info-item">
               <div class="rii-title">
                 第
-                <input v-if="isCustomer" type="number" v-model="sectionNo" />
+                <input v-if="isCustomer" class="numberInput" type="number" v-model="sectionNo" />
                 <span v-else>{{ sectionNo }}</span>
                 节
               </div>
@@ -64,8 +64,8 @@
             <div class="sli-item" v-for="item in Object.keys(studyLog)" :key="item">
               <div class="sli-date">{{ item }}</div>
               <div class="sli-courses">
-                <div class="sli-course-item" v-for="course in studyLog[item].courseList" :key="course">
-                  {{ course.title }}
+                <div class="sli-course-item" v-for="courseTitle in studyLog[item]" :key="courseTitle">
+                  {{ courseTitle }}
                 </div>
               </div>
             </div>
@@ -76,10 +76,11 @@
 </template>
 
 <script setup>
-import { computed, ref, reactive, onMounted } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import dayjs from 'dayjs';
 import Tooltip from '@/components/Tooltip';
-import { getCurrentCourseInfo, updateCourseTitleMapById, initStudyLog } from './server'
+import { getCurrentCourseInfo, updateCourseTitleMapById } from './server';
+import { StudyLogManager } from './presenter'
 
 const partNo = ref(null);
 const chapterNo = ref(null);
@@ -87,18 +88,24 @@ const sectionNo = ref(null);
 const isCustomer = ref(false);
 const isStudying = ref(false);
 const courseTitleMap = ref({});
-const studyLog = localStorage.getItem('studyLog') ? reactive(JSON.parse(localStorage.getItem('studyLog'))) : reactive({});
+const studyLog = ref({});
 const courseInfo = ref({});
-let partInfoList;
+let partInfoListOfCurCourse;
+let studyLogManager;
 
 onMounted(() => {
   init();
+  // initStudyLog()
 })
 
 async function init() {
-  courseInfo.value = await getCurrentCourseInfo();
-  partInfoList = courseInfo.value.partInfoList;
-  courseTitleMap.value = courseInfo.value.titleMap;
+  const course = await getCurrentCourseInfo();
+  const { partInfoList, titleMap } = course;
+  courseInfo.value = course;
+  partInfoListOfCurCourse = partInfoList;
+  courseTitleMap.value = titleMap;
+  studyLogManager = new StudyLogManager(titleMap);
+  studyLog.value = await studyLogManager.getStudyLogMap();
 }
 
 function generatorRandom (max) {
@@ -106,9 +113,9 @@ function generatorRandom (max) {
 }
 
 function onRandom() {
-  const currentPartNo = generatorRandom(partInfoList.length); 
+  const currentPartNo = generatorRandom(partInfoListOfCurCourse.length); 
   partNo.value = currentPartNo;
-  const currentPartItem = partInfoList.find(item => item.id === currentPartNo);
+  const currentPartItem = partInfoListOfCurCourse.find(item => item.id === currentPartNo);
 
   const curChapterNo = generatorRandom(currentPartItem.sectionNumPerChapterList.length);
   chapterNo.value = curChapterNo;
@@ -131,49 +138,40 @@ function onStartStudy() {
 
 const allTitle = computed(() => {
   if(!partNo.value || !chapterNo.value || !sectionNo.value) return '';
-
   const thirdTitleKey = `Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`;
-  const thirdTitle = courseTitleMap.value[thirdTitleKey];
-
-  const secondTitleKey = `Part${partNo.value}.${chapterNo.value}`;
-  const secondTitle = courseTitleMap.value[secondTitleKey];
-
-  const firstTitleKey = `Part${partNo.value}`;
-  const firstTitle = courseTitleMap.value[firstTitleKey];
-
-  return thirdTitle && secondTitle && firstTitle ? `${thirdTitleKey}：【${firstTitle}】.【${secondTitle}】.【${thirdTitle}】` : '';
+  return studyLogManager.getAllTitle(thirdTitleKey);
 })
 
 function changeDisable(flag) {
-  const inputs = document.querySelectorAll('input');
+  const inputs = document.querySelectorAll('.numberInput');
   Array.from(inputs).map((item) => item.disabled = flag);
 }
 
 function onFinish() {
-  isStudying.value = false;
-  changeDisable(false);
-  updateStudyLog();
-}
-
-function updateStudyLog() {
   if (!courseTitleMap.value[`Part${partNo.value}`] || !courseTitleMap.value[`Part${partNo.value}.${chapterNo.value}`] || !courseTitleMap.value[`Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`]) {
     alert('请先输入章节名称');
   } else {
-    const todayStr = dayjs().format('YYYY-MM-DD');
-    const courseItem = {
-      title: allTitle.value,
-    }
-    if (!studyLog[todayStr]) {
-      studyLog[todayStr] = {};
-      studyLog[todayStr].courseList = [courseItem];
-    } else {
-      if (!studyLog[todayStr].courseList) {
-        studyLog[todayStr].courseList = [];
-      }
-      studyLog[todayStr].courseList.push(courseItem);
-    }
-    localStorage.setItem('studyLog', JSON.stringify(studyLog));
+    isStudying.value = false;
+    changeDisable(false);
+    updateStudyLog();
   }
+}
+
+function updateStudyLog() {
+  const todayStr = dayjs().format('YYYY-MM-DD');
+  const courseItem = {
+    title: allTitle.value,
+  }
+  if (!studyLog[todayStr]) {
+    studyLog[todayStr] = {};
+    studyLog[todayStr].courseList = [courseItem];
+  } else {
+    if (!studyLog[todayStr].courseList) {
+      studyLog[todayStr].courseList = [];
+    }
+    studyLog[todayStr].courseList.push(courseItem);
+  }
+  localStorage.setItem('studyLog', JSON.stringify(studyLog));
 }
 
 function updateCourseTitleMap(event, key) {

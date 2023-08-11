@@ -16,8 +16,9 @@ async function updateCourseTitleMapById(id, newKey, newValue) {
   await db.put('course', value);
 }
 
-async function getStudyLog() {
-
+async function getStudyLogList() {
+  const studyLog = await db.getAll('studyLog');
+  return Promise.resolve(studyLog);
 }
 
 async function initStudyLog() {
@@ -46,6 +47,6 @@ async function initStudyLog() {
 export {
   getCurrentCourseInfo,
   updateCourseTitleMapById,
-  getStudyLog,
+  getStudyLogList,
   initStudyLog
 }
