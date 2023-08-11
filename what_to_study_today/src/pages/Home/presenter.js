@@ -9,6 +9,10 @@ class StudyLogManager {
   async getStudyLogMap() {
     let studyLogList = await getStudyLogListById(this.currentCourseId);
     const studyLogMap = {};
+    studyLogList = studyLogList.sort((a, b) => {
+      const [time1, time2] = [a.id.split('_')[1], b.id.split('_')[1]];
+      return time2 - time1;
+    });
     studyLogList.forEach((item) => {
       const { date, titleKey } = item;
       const allTitle = this.getAllTitle(titleKey);
