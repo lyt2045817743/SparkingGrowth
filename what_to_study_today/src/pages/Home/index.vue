@@ -59,6 +59,7 @@
             <Tooltip content="记录规则：学习前点击【开始学习】按钮并在学习完成后点击【结束学习】按钮才会被记录">
               <img src="@/assets/icons/help-filling.png" width="15" height="15" class="help-icon" />
             </Tooltip>
+            <span class="study-log-total">（共{{ studyLogTotal }}条）</span>
           </div>
           <div class="study-log-inner">
             <div class="sli-item" v-for="item in Object.keys(studyLog)" :key="item">
@@ -90,6 +91,7 @@ const isStudying = ref(false);
 const courseTitleMap = ref({});
 const studyLog = ref({});
 const courseInfo = ref({});
+const studyLogTotal = ref(0);
 let partInfoListOfCurCourse;
 let studyLogManager;
 
@@ -109,7 +111,9 @@ async function init() {
 }
 
 async function updateStudyLogList() {
-  studyLog.value = await studyLogManager.getStudyLogMap();
+  const result = await studyLogManager.getStudyLogMap();
+  studyLog.value = result.studyLog ?? {};
+  studyLogTotal.value = result.total ?? 0;
 }
 
 function generatorRandom (max) {
@@ -270,10 +274,17 @@ input {
 }
 .slo-title {
   display: flex;
+  position: relative;
   color: #666666;
   font-weight: bolder;
   border-bottom: 1px solid gray;
   padding-bottom: 10px;
+}
+.study-log-total {
+  position: absolute;
+  right: 0;
+  bottom: 12px;
+  font-size: 12px;
 }
 .sli-date {
   font-size: 17px;

@@ -22,7 +22,11 @@ class StudyLogManager {
         studyLogMap[date] = [allTitle];
       }
     })
-    return Promise.resolve(studyLogMap);
+    const result = {
+      studyLog: studyLogMap,
+      total: studyLogList.length
+    }
+    return Promise.resolve(result);
   }
   
   getAllTitle(thirdTitleKey) {
