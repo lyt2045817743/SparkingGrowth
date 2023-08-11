@@ -39,7 +39,6 @@ const defaultCourseInfo = {
     "Part1.11.4": "使用Promise处理错误",
     "Part1.7": "对象属性配置",
     "Part1.7.1": "属性标志和描述符",
-    "Part1.3.4": "",
     "Part3.5": "动画",
     "Part1.5": "数据类型",
     "Part1.5.6": "字符串",
@@ -58,7 +57,8 @@ const defaultCourseInfo = {
     "Part2.6.1": "MutationObserver",
     "Part3.1": "Frame 和 window",
     "Part3.1.2": "跨窗口通信",
-    "Part2.4.3": "事件：change，input，cut，copy，paste"
+    "Part2.4.3": "事件：change，input，cut，copy，paste",
+    "Part2.3.5": "键盘：keydown 和 keyup"
   }
 }
 

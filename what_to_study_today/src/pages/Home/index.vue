@@ -79,7 +79,7 @@
 import { computed, ref, onMounted } from 'vue';
 import dayjs from 'dayjs';
 import Tooltip from '@/components/Tooltip';
-import { getCurrentCourseInfo, updateCourseTitleMapById } from './server';
+import { getCurrentCourseInfo, updateCourseTitleMapById, addStudyLog } from './server';
 import { StudyLogManager } from './presenter'
 
 const partNo = ref(null);
@@ -100,11 +100,15 @@ onMounted(() => {
 
 async function init() {
   const course = await getCurrentCourseInfo();
-  const { partInfoList, titleMap } = course;
+  const { partInfoList, titleMap, id } = course;
   courseInfo.value = course;
   partInfoListOfCurCourse = partInfoList;
   courseTitleMap.value = titleMap;
-  studyLogManager = new StudyLogManager(titleMap);
+  studyLogManager = new StudyLogManager(titleMap, id);
+  updateStudyLogList();
+}
+
+async function updateStudyLogList() {
   studyLog.value = await studyLogManager.getStudyLogMap();
 }
 
@@ -157,24 +161,19 @@ function onFinish() {
   }
 }
 
-function updateStudyLog() {
-  const todayStr = dayjs().format('YYYY-MM-DD');
-  const courseItem = {
-    title: allTitle.value,
-  }
-  if (!studyLog[todayStr]) {
-    studyLog[todayStr] = {};
-    studyLog[todayStr].courseList = [courseItem];
-  } else {
-    if (!studyLog[todayStr].courseList) {
-      studyLog[todayStr].courseList = [];
-    }
-    studyLog[todayStr].courseList.push(courseItem);
-  }
-  localStorage.setItem('studyLog', JSON.stringify(studyLog));
+async function updateStudyLog() {
+  const now = dayjs();
+  const nowStamp = now.valueOf();
+  const date = now.format('YYYY-MM-DD');
+  const titleKey = `Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`;
+  const id = `${courseInfo.value.id}_${nowStamp}`;
+  const studyLog = { date, titleKey, id, courseId: courseInfo.value.id };
+  await addStudyLog(studyLog);
+  updateStudyLogList();
 }
 
 function updateCourseTitleMap(event, key) {
+  if (!event.target.value) return;
   courseTitleMap.value[key] = event.target.value;
   updateCourseTitleMapById(courseInfo.value.id, key,  event.target.value);
 }

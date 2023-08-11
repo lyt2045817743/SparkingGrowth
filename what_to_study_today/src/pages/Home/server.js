@@ -1,5 +1,6 @@
 const db = window.db;
 
+// 获取当前的课程信息
 async function getCurrentCourseInfo() {
   const transaction = db.transaction(['config', 'course']);
   const configStore = transaction.objectStore('config');
@@ -10,15 +11,22 @@ async function getCurrentCourseInfo() {
   return Promise.resolve(currentCourseInfo);
 }
 
+// 更新课程目录
 async function updateCourseTitleMapById(id, newKey, newValue) {
   const value = await db.get('course', id);
   value.titleMap[newKey] = newValue;
   await db.put('course', value);
 }
 
+// 获取学习记录数据
 async function getStudyLogList() {
   const studyLog = await db.getAll('studyLog');
   return Promise.resolve(studyLog);
+}
+
+// 新增一条学习记录
+async function addStudyLog(studyLogInfo) {
+  await db.add('studyLog', studyLogInfo);
 }
 
 async function initStudyLog() {
@@ -29,13 +37,13 @@ async function initStudyLog() {
   for (let date in studyLogByDate) {
     const courseList = studyLogByDate[date].courseList;
     for (let i = 0; i < courseList.length; i++) {
-      const title = courseList[i].title.split('：')[0];
+      const titleKey = courseList[i].title.split('：')[0];
       let dateTimeStamp = new Date(`${date} 14:00:00`).getTime();
       if (date === '2023-08-03') {
         dateTimeStamp += space;
         space += 1*60*60*1000*2;
       }
-      studyLogById.push({ date, title, courseId: 0, id: `${0}_${dateTimeStamp}` });
+      studyLogById.push({ date, titleKey, courseId: 0, id: `${0}_${dateTimeStamp}` });
     }
   }
   const promiseArr = studyLogById.map((item) => {
@@ -48,5 +56,6 @@ export {
   getCurrentCourseInfo,
   updateCourseTitleMapById,
   getStudyLogList,
-  initStudyLog
+  initStudyLog,
+  addStudyLog
 }

@@ -1,16 +1,17 @@
 import { getStudyLogList } from './server';
 
 class StudyLogManager {
-  constructor(titleMap) {
+  constructor(titleMap, courseId) {
     this.titleMap = titleMap;
+    this.currentCourseId = courseId;
   }
 
   async getStudyLogMap() {
-    const studyLogList = await getStudyLogList();
+    let studyLogList = await getStudyLogList();
     const studyLogMap = {};
     studyLogList.forEach((item) => {
-      const { date, title } = item;
-      const allTitle = this.getAllTitle(title);
+      const { date, titleKey } = item;
+      const allTitle = this.getAllTitle(titleKey);
       if (studyLogMap[date]) {
         studyLogMap[date].push(allTitle);
       } else {
