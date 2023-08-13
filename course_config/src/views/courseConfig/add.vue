@@ -50,6 +50,7 @@
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { CourseTitleMap } from '../../common';
+import { addCourse, updateConfig } from './sever';
 
 const router = useRouter();
 const formEl = ref(null);
@@ -111,7 +112,8 @@ const onRealSubmit = async (callback) => {
       })),
       titleMap: {}
     }
-    callback();
+    const courseId = await addCourse(courseInfo);
+    callback(courseId);
   }
 }
 
@@ -123,8 +125,9 @@ const onSubmit = async () => {
 }
 
 const onSubmitAndTry = async () => {
-  onRealSubmit(() => {
-    alert('跳转链接中');
+  onRealSubmit((courseId) => {
+    updateConfig('currentCourseId', courseId);
+    window.location.replace('/what_to_study_today');
   });
 }
 
@@ -133,7 +136,6 @@ const customValidate = () => {
     alert('课程篇数不能为0');
     return false;
   }
-  console.log(form);
   if (!form.partNum || form.chapter.length != form.partNum || form.chapter.filter(item => !item).length > 0 || form.section.map(item => item.length).reduce((a, b) => a + b, 0) !== form.chapter.reduce((a, b) => a + b, 0)) {
     alert('请先将课程目录配置补充完整');
     return false;
