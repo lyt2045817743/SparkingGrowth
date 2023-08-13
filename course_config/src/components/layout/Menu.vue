@@ -28,4 +28,8 @@ function handleOpen(key) {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.menu {
+  padding-top: 15px;
+}
+</style>
