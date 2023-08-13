@@ -1,7 +1,7 @@
 import { openDB } from 'idb';
 import { DatabaseConfig } from './.';
 import DefaultCourseInfo from './defaultCourseData';
-import { setGlobalState } from '../utils'
+import { setGlobalState } from '../utils';
 
 let db, curTransaction;
 export async function initDatabase() {
