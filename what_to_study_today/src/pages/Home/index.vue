@@ -41,7 +41,7 @@
           <div class="btn-box">
             <button v-if="!isStudying" class="startBtn" @click="onRandom">开始生成随机章节</button>
             <button v-if="!isStudying" class="startBtn" @click="onEditCustomerCourse">学习自定义章节</button>
-            <button v-if="allTitle && !isStudying" class="startBtn" @click="onStartStudy">开始学习</button>
+            <button v-if="(partNo || isCustomer) && !isStudying" class="startBtn" @click="onStartStudy">开始学习</button>
             <button v-if="isStudying" class="startBtn finishStudyBtn" @click="onFinish">完成学习</button>
           </div>
         </div>
