@@ -1,6 +1,9 @@
 <template>
   <div class="home">
-    <div class="tip">以一点点火花为起点，开启下一个大的想法</div>
+    <div class="tip">
+      不积跬步，无以至千里；不积小流，无以成江海
+      <span class="quota"> 《荀子·劝学》</span>
+    </div>
     <div class="sub-apps__box">
       <div v-for="item in microConfigs" class="sub-apps__item" :key="item.activeRule" @click="() => goPage(item.activeRule)">
         {{ item.name }}
@@ -17,7 +20,7 @@ const goPage = (to) => {
   router.push({
     path: to
   })
-}
+};
 </script>
 
 <style scoped>
@@ -30,6 +33,11 @@ const goPage = (to) => {
   color: #4c8dae;
   font-weight: bolder;
   font-family: cursive;
+}
+
+.quota {
+  font-size: 18px;
+  color: #333333;
 }
 .sub-apps__box {
   display: flex;
