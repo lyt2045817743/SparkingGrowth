@@ -144,11 +144,11 @@ function onStartStudy() {
   changeDisable(true);
 }
 
-const allTitle = computed(() => {
-  if(!partNo.value || !chapterNo.value || !sectionNo.value) return '';
-  const thirdTitleKey = `Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`;
-  return studyLogManager.getAllTitle(thirdTitleKey);
-})
+// const allTitle = computed(() => {
+//   if(!partNo.value || !chapterNo.value || !sectionNo.value) return '';
+//   const thirdTitleKey = `Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`;
+//   return studyLogManager.getAllTitle(thirdTitleKey);
+// })
 
 function changeDisable(flag) {
   const inputs = document.querySelectorAll('.numberInput');
