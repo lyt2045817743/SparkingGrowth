@@ -25,13 +25,13 @@
     </el-form-item>
     <el-form-item>
       <div>
-        <div>该课程有<input v-model="form.partNum" type="number" @input="initCourseNum" />篇/部分</div>
+        <div>该课程有<input v-model="form.partNum" type="number" @input="initCourseNum" placeholder="请输入篇数" />篇/部分</div>
           <ul v-if="form.partNum">
             <li v-for="num in [...Array(form.partNum)].map((_k, i )=> i)" :key="num">
-              <span>第{{ num + 1 }}篇/部分有<input type="number" v-model="form.chapter[num]" @input="() => onChapterChange(num)" />章</span>
+              <span>第{{ num + 1 }}篇/部分有<input type="number" placeholder="请输入章数" v-model="form.chapter[num]" @input="() => onChapterChange(num)" />章</span>
               <div v-if="form.chapter[num]">
                 <li class="section-li" v-for="sectionNum in [...Array(form.chapter[num])].map((_k, i )=> i)" :key="sectionNum">
-                  第{{ sectionNum + 1 }}章有<input type="number" @input="(val) => onSectionChange(val, num, sectionNum)" />节
+                  第{{ sectionNum + 1 }}章有<input type="number" placeholder="请输入节数" @input="(val) => onSectionChange(val, num, sectionNum)" />节
                 </li>
               </div>
             </li>
@@ -161,7 +161,7 @@ const rules = reactive({
       trigger: 'blur',
     },
   ],
-})
+});
 
 </script>
 
@@ -171,6 +171,8 @@ const rules = reactive({
   list-style: circle;
 }
 input {
+  border: 1px solid #dcdfe6;
+  padding: 3px;
   margin: 0 5px;
 }
 </style>
