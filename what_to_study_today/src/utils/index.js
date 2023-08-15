@@ -1,0 +1,1 @@
+export const projectName = 'what_to_study_today';

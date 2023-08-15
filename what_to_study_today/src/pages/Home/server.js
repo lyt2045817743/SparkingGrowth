@@ -1,4 +1,4 @@
-const db = window.db;
+import { db } from '../../utils/globalState';
 
 // 获取当前的课程信息
 async function getCurrentCourseInfo() {

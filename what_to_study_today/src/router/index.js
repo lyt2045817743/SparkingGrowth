@@ -1,10 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { routes } from './routes';
-
-const activeRule = 'what_to_study_today';
+import { projectName } from '../utils'
 
 const router = createRouter({
-  history: createWebHistory(`/${activeRule}`),
+  history: createWebHistory(`/${projectName}`),
   routes
 });
 
