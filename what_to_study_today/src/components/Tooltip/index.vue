@@ -1,6 +1,6 @@
 <template>
   <div class="tooltip-outer" @mouseover="showText = true" @mouseleave="showText = false">
-    <p v-if="showText" :class="['tooltip', getClassName()]">{{ content }}</p>
+    <p v-if="showText" :class="['tooltip', getClassName()]" :style="`left: calc(50% + ${left}px)`">{{ content }}</p>
     <slot></slot>
   </div>
 </template>
@@ -13,6 +13,7 @@ const props = defineProps({
   content: String,
   triggerType: String,
   placement: String,
+  left: Number
 });
 
 function getClassName() {
@@ -41,7 +42,7 @@ function getClassName() {
 }
 
 .tooltip-top {
-  top: -30px;
+  top: -40px;
   left: 50%;
   transform: translateX(-50%);
 }

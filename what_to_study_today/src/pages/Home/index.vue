@@ -46,7 +46,13 @@
           </div>
         </div>
         <div class="current-course">
-          <span class="cc-title">当前课程：</span>
+          <div class="cc-title">
+            <span class="cct-text">当前课程</span>
+            <Tooltip content="点击系统左上角，在首页【课程配置后台】进行配置" placement="top" :left="50">
+              <img src="@/assets/icons/help-filling.png" width="15" height="15" class="help-icon" />
+            </Tooltip>
+            <span>：</span>
+          </div>
           <select class="change-course" placeholder="切换课程" @change="onCourseChange">
             <option v-for="item in courseList" :key="item.id" :value="item.id" class="cc-name" :selected="item.id === courseInfo.id">{{ item.name }}</option>
           </select>
@@ -312,12 +318,19 @@ input {
   margin-bottom: 10px;
 }
 .current-course {
+  display: flex;
   margin-bottom: 20px;
 }
 .change-course {
   width: 200px;
   margin-right: 10px;
   font-size: 18px;
+}
+.cc-title {
+  display: flex;
+}
+.cct-text {
+  margin-right: -3px;
 }
 .link-text {
   cursor: pointer;
