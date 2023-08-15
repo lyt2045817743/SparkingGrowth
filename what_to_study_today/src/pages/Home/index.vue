@@ -121,6 +121,8 @@ function generatorRandom (max) {
 }
 
 function onRandom() {
+  isCustomer.value = false;
+
   const currentPartNo = generatorRandom(partInfoListOfCurCourse.length); 
   partNo.value = currentPartNo;
   const currentPartItem = partInfoListOfCurCourse.find(item => item.id === currentPartNo);
@@ -162,6 +164,8 @@ function onFinish() {
     isStudying.value = false;
     changeDisable(false);
     updateStudyLog();
+    partNo.value = null;
+    isCustomer.value = false;
   }
 }
 
