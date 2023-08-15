@@ -47,9 +47,10 @@
         </div>
         <div class="current-course">
           <span class="cc-title">当前课程：</span>
-          <a v-if="courseInfo.url" :href="courseInfo.url" target="_blank">{{ courseInfo.name }}</a>
-          <span v-else class="cc-name">{{ courseInfo.name }}</span>
-          <span class="change-course-link link-text" @click="changeCourse">切换课程</span>
+          <select class="change-course" placeholder="切换课程" @change="onCourseChange">
+            <option v-for="item in courseList" :key="item.id" :value="item.id" class="cc-name" :selected="item.id === courseInfo.id">{{ item.name }}</option>
+          </select>
+          <a v-if="courseInfo.url" :href="courseInfo.url" target="_blank">课程链接</a>
         </div>
       </article>
       <aside>
@@ -77,10 +78,10 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import dayjs from 'dayjs';
 import Tooltip from '@/components/Tooltip';
-import { getCurrentCourseInfo, updateCourseTitleMapById, addStudyLog } from './server';
+import { getCurrentCourseInfo, updateCourseTitleMapById, addStudyLog, getCourseList, updateConfig } from './server';
 import { StudyLogManager } from './presenter'
 
 const partNo = ref(null);
@@ -92,13 +93,18 @@ const courseTitleMap = ref({});
 const studyLog = ref({});
 const courseInfo = ref({});
 const studyLogTotal = ref(0);
+const courseList = ref([]);
 let partInfoListOfCurCourse;
 let studyLogManager;
 
 onMounted(() => {
   init();
-  // initStudyLog()
+  queryCourseList();
 })
+
+async function queryCourseList() {
+  courseList.value = await getCourseList();
+}
 
 async function init() {
   const course = await getCurrentCourseInfo();
@@ -146,12 +152,6 @@ function onStartStudy() {
   changeDisable(true);
 }
 
-// const allTitle = computed(() => {
-//   if(!partNo.value || !chapterNo.value || !sectionNo.value) return '';
-//   const thirdTitleKey = `Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`;
-//   return studyLogManager.getAllTitle(thirdTitleKey);
-// })
-
 function changeDisable(flag) {
   const inputs = document.querySelectorAll('.numberInput');
   Array.from(inputs).map((item) => item.disabled = flag);
@@ -164,9 +164,13 @@ function onFinish() {
     isStudying.value = false;
     changeDisable(false);
     updateStudyLog();
-    partNo.value = null;
-    isCustomer.value = false;
+    clearStates();
   }
+}
+
+function clearStates() {
+  partNo.value = null;
+  isCustomer.value = false;
 }
 
 async function updateStudyLog() {
@@ -186,8 +190,10 @@ function updateCourseTitleMap(event, key) {
   updateCourseTitleMapById(courseInfo.value.id, key,  event.target.value);
 }
 
-function changeCourse() {
-  alert('即将开放，敬请期待');
+async function onCourseChange(event) {
+  await updateConfig('currentCourseId', +event.target.value);
+  init();
+  clearStates();
 }
 
 </script>
@@ -308,10 +314,10 @@ input {
 .current-course {
   margin-bottom: 20px;
 }
-.change-course-link {
-  margin-left: 10px;
-  color: blue;
-  font-size: 10px;
+.change-course {
+  width: 200px;
+  margin-right: 10px;
+  font-size: 18px;
 }
 .link-text {
   cursor: pointer;

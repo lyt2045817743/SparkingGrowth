@@ -1,5 +1,11 @@
 import { db } from '../../utils/globalState';
 
+// 获取课程列表
+async function getCourseList() {
+  const list = await db.getAll('course');
+  return Promise.resolve(list);
+}
+
 // 获取当前的课程信息
 async function getCurrentCourseInfo() {
   const transaction = db.transaction(['config', 'course']);
@@ -52,10 +58,17 @@ async function initStudyLog() {
   await Promise.all(promiseArr.concat([transaction.done]));
 }
 
+// 修改配置信息
+async function updateConfig(key, value) {
+  await db.put('config', { key, value });
+}
+
 export {
+  getCourseList,
   getCurrentCourseInfo,
   updateCourseTitleMapById,
   getStudyLogListById,
   initStudyLog,
-  addStudyLog
+  addStudyLog,
+  updateConfig
 }
