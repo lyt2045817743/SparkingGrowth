@@ -19,11 +19,12 @@
     </el-form-item>
     <el-form-item label="课程目录配置：" required>
       <el-radio-group v-model="form.settingType">
-        <el-radio :label="1">简单配置</el-radio>
-        <el-radio :label="2">完整配置</el-radio>
+        <el-radio :label="1">简单配置（仅章节数）</el-radio>
+        <el-radio :label="2">部分配置（带题目）</el-radio>
       </el-radio-group>
     </el-form-item>
     <el-form-item>
+      <!-- 简单配置 -->
       <div v-if="form.settingType === 1">
         <div>【简单配置】该课程有<input v-model="form.partNum" type="number" @input="initCourseNum" placeholder="请输入篇数" />篇/部分</div>
           <ul v-if="form.partNum">
@@ -37,22 +38,20 @@
             </li>
           </ul>
       </div>
+      <!-- 部分配置（带题目） -->
       <div v-else class="ccb-inner">
-        <div>【完整配置】该课程有<input v-model="form.partNum" type="number" @input="initCourseNum" placeholder="请输入篇数" />篇/部分</div>
+        <div>【部分配置】该课程有<input v-model="form.partNum" type="number" @input="initCourseNum" placeholder="请输入篇数" />篇/部分</div>
         <ul v-if="form.partNum">
           <li v-for="num in [...Array(form.partNum)].map((_k, i )=> i)" :key="num">
-            <!-- <span>第{{ num + 1 }}篇： -->
-              <input :placeholder="`请输入第${ num + 1 }篇题目`" @input="() => onChangeTitle(num, sectionNum)" />
+              <input :placeholder="`请输入第${ num + 1 }篇题目`" @change="(val) => onChangeTitle(val, num, sectionNum)" />
               ，有<input type="number" placeholder="请输入章数" v-model="form.chapter[num]" @input="() => onChapterChange(num)" />章
-            <!-- </span> -->
             <div v-if="form.chapter[num]">
               <li class="section-li" v-for="sectionNum in [...Array(form.chapter[num])].map((_k, i )=> i)" :key="sectionNum">
-                <!-- 第{{ sectionNum + 1 }}章： -->
-                <input :placeholder="`请输入第${ sectionNum + 1 }章题目`" @input="() => onChangeTitle(num, sectionNum)" />
+                <input :placeholder="`请输入第${ sectionNum + 1 }章题目`" @change="(val) => onChangeTitle(val, num, sectionNum)" />
                 ，有<input type="number" placeholder="请输入节数" @input="(val) => onSectionChange(val, num, sectionNum)" />节
-                <div v-if="form.section[num]?.length" class="section-title">
+                <div v-if="form.section[num]?.[sectionNum]" class="section-title">
                   <li class="section-title-li" v-for="innerNum in [...Array(form.section[num][sectionNum])].map((_k, i )=> i)" :key="innerNum">
-                    <input :placeholder="`请输入第${innerNum + 1}节题目`" @input="() => onChangeTitle(num, sectionNum, innerNum)" />
+                    <input :placeholder="`请输入第${innerNum + 1}节题目`" @change="(val) => onChangeTitle(val, num, sectionNum, innerNum)" />
                   </li>
                 </div>
               </li>
@@ -85,7 +84,8 @@ const form = ref({
   settingType: 1,
   partNum: undefined,
   chapter: [],
-  section: []
+  section: [],
+  titleMap: {}
 })
 
 const initCourseNum = function () {
@@ -98,8 +98,8 @@ const onChapterChange = function (chapterIdx) {
 }
 
 const onSectionChange = function(e, chapterIdx, sectionIdx) {
-  let { data } = e;
-  data = Number(data);
+  let { value } = e.target;
+  const data = Number(value);
   if (form.value.section[chapterIdx]) {
     if (data) {
       form.value.section[chapterIdx][sectionIdx] = data;
@@ -109,6 +109,12 @@ const onSectionChange = function(e, chapterIdx, sectionIdx) {
   } else {
     form.value.section[chapterIdx] = [data];
   }
+}
+
+const onChangeTitle = function(e, ...otherArg) {
+  const titleIdxArr = otherArg.map((item) => item + 1).filter(Boolean);
+  const titleKey = `Part${titleIdxArr.join('.')}`;
+  form.value.titleMap[titleKey] = e.target.value;
 }
 
 
@@ -128,7 +134,7 @@ const onValid = async () => {
 const onRealSubmit = async (callback) => {
   const flag = await onValid();
   if (flag) {
-    const { name, type, url, section } = form.value;
+    const { name, type, url, section, titleMap } = form.value;
     const courseInfo = {
       name,
       type,
@@ -137,7 +143,7 @@ const onRealSubmit = async (callback) => {
         sectionNumPerChapterList: item,
         id: index + 1
       })),
-      titleMap: {}
+      titleMap
     }
     const courseId = await addCourse(courseInfo);
     callback(courseId);
