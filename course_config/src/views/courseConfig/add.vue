@@ -20,12 +20,12 @@
     <el-form-item label="课程目录配置：" required>
       <el-radio-group v-model="form.settingType">
         <el-radio :label="1">简单配置</el-radio>
-        <!-- <el-radio :label="2">完整配置</el-radio> -->
+        <el-radio :label="2">完整配置</el-radio>
       </el-radio-group>
     </el-form-item>
     <el-form-item>
-      <div>
-        <div>该课程有<input v-model="form.partNum" type="number" @input="initCourseNum" placeholder="请输入篇数" />篇/部分</div>
+      <div v-if="form.settingType === 1">
+        <div>【简单配置】该课程有<input v-model="form.partNum" type="number" @input="initCourseNum" placeholder="请输入篇数" />篇/部分</div>
           <ul v-if="form.partNum">
             <li v-for="num in [...Array(form.partNum)].map((_k, i )=> i)" :key="num">
               <span>第{{ num + 1 }}篇/部分有<input type="number" placeholder="请输入章数" v-model="form.chapter[num]" @input="() => onChapterChange(num)" />章</span>
@@ -36,6 +36,29 @@
               </div>
             </li>
           </ul>
+      </div>
+      <div v-else class="ccb-inner">
+        <div>【完整配置】该课程有<input v-model="form.partNum" type="number" @input="initCourseNum" placeholder="请输入篇数" />篇/部分</div>
+        <ul v-if="form.partNum">
+          <li v-for="num in [...Array(form.partNum)].map((_k, i )=> i)" :key="num">
+            <!-- <span>第{{ num + 1 }}篇： -->
+              <input :placeholder="`请输入第${ num + 1 }篇题目`" @input="() => onChangeTitle(num, sectionNum)" />
+              ，有<input type="number" placeholder="请输入章数" v-model="form.chapter[num]" @input="() => onChapterChange(num)" />章
+            <!-- </span> -->
+            <div v-if="form.chapter[num]">
+              <li class="section-li" v-for="sectionNum in [...Array(form.chapter[num])].map((_k, i )=> i)" :key="sectionNum">
+                <!-- 第{{ sectionNum + 1 }}章： -->
+                <input :placeholder="`请输入第${ sectionNum + 1 }章题目`" @input="() => onChangeTitle(num, sectionNum)" />
+                ，有<input type="number" placeholder="请输入节数" @input="(val) => onSectionChange(val, num, sectionNum)" />节
+                <div v-if="form.section[num]?.length" class="section-title">
+                  <li class="section-title-li" v-for="innerNum in [...Array(form.section[num][sectionNum])].map((_k, i )=> i)" :key="innerNum">
+                    <input :placeholder="`请输入第${innerNum + 1}节题目`" @input="() => onChangeTitle(num, sectionNum, innerNum)" />
+                  </li>
+                </div>
+              </li>
+            </div>
+          </li>
+        </ul>
       </div>
     </el-form-item>
     <el-form-item>
@@ -54,7 +77,7 @@ import { addCourse, updateConfig } from './sever';
 
 const router = useRouter();
 const formEl = ref(null);
-const form = reactive({
+const form = ref({
   name: '',
   type: '',
   hasUrl: 0,
@@ -66,21 +89,25 @@ const form = reactive({
 })
 
 const initCourseNum = function () {
-  form.chapter = [];
-  form.section = [];
+  form.value.chapter = [];
+  form.value.section = [];
 }
 
 const onChapterChange = function (chapterIdx) {
-  form.section[chapterIdx] = [];
+  form.value.section[chapterIdx] = [];
 }
 
 const onSectionChange = function(e, chapterIdx, sectionIdx) {
   let { data } = e;
   data = Number(data);
-  if (form.section[chapterIdx]) {
-    form.section[chapterIdx][sectionIdx] = data;
+  if (form.value.section[chapterIdx]) {
+    if (data) {
+      form.value.section[chapterIdx][sectionIdx] = data;
+    } else {
+      form.value.section[chapterIdx].splice(sectionIdx, 1);
+    }
   } else {
-    form.section[chapterIdx] = [data];
+    form.value.section[chapterIdx] = [data];
   }
 }
 
@@ -101,7 +128,7 @@ const onValid = async () => {
 const onRealSubmit = async (callback) => {
   const flag = await onValid();
   if (flag) {
-    const { name, type, url, section } = form;
+    const { name, type, url, section } = form.value;
     const courseInfo = {
       name,
       type,
@@ -132,11 +159,12 @@ const onSubmitAndTry = async () => {
 }
 
 const customValidate = () => {
-  if (form.partNum === 0) {
+  const { partNum, chapter, section } = form.value;
+  if (partNum === 0) {
     alert('课程篇数不能为0');
     return false;
   }
-  if (!form.partNum || form.chapter.length != form.partNum || form.chapter.filter(item => !item).length > 0 || form.section.map(item => item.length).reduce((a, b) => a + b, 0) !== form.chapter.reduce((a, b) => a + b, 0)) {
+  if (!partNum ||chapter.length != partNum || chapter.filter(item => !item).length > 0 || section.map(item => item.length).reduce((a, b) => a + b, 0) !== chapter.reduce((a, b) => a + b, 0)) {
     alert('请先将课程目录配置补充完整');
     return false;
   }
@@ -167,8 +195,14 @@ const rules = reactive({
 
 <style scoped>
 .section-li {
-  margin-left: 15px;
+  margin-left: 25px;
   list-style: circle;
+}
+
+.section-title-li {
+  margin-left: 25px;
+  text-align: left;
+  list-style: disc;
 }
 input {
   border: 1px solid #dcdfe6;
