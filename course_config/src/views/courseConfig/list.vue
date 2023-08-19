@@ -12,7 +12,7 @@
         <el-input v-model="search" size="small" placeholder="搜索课程" />
       </template>
       <template #default="scope">
-        <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
+        <el-button size="small" @click="handleEdit(scope.row)"
           >编辑</el-button
         >
         <el-button
@@ -27,11 +27,13 @@
 </template>
 
 <script setup>
-// import HelloWorld from '../../components/HelloWorld.vue';
 import { onMounted, ref } from 'vue';
-import { ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus';
+import { useRouter } from 'vue-router';
 import { getCourseList, deleteCourse } from './sever';
 import { CourseTitleMap } from '../../common';
+
+const router = useRouter();
 
 const tableList = ref([]);
 const search = ref('');
@@ -58,8 +60,15 @@ const handleDelete = async (row) => {
   updateView();
 }
 
-const handleEdit = async () => {
-  
+const handleEdit = async (row) => {
+  const { id } = row;
+  router.push({
+    path: '/edit',
+    query: {
+      id,
+      pageType: 'edit'
+    }
+  })
 }
 
 </script>

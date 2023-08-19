@@ -1,7 +1,5 @@
-// const Home = () => import('../components/HelloWorld.vue');
 const List = () => import('../views/courseConfig/list.vue');
-const Add = () => import('../views/courseConfig/add.vue');
-// import { projectName } from '../utils';
+const Edit = () => import('../views/courseConfig/edit.vue');
 
 export const routes = [
   {
@@ -23,6 +21,14 @@ export const routes = [
     meta: {
       title: '添加课程'
     },
-    component: Add,
+    component: Edit,
+  },
+  {
+    path: '/edit',
+    meta: {
+      title: '修改课程',
+      hidden: true
+    },
+    component: Edit,
   },
 ];

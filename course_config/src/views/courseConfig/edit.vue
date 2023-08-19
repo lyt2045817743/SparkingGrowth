@@ -1,4 +1,8 @@
 <template>
+  <el-breadcrumb v-if="pageType === 'edit'" :separator-icon="ArrowRight" class="breadcrumb">
+    <el-breadcrumb-item :to="{ path: '/list' }">课程列表</el-breadcrumb-item>
+    <el-breadcrumb-item>编辑课程</el-breadcrumb-item>
+  </el-breadcrumb>
   <el-form ref="formEl" :model="form" label-width="150px" :rules="rules">
     <el-form-item label="课程名称：" prop="name">
       <el-input v-model="form.name" style="width: 350px" placeholder="请输入" />
@@ -17,13 +21,13 @@
     <el-form-item v-if="form.hasUrl" label="资源链接(url)：" prop="url">
       <el-input v-model="form.url" type="text" style="width: 350px" placeholder="请输入" />
     </el-form-item>
-    <el-form-item label="课程目录配置：" required>
+    <el-form-item v-if="pageType !== 'edit'" label="课程目录配置：" required>
       <el-radio-group v-model="form.settingType">
         <el-radio :label="1">简单配置（仅章节数）</el-radio>
         <el-radio :label="2">部分配置（带题目）</el-radio>
       </el-radio-group>
     </el-form-item>
-    <el-form-item>
+    <el-form-item v-if="pageType !== 'edit'">
       <!-- 简单配置 -->
       <div v-if="form.settingType === 1">
         <div>【简单配置】该课程有<input v-model="form.partNum" type="number" @input="initCourseNum" placeholder="请输入篇数" />篇/部分</div>
@@ -60,22 +64,30 @@
         </ul>
       </div>
     </el-form-item>
-    <el-form-item>
+    <el-form-item v-if="pageType === 'edit'">
+      <el-button type="primary" @click="onEditSubmit">提交</el-button>
+      <el-button @click="onCancel">取消</el-button>
+    </el-form-item>
+    <el-form-item v-else>
       <el-button type="primary" @click="onSubmit">仅提交</el-button>
       <el-button type="primary" @click="onSubmitAndTry">提交并立即体验</el-button>
-      <el-button>取消</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { ElMessage } from 'element-plus'
+import { reactive, ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus';
+import { ArrowRight } from '@element-plus/icons-vue'
 import { CourseTitleMap } from '../../common';
-import { addCourse, updateConfig } from './sever';
+import { addCourse, updateConfig, getCourseById, updateCourse } from './sever';
 
+const route = useRoute();
 const router = useRouter();
+
+const { pageType, id: newId } = route.query;
+const id = Number(newId);
 const formEl = ref(null);
 const form = ref({
   name: '',
@@ -88,6 +100,21 @@ const form = ref({
   section: [],
   titleMap: {}
 })
+
+
+onMounted(() => {
+  if (pageType === 'edit') {
+    init();
+  }
+})
+
+const init = async () => {
+  const { name, url, type } = await getCourseById(id);
+  form.value.name = name;
+  form.value.url = url;
+  form.value.hasUrl = url ? 1 : 0;
+  form.value.type = type;
+}
 
 const initCourseNum = function () {
   form.value.chapter = [];
@@ -124,7 +151,11 @@ const onValid = async () => {
   let flag = false;
   await formEl.value.validate((valid) => {
     if (valid) {
-      flag = customValidate();
+      if (pageType === 'edit') {
+        flag = true;
+      } else {
+        flag = validateCourseTitle();
+      }
     } else {
       ElMessage({
         message: '课程信息校验未通过，请检查',
@@ -164,6 +195,24 @@ const onSubmit = async () => {
   });
 }
 
+const onEditSubmit = async () => {
+  const flag = await onValid();
+  if (flag) {
+    const { name, url, type, hasUrl } = form.value;
+    const params = {
+      name,
+      url: hasUrl ? url : '',
+      type
+    }
+    await updateCourse(id, params);
+    ElMessage({
+      message: '修改成功！',
+      type: 'success',
+    });
+    router.push('/list');
+  }
+}
+
 const onSubmitAndTry = async () => {
   onRealSubmit((courseId) => {
     updateConfig('currentCourseId', courseId);
@@ -171,7 +220,11 @@ const onSubmitAndTry = async () => {
   });
 }
 
-const customValidate = () => {
+const onCancel = () => {
+  router.go(-1);
+}
+
+const validateCourseTitle = () => {
   const { partNum, chapter, section } = form.value;
   if (partNum === 0) {
     ElMessage({
@@ -213,6 +266,9 @@ const rules = reactive({
 </script>
 
 <style scoped>
+.breadcrumb {
+  margin: 10px 0 25px;
+}
 .section-li {
   margin-left: 25px;
   list-style: circle;
