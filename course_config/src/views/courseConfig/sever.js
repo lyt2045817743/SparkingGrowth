@@ -11,6 +11,10 @@ async function addCourse(courseInfo) {
   return Promise.resolve(courseId);
 }
 
+async function deleteCourse(key) {
+  await db.delete('course', key);
+}
+
 async function updateConfig(key, value) {
   await db.put('config', { key, value });
 }
@@ -18,5 +22,6 @@ async function updateConfig(key, value) {
 export {
   getCourseList,
   addCourse,
-  updateConfig
+  updateConfig,
+  deleteCourse
 }
