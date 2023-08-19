@@ -71,6 +71,7 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus'
 import { CourseTitleMap } from '../../common';
 import { addCourse, updateConfig } from './sever';
 
@@ -125,7 +126,10 @@ const onValid = async () => {
     if (valid) {
       flag = customValidate();
     } else {
-      alert('课程信息校验未通过，请检查');
+      ElMessage({
+        message: '课程信息校验未通过，请检查',
+        type: 'warning',
+      });
     }
   })
   return Promise.resolve(flag);
@@ -152,7 +156,10 @@ const onRealSubmit = async (callback) => {
 
 const onSubmit = async () => {
   onRealSubmit(() => {
-    alert('添加成功！');
+    ElMessage({
+      message: '添加成功！',
+      type: 'success',
+    });
     router.push('/list');
   });
 }
@@ -167,11 +174,17 @@ const onSubmitAndTry = async () => {
 const customValidate = () => {
   const { partNum, chapter, section } = form.value;
   if (partNum === 0) {
-    alert('课程篇数不能为0');
+    ElMessage({
+        message: '课程篇数不能为0',
+        type: 'warning',
+      });
     return false;
   }
   if (!partNum ||chapter.length != partNum || chapter.filter(item => !item).length > 0 || section.map(item => item.length).reduce((a, b) => a + b, 0) !== chapter.reduce((a, b) => a + b, 0)) {
-    alert('请先将课程目录配置补充完整');
+    ElMessage({
+        message: '请先将课程目录配置补充完整',
+        type: 'warning',
+      });
     return false;
   }
   return true;
