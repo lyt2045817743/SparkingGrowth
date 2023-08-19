@@ -86,7 +86,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import dayjs from 'dayjs';
-import { ElMessage } from 'element-plus'
 import Tooltip from '@/components/Tooltip';
 import { getCurrentCourseInfo, updateCourseTitleMapById, addStudyLog, getCourseList, updateConfig } from './server';
 import { StudyLogManager } from './presenter'
@@ -166,10 +165,7 @@ function changeDisable(flag) {
 
 function onFinish() {
   if (!courseTitleMap.value[`Part${partNo.value}`] || !courseTitleMap.value[`Part${partNo.value}.${chapterNo.value}`] || !courseTitleMap.value[`Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`]) {
-    ElMessage({
-      message: '请先输入章节名称',
-      type: 'warning',
-    });
+    alert('请先输入章节名称');
   } else {
     isStudying.value = false;
     changeDisable(false);
