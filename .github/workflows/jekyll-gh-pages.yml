@@ -34,7 +34,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd SparkingGrowth_main
-          npm install
+          yarn
 
       - name: Build main app
         run: |
@@ -43,10 +43,10 @@ jobs:
       - name: Build and deploy sub-apps
         run: |
           cd ../what_to_study_today
-          npm install
+          yarn
           npm run build
           cd ../course_config
-          npm install
+          yarn
           npm run build
 
       - name: Build with Jekyll
