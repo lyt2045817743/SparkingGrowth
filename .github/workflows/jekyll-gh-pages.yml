@@ -33,7 +33,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd sparkingGrowth_main
+          cd /sparkingGrowth_main
           npm install
 
       - name: Build main app
@@ -52,7 +52,7 @@ jobs:
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
-          source: ./sparkingGrowth_main
+          source: ./
           destination: ./_site
           
       - name: Upload artifact
