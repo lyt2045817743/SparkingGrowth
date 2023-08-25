@@ -33,7 +33,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd /sparkingGrowth_main
+          cd ../../sparkingGrowth_main
           npm install
 
       - name: Build main app
