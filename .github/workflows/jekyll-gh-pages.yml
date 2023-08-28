@@ -62,6 +62,17 @@ jobs:
           cd course_config
           yarn
           npm run build
+
+      - name: Delete node_modules Markdown files
+        run: |
+          find . -path "**/node_modules/*.md" -delete
+          
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          exclude: "**/node_modules/**/*.md"
+          destination: ./_site
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
