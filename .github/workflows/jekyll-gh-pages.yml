@@ -70,9 +70,7 @@ jobs:
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
-          source: ./
-          index-file: SparkingGrowth_main/index.html
-          exclude: "**/node_modules/**/*.md"
+          source: ./SparkingGrowth_main
           destination: ./_site
           
       - name: Upload artifact
