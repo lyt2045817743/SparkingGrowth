@@ -51,11 +51,14 @@ jobs:
         with:
           node-version: 14
 
-      - name: Build and deploy sub-apps
+      - name: Build and deploy what_to_study_today
         run: |
           cd what_to_study_today
           yarn
           npm run build
+
+      - name: Build and deploy course_config
+        run: |
           cd course_config
           yarn
           npm run build
