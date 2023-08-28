@@ -72,7 +72,7 @@ jobs:
         with:
           source: ./SparkingGrowth_main/dist
           destination: ./_site
-          baseurl: /SparkingGrowth
+          baseurl: /SparkingGrowth_main/dist
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
