@@ -46,6 +46,11 @@ jobs:
           cd SparkingGrowth_main
           npm run build
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
       - name: Build and deploy sub-apps
         run: |
           cd /what_to_study_today
