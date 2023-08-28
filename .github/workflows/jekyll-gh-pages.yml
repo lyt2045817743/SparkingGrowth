@@ -62,13 +62,6 @@ jobs:
           cd course_config
           yarn
           npm run build
-
-      - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./
-          exclude: "**/node_modules/**/*.md"
-          destination: ./_site
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
