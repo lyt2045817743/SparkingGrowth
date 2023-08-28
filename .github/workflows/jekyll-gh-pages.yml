@@ -53,10 +53,10 @@ jobs:
 
       - name: Build and deploy sub-apps
         run: |
-          cd ../what_to_study_today
+          cd what_to_study_today
           yarn
           npm run build
-          cd ../course_config
+          cd course_config
           yarn
           npm run build
 
