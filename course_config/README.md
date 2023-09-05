@@ -1,5 +1,10 @@
 # course_config
 
+## 简介
+
+## 功能模块
+[ ] 添加课程简介
+
 ## Project setup
 ```
 yarn install
