@@ -1,12 +1,15 @@
 <template>
   <el-container>
     <el-header class="header">
-      <h1>新增待办</h1>
+      <el-breadcrumb class="breadcrumb">
+        <el-breadcrumb-item :to="{ path: '/todo' }">待办列表</el-breadcrumb-item>
+        <el-breadcrumb-item>{{ pageType === 'edit' ? '编辑' : '新增' }}</el-breadcrumb-item>
+      </el-breadcrumb>
       <el-button class="back-btn" type="info" round @click="onCancel">返回</el-button>
     </el-header>
     <el-main>
       <el-form :model="form" label-width="120px">
-        <el-form-item label="配置方式：" required>
+        <el-form-item v-if="pageType !== 'edit'" label="配置方式：" required>
           <el-radio-group v-model="form.configType">
             <el-radio :label="0">简单配置</el-radio>
             <el-radio :label="1">完整配置</el-radio>
@@ -18,7 +21,7 @@
         <div v-if="form.configType === 1">
           <el-form-item label="待办类型：">
             <el-select v-model="form.type" placeholder="请选择">
-              <!-- <el-option :label="0" value="未定义" /> -->
+              <el-option v-for="key in Object.keys(TodoTypeLabel)" :label="TodoTypeLabel[key]" :value="+key" />
             </el-select>
           </el-form-item>
           <el-form-item label="截止时间：">
@@ -50,22 +53,47 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import dayjs from 'dayjs';
-import { addTodo } from './serve.js'
+import { ElMessage, dayjs } from 'element-plus';
+import { addTodo, getTodoById, updateTodo } from './serve.js';
+import { TodoTypeLabel } from './constant';
 
-// const route = useRoute();
+const route = useRoute();
 const router = useRouter();
+const { pageType, id: newId } = route.query;
+const id = Number(newId);
 
 const form = ref({
-  configType: 0,
+  configType: 1,
   content: '',
   deadlineDate: '',
   deadlineTime: '',
   desc: '',
   type: ''
 })
+
+onMounted(() => {
+  if (pageType === 'edit') {
+    init();
+  } else {
+    form.value.configType = 0
+  }
+})
+
+const init = async () => {
+  const { content, createTime, deadline, desc, type, status } = await getTodoById(id);
+  // form.value.name = name;
+  // form.value.url = url;
+  // form.value.hasUrl = url ? 1 : 0;
+  // form.value.type = type;
+
+  const deadlineDate = deadline.slice(0, 10)
+  const deadlineTime = deadline.slice(11, 16)
+  console.log(deadlineDate, deadlineTime);
+
+  form.value = Object.assign(form.value, { content, createTime, desc, type, status, deadlineDate, deadlineTime })
+}
 
 const onSubmit = async () => {
   const { content, desc, type, deadlineDate, deadlineTime } = form.value;
@@ -79,7 +107,20 @@ const onSubmit = async () => {
     type: type || 0,
     desc
   };
-  addTodo(todoInfo);
+  let message = '添加成功';
+  if (pageType === 'edit') {
+    delete todoInfo.createTime;
+    delete todoInfo.status;
+    await updateTodo(id, todoInfo);
+    message = '修改成功';
+  } else {
+    await addTodo(todoInfo);
+  }
+  ElMessage({
+    message,
+    type: 'success',
+  });
+  router.push('/todo');
 }
 
 const onCancel = () => {

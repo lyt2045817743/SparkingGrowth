@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header class="header">
-      <el-breadcrumb :separator-icon="ArrowRight" class="breadcrumb">
+      <el-breadcrumb class="breadcrumb">
         <el-breadcrumb-item :to="{ path: '/list' }">学习资源列表</el-breadcrumb-item>
         <el-breadcrumb-item>{{ pageType === 'edit' ? '编辑' : '新增' }}</el-breadcrumb-item>
       </el-breadcrumb>
@@ -86,7 +86,6 @@
 import { reactive, ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import { ArrowRight } from '@element-plus/icons-vue'
 import { CourseTitleMap } from '../../common';
 import { addCourse, updateConfig, getCourseById, updateCourse } from './sever';
 

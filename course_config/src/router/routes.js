@@ -1,6 +1,9 @@
 const List = () => import('../views/courseConfig/list.vue');
 const Edit = () => import('../views/courseConfig/edit.vue');
 
+const TodoList = () => import('../views/todoConfig/list.vue')
+const TodoEdit = () => import('../views/todoConfig/edit.vue');
+
 export const routes = [
   {
     path: '/',
@@ -12,14 +15,15 @@ export const routes = [
   {
     path: '/list',
     meta: {
-      title: '学习资源列表'
+      title: '学习资源管理'
     },
     component: List,
   },
   {
     path: '/add',
     meta: {
-      title: '添加学习资源'
+      title: '添加学习资源',
+      hidden: true
     },
     component: Edit,
   },
@@ -30,5 +34,28 @@ export const routes = [
       hidden: true
     },
     component: Edit,
+  },
+  {
+    path: '/todo',
+    meta: {
+      title: '待办管理'
+    },
+    component: TodoList,
+  },
+  {
+    path: '/todoAdd',
+    meta: {
+      title: '添加待办',
+      hidden: true
+    },
+    component: TodoEdit,
+  },
+  {
+    path: '/todoEdit',
+    meta: {
+      title: '编辑待办',
+      hidden: true
+    },
+    component: TodoEdit,
   },
 ];
