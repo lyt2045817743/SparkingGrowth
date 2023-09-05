@@ -51,20 +51,28 @@ jobs:
         with:
           node-version: 14
 
-      - name: Build and deploy sub-apps
+      - name: Build and deploy what_to_study_today
         run: |
-          cd /what_to_study_today
-          yarn
-          npm run build
-          cd /course_config
+          cd what_to_study_today
           yarn
           npm run build
 
+      - name: Build and deploy course_config
+        run: |
+          cd course_config
+          yarn
+          npm run build
+
+      - name: Delete node_modules Markdown files
+        run: |
+          find . -path "**/node_modules/*.md" -delete
+          
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
-          source: ./
+          source: ./SparkingGrowth_main/dist
           destination: ./_site
+          baseurl: /SparkingGrowth_main/dist
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
