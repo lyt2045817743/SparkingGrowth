@@ -1,15 +1,15 @@
 <template>
   <el-table :data="tableList">
     <el-table-column type="index" label="序号" width="80" />
-    <el-table-column prop="name" label="课程名称" />
-    <el-table-column prop="type" label="课程类型">
+    <el-table-column prop="name" label="资源名称" />
+    <el-table-column prop="type" label="资源类型">
       <template #default="scope">
         {{ CourseTitleMap[scope.row.type] }}
       </template>
     </el-table-column>
     <el-table-column align="right">
       <template #header>
-        <el-input v-model="search" size="small" placeholder="搜索课程" />
+        <el-input v-model="search" size="small" placeholder="搜索学习资源" />
       </template>
       <template #default="scope">
         <el-button size="small" @click="handleEdit(scope.row)"

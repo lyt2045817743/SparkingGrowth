@@ -47,16 +47,16 @@
         </div>
         <div class="current-course">
           <div class="cc-title">
-            <span class="cct-text">当前课程</span>
-            <Tooltip content="点击系统左上角，在首页【课程配置后台】进行配置" placement="top" :left="50">
+            <span class="cct-text">当前学习资源</span>
+            <Tooltip content="点击系统左上角，在首页【内容配置后台】进行配置" placement="top" :left="50">
               <img src="@/assets/icons/help-filling.png" width="15" height="15" class="help-icon" />
             </Tooltip>
             <span>：</span>
           </div>
-          <select class="change-course" placeholder="切换课程" @change="onCourseChange">
+          <select class="change-course" placeholder="切换学习资源" @change="onCourseChange">
             <option v-for="item in courseList" :key="item.id" :value="item.id" class="cc-name" :selected="item.id === courseInfo.id">{{ item.name }}</option>
           </select>
-          <a v-if="courseInfo.url" :href="courseInfo.url" target="_blank">课程链接</a>
+          <a v-if="courseInfo.url" :href="courseInfo.url" target="_blank">学习资源链接</a>
         </div>
       </article>
       <aside>

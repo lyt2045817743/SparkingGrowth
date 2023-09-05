@@ -12,21 +12,21 @@ export const routes = [
   {
     path: '/list',
     meta: {
-      title: '课程列表'
+      title: '学习资源列表'
     },
     component: List,
   },
   {
     path: '/add',
     meta: {
-      title: '添加课程'
+      title: '添加学习资源'
     },
     component: Edit,
   },
   {
     path: '/edit',
     meta: {
-      title: '修改课程',
+      title: '修改学习资源',
       hidden: true
     },
     component: Edit,

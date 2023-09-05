@@ -1,13 +1,13 @@
 <template>
   <el-breadcrumb v-if="pageType === 'edit'" :separator-icon="ArrowRight" class="breadcrumb">
-    <el-breadcrumb-item :to="{ path: '/list' }">课程列表</el-breadcrumb-item>
-    <el-breadcrumb-item>编辑课程</el-breadcrumb-item>
+    <el-breadcrumb-item :to="{ path: '/list' }">学习资源列表</el-breadcrumb-item>
+    <el-breadcrumb-item>编辑</el-breadcrumb-item>
   </el-breadcrumb>
   <el-form ref="formEl" :model="form" label-width="150px" :rules="rules">
-    <el-form-item label="课程名称：" prop="name">
+    <el-form-item label="资源名称：" prop="name">
       <el-input v-model="form.name" style="width: 350px" placeholder="请输入" />
     </el-form-item>
-    <el-form-item label="课程类型：" prop="type">
+    <el-form-item label="资源类型：" prop="type">
       <el-select v-model="form.type" placeholder="请选择">
         <el-option v-for="(key, val) in CourseTitleMap" :key="key" :label="key" :value="Number(val)" />
       </el-select>
@@ -21,7 +21,7 @@
     <el-form-item v-if="form.hasUrl" label="资源链接(url)：" prop="url">
       <el-input v-model="form.url" type="text" style="width: 350px" placeholder="请输入" />
     </el-form-item>
-    <el-form-item v-if="pageType !== 'edit'" label="课程目录配置：" required>
+    <el-form-item v-if="pageType !== 'edit'" label="目录配置：" required>
       <el-radio-group v-model="form.settingType">
         <el-radio :label="1">简单配置（仅章节数）</el-radio>
         <el-radio :label="2">部分配置（带题目）</el-radio>
@@ -30,7 +30,7 @@
     <el-form-item v-if="pageType !== 'edit'">
       <!-- 简单配置 -->
       <div v-if="form.settingType === 1">
-        <div>【简单配置】该课程有<input v-model="form.partNum" type="number" @input="initCourseNum" placeholder="请输入篇数" />篇/部分</div>
+        <div>【简单配置】该学习资源有<input v-model="form.partNum" type="number" @input="initCourseNum" placeholder="请输入篇数" />篇/部分</div>
           <ul v-if="form.partNum">
             <li v-for="num in [...Array(form.partNum)].map((_k, i )=> i)" :key="num">
               <span>第{{ num + 1 }}篇/部分有<input type="number" placeholder="请输入章数" v-model="form.chapter[num]" @input="() => onChapterChange(num)" />章</span>
@@ -44,7 +44,7 @@
       </div>
       <!-- 部分配置（带题目） -->
       <div v-else class="ccb-inner">
-        <div>【部分配置】该课程有<input v-model="form.partNum" type="number" @input="initCourseNum" placeholder="请输入篇数" />篇/部分</div>
+        <div>【部分配置】该学习资源有<input v-model="form.partNum" type="number" @input="initCourseNum" placeholder="请输入篇数" />篇/部分</div>
         <ul v-if="form.partNum">
           <li v-for="num in [...Array(form.partNum)].map((_k, i )=> i)" :key="num">
               <input :placeholder="`请输入第${ num + 1 }篇题目`" @change="(val) => onChangeTitle(val, num, sectionNum)" />
@@ -158,7 +158,7 @@ const onValid = async () => {
       }
     } else {
       ElMessage({
-        message: '课程信息校验未通过，请检查',
+        message: '资源信息校验未通过，请检查',
         type: 'warning',
       });
     }
@@ -228,14 +228,14 @@ const validateCourseTitle = () => {
   const { partNum, chapter, section } = form.value;
   if (partNum === 0) {
     ElMessage({
-        message: '课程篇数不能为0',
+        message: '资源篇数不能为0',
         type: 'warning',
       });
     return false;
   }
   if (!partNum ||chapter.length != partNum || chapter.filter(item => !item).length > 0 || section.map(item => item.length).reduce((a, b) => a + b, 0) !== chapter.reduce((a, b) => a + b, 0)) {
     ElMessage({
-        message: '请先将课程目录配置补充完整',
+        message: '请先将资源目录配置补充完整',
         type: 'warning',
       });
     return false;
@@ -245,19 +245,19 @@ const validateCourseTitle = () => {
 
 const rules = reactive({
   name: [
-    { required: true, message: '请输入课程名称', trigger: 'blur' },
+    { required: true, message: '请输入资源名称', trigger: 'blur' },
   ],
   type: [
     {
       required: true,
-      message: '请选择课程类型',
+      message: '请选择资源类型',
       trigger: 'change',
     },
   ],
   url: [
     {
       required: true,
-      message: '请输入课程链接',
+      message: '请输入资源链接',
       trigger: 'blur',
     },
   ],
