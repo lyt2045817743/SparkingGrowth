@@ -1,0 +1,105 @@
+<template>
+  <el-container>
+    <el-header class="header">
+      <h1>新增待办</h1>
+      <el-button class="back-btn" type="info" round @click="onCancel">返回</el-button>
+    </el-header>
+    <el-main>
+      <el-form :model="form" label-width="120px">
+        <el-form-item label="配置方式：" required>
+          <el-radio-group v-model="form.configType">
+            <el-radio :label="0">简单配置</el-radio>
+            <el-radio :label="1">完整配置</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="待办内容：" required>
+          <el-input v-model="form.content" style="width: 350px" placeholder="请输入" />
+        </el-form-item>
+        <div v-if="form.configType === 1">
+          <el-form-item label="待办类型：">
+            <el-select v-model="form.type" placeholder="请选择">
+              <!-- <el-option :label="0" value="未定义" /> -->
+            </el-select>
+          </el-form-item>
+          <el-form-item label="截止时间：">
+            <el-date-picker
+              v-model="form.deadlineDate"
+              type="date"
+              placeholder="截止日期"
+              style="width: 200px"
+            />
+            <span class="text-split">-</span>
+            <el-time-select
+              v-model="form.deadlineTime"
+              start="00:00"
+              step="00:30"
+              end="23:30"
+              placeholder="具体时间"
+            />
+          </el-form-item>
+          <el-form-item label="待办详情：">
+            <el-input v-model="form.desc" placeholder="请输入" type="textarea" :rows="4" style="width: 700px" />
+          </el-form-item>
+        </div>
+        <el-form-item>
+          <el-button :disabled="!form.content" type="primary" @click="onSubmit">提交</el-button>
+        </el-form-item>
+      </el-form>
+    </el-main>
+  </el-container>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import dayjs from 'dayjs';
+import { addTodo } from './serve.js'
+
+// const route = useRoute();
+const router = useRouter();
+
+const form = ref({
+  configType: 0,
+  content: '',
+  deadlineDate: '',
+  deadlineTime: '',
+  desc: '',
+  type: ''
+})
+
+const onSubmit = async () => {
+  const { content, desc, type, deadlineDate, deadlineTime } = form.value;
+  const createTime = Date.now()
+  const deadline = deadlineDate && deadlineTime ? `${dayjs(deadlineDate).format('YYYY-MM-DD')} ${deadlineTime}:00` : '';
+  const todoInfo = {
+    content,
+    createTime,
+    deadline: deadline || dayjs(createTime).add(1, 'day').format('YYYY-MM-DD 00:00:00'),
+    status: 0,
+    type: type || 0,
+    desc
+  };
+  addTodo(todoInfo);
+}
+
+const onCancel = () => {
+  router.go(-1);
+};
+</script>
+
+<style scoped>
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5px;
+  border-bottom: 1px solid #dcdfe6;
+}
+.main {
+  padding-top: 0;
+}
+.text-split {
+  text-align: center;
+  width: 50px;
+}
+</style>

@@ -13,6 +13,7 @@ export async function initDatabase() {
       initCourseStore();
       initStudyLogStore();
       initConfigStore();
+      initTodoStore();
     },
   })
   setGlobalState('db', db);
@@ -30,11 +31,9 @@ function initStudyLogStore() {
   let studyLogStore;
   if (!db.objectStoreNames.contains('studyLog')) {
     studyLogStore = db.createObjectStore('studyLog', { keyPath: 'id' });
-  }  else {
-    studyLogStore = curTransaction.objectStore('studyLog');
+    studyLogStore.createIndex('date_idx', 'date');
+    studyLogStore.createIndex('courseId_idx', 'courseId');
   }
-  studyLogStore.createIndex('date_idx', 'date');
-  studyLogStore.createIndex('courseId_idx', 'courseId');
 }
 
 function initConfigStore() {
@@ -42,6 +41,12 @@ function initConfigStore() {
   if (!db.objectStoreNames.contains('config')) {
     configStore = db.createObjectStore('config', { keyPath: 'key' });
     configStore.add({ key: 'currentCourseId', value: DefaultCourseInfo.id });
+  }
+}
+
+function initTodoStore() {
+  if (!db.objectStoreNames.contains('todo')) {
+    db.createObjectStore('todo', { keyPath: 'key', autoIncrement: true });
   }
 }
 

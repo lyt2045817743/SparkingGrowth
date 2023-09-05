@@ -4,7 +4,7 @@
       <el-aside width="200px">
         <Menu />
       </el-aside>
-      <el-main>
+      <el-main class="app-main">
         <router-view :key="$route.path" />
       </el-main>
     </el-container>
@@ -27,11 +27,13 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   display: flex;
 }
 .menu {
   height: calc(100vh - 55px);
+}
+.app-main {
+  padding: 0;
 }
 </style>
