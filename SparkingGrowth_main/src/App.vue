@@ -4,6 +4,9 @@
       <img width="40" height="40" class="home-logo" src="./assets/logo.png" />
       <span class="home-title">婷的空间</span>
     </div>
+    <div class="quick-entry-box">
+      <router-link v-for="item in QuickEntry" :to="item.path">{{ item.title }}</router-link>
+    </div>
   </header>
   <router-view v-show="route.name" />
   <div v-show="!route.name" id="container" />
@@ -11,6 +14,8 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
+import QuickEntry from './constant/quickEntry';
+
 const route = useRoute();
 
 const goHome = () => {
@@ -22,8 +27,9 @@ const goHome = () => {
 header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   height: 55px;
-  padding-left: 15px;
+  padding: 0 15px;
   background-color: #4c8dae;
   font-family: cursive;
   color: white;
@@ -44,5 +50,15 @@ header {
 div {
   font-family: cursive;
   font-size: 20px;
+}
+.quick-entry-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+a {
+  color: #ffffff;
+  font-size: 15px;
+  text-decoration: none;
 }
 </style>
