@@ -22,9 +22,43 @@ export const TodoStatusTagType = {
 }
 
 export const TodoTypeMap = {
-  Undefined: 0
+  Undefined: 0,
+  PlanAndSummary: 1,
+  Study: 2,
+  Read: 3,
+  CycleByWeek: 4,
+  CycleByMonth: 5
 }
 
 export const TodoTypeLabel = {
-  [TodoTypeMap.Undefined]: '未定义'
+  [TodoTypeMap.Undefined]: '未定义',
+  [TodoTypeMap.PlanAndSummary]: '计划与总结',
+  [TodoTypeMap.Study]: '学习',
+  [TodoTypeMap.Read]: '阅读',
+  [TodoTypeMap.CycleByWeek]: '周循环',
+  [TodoTypeMap.CycleByMonth]: '月循环'
 }
+
+function getCascadeOptionsByFilter(filters) {
+  return filters.map((key) => ({
+    value: key,
+    label: TodoTypeLabel[key]
+  }));
+}
+
+export const TypeCascadeOptions = [
+  {
+    value: TodoTypeMap.Undefined,
+    label: TodoTypeLabel[TodoTypeMap.Undefined]
+  },
+  {
+    value: 100,
+    label: '基础分类',
+    children: getCascadeOptionsByFilter([TodoTypeMap.PlanAndSummary, TodoTypeMap.Study, TodoTypeMap.Read])
+  },
+  {
+    value: 101,
+    label: '循环分类',
+    children: getCascadeOptionsByFilter([TodoTypeMap.CycleByWeek, TodoTypeMap.CycleByMonth])
+  }
+]

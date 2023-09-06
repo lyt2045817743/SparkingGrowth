@@ -20,9 +20,7 @@
         </el-form-item>
         <div v-if="form.configType === 1">
           <el-form-item label="待办类型：">
-            <el-select v-model="form.type" placeholder="请选择">
-              <el-option v-for="key in Object.keys(TodoTypeLabel)" :label="TodoTypeLabel[key]" :value="+key" />
-            </el-select>
+            <el-cascader v-model="form.type" collapse-tags collapse-tags-tooltip :props="props" style="width: 250px" placeholder="请选择" :options="TypeCascadeOptions" />
           </el-form-item>
           <el-form-item label="截止时间：">
             <el-date-picker
@@ -57,7 +55,7 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage, dayjs } from 'element-plus';
 import { addTodo, getTodoById, updateTodo } from './serve.js';
-import { TodoTypeLabel } from './constant';
+import { TodoTypeMap, TypeCascadeOptions } from './constant';
 
 const route = useRoute();
 const router = useRouter();
@@ -70,8 +68,13 @@ const form = ref({
   deadlineDate: '',
   deadlineTime: '',
   desc: '',
-  type: ''
+  type: []
 })
+
+const props = {
+  multiple: true,
+  emitPath: false
+};
 
 onMounted(() => {
   if (pageType === 'edit') {
@@ -83,15 +86,8 @@ onMounted(() => {
 
 const init = async () => {
   const { content, createTime, deadline, desc, type, status } = await getTodoById(id);
-  // form.value.name = name;
-  // form.value.url = url;
-  // form.value.hasUrl = url ? 1 : 0;
-  // form.value.type = type;
-
   const deadlineDate = deadline.slice(0, 10)
   const deadlineTime = deadline.slice(11, 16)
-  console.log(deadlineDate, deadlineTime);
-
   form.value = Object.assign(form.value, { content, createTime, desc, type, status, deadlineDate, deadlineTime })
 }
 
@@ -104,7 +100,7 @@ const onSubmit = async () => {
     createTime,
     deadline: deadline || dayjs(createTime).add(1, 'day').format('YYYY-MM-DD 00:00:00'),
     status: 0,
-    type: type || 0,
+    type: type.includes(TodoTypeMap.Undefined) ? [TodoTypeMap.Undefined] : type,
     desc
   };
   let message = '添加成功';
