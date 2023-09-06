@@ -20,7 +20,16 @@
         </el-form-item>
         <div v-if="form.configType === 1">
           <el-form-item label="待办类型：">
-            <el-cascader v-model="form.type" collapse-tags collapse-tags-tooltip :props="props" style="width: 250px" placeholder="请选择" :options="TypeCascadeOptions" />
+            <el-cascader
+              v-model="form.type"
+              collapse-tags
+              collapse-tags-tooltip
+              :show-all-levels="false"
+              :props="props"
+              style="width: 250px"
+              placeholder="请选择"
+              :options="TypeCascadeOptions"
+            />
           </el-form-item>
           <el-form-item label="截止时间：">
             <el-date-picker
@@ -100,7 +109,7 @@ const onSubmit = async () => {
     createTime,
     deadline: deadline || dayjs(createTime).add(1, 'day').format('YYYY-MM-DD 00:00:00'),
     status: 0,
-    type: type.includes(TodoTypeMap.Undefined) ? [TodoTypeMap.Undefined] : type,
+    type: type.includes(TodoTypeMap.Undefined) || type.length === 0 ? [TodoTypeMap.Undefined] : type,
     desc
   };
   let message = '添加成功';
