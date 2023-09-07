@@ -14,6 +14,7 @@ export async function initDatabase() {
       initStudyLogStore();
       initConfigStore();
       initTodoStore();
+      initPointStore();
     },
   })
   setGlobalState('db', db);
@@ -47,6 +48,12 @@ function initConfigStore() {
 function initTodoStore() {
   if (!db.objectStoreNames.contains('todo')) {
     db.createObjectStore('todo', { keyPath: 'key', autoIncrement: true });
+  }
+}
+
+function initPointStore() {
+  if (!db.objectStoreNames.contains('point')) {
+    db.createObjectStore('point', { keyPath: 'id', autoIncrement: true });
   }
 }
 

@@ -26,8 +26,6 @@ export const TodoTypeMap = {
   Summary: 1,
   Study: 2,
   Read: 3,
-  CycleByWeek: 4,
-  CycleByMonth: 5,
   Simple: 6,
   Dev: 7,
   Plan: 8
@@ -40,9 +38,16 @@ export const TodoTypeLabel = {
   [TodoTypeMap.Plan]: '计划',
   [TodoTypeMap.Study]: '学习',
   [TodoTypeMap.Read]: '阅读',
-  [TodoTypeMap.Dev]: '研发',
-  [TodoTypeMap.CycleByWeek]: '周循环',
-  [TodoTypeMap.CycleByMonth]: '月循环'
+  [TodoTypeMap.Dev]: '研发'
+}
+
+export const TodoTypeScore = {
+  [TodoTypeMap.Simple]: 0.5,
+  [TodoTypeMap.Summary]: 2,
+  [TodoTypeMap.Plan]: 1,
+  [TodoTypeMap.Study]: 5,
+  [TodoTypeMap.Read]: 1,
+  [TodoTypeMap.Dev]: 2
 }
 
 function getCascadeOptionsByFilter(filters) {
@@ -62,10 +67,5 @@ export const TypeCascadeOptions = [
     value: 101,
     label: '基础分类',
     children: getCascadeOptionsByFilter([TodoTypeMap.Study, TodoTypeMap.Plan, TodoTypeMap.Summary, TodoTypeMap.Dev, TodoTypeMap.Read])
-  },
-  {
-    value: 102,
-    label: '循环分类',
-    children: getCascadeOptionsByFilter([TodoTypeMap.CycleByWeek, TodoTypeMap.CycleByMonth])
   }
 ]
