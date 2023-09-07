@@ -2,13 +2,16 @@
   <div class="common-layout">
     <el-container>
       <el-header class="header">
-        <h5>待办列表</h5>
+        <div style="display: flex; align-items: center;">
+          <h5>待办列表</h5>
+          <el-checkbox checked style="margin-left: 15px;" label="仅展示今晚前截止的待办" size="large" @change="showTheTodayTodo" />
+        </div>
         <el-button class="add-btn" type="primary" round @click="handleAdd">新增待办</el-button>
       </el-header>
       <el-main class="main">
         <el-table ref="tableRef" row-key="date" :data="tableList">
           <el-table-column type="index" label="序号" width="60" />
-          <el-table-column prop="content" label="待办内容" width="220" />
+          <el-table-column prop="content" label="待办内容" min-width="150" />
           <el-table-column prop="status" label="状态" width="80" :filters="TodoStatusTagConfig"
             :filter-method="filterTag" filter-placement="bottom-end">
             <template #default="scope">
@@ -16,16 +19,16 @@
               }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="deadline" label="截止时间（倒计时）" width="220">
+          <el-table-column prop="deadline" label="截止时间（倒计时）" width="260">
             <template #default="scope">
               <span>
                 {{ scope.row.deadline }}
-                <span v-if="getDeadlineExtraText(scope.row)" :style="{ color: getDeadlineExtraText(scope.row) === '<1' ? 'red' : 'black' }">{{ `（${getDeadlineExtraText(scope.row)}天）` }}</span>
+                <span v-if="getDeadlineExtraText(scope.row)" :style="{ color: getDeadlineExtraText(scope.row).color }">{{ `（${getDeadlineExtraText(scope.row).text}天）` }}</span>
               </span>
             </template>
           </el-table-column>
           <el-table-column prop="type" label="分类（积分）" :formatter="formatter" width="130" />
-          <el-table-column prop="desc" label="待办详情" min-width="180">
+          <el-table-column prop="desc" label="待办详情" min-width="220">
             <template #default="scope">
               {{ scope.row.desc || '--' }}
             </template>
@@ -55,6 +58,7 @@ import { deleteTodo, getTodoList, updateTodo, addPoint } from './serve'
 const router = useRouter();
 
 const tableList = ref([]);
+let totalList;
 
 onMounted(() => {
   getData();
@@ -66,6 +70,21 @@ const updateView = () => {
 
 const getData = async () => {
   tableList.value = await getTodoList();
+  totalList = tableList.value;
+  showTheTodayTodo(true);
+}
+
+const showTheTodayTodo = (value) => {
+  if (value) {
+    tableList.value = totalList.filter((item) => {
+      const { deadline, status } = item;
+      const todayEnding = dayjs().add(1, 'day').format('YYYY-MM-DD 23:59:59');
+      const isComplete = [TodoStatusMap.Done, TodoStatusMap.DoneButOverdue].includes(status);
+      return dayjs(todayEnding).valueOf() > dayjs(deadline).valueOf() && !isComplete;
+    })
+  } else {
+    tableList.value = totalList;
+  }
 }
 
 const formatter = (row) => {
@@ -77,9 +96,18 @@ const formatter = (row) => {
 
 const getDeadlineExtraText = (row) => {
   const { deadline, status } = row;
-  const diffDays = dayjs(deadline).diff(dayjs(), 'day') || '<1';
+  const diffDays = dayjs(deadline).diff(dayjs(), 'day');
+  let diffDaysText = diffDays;
+  let color = 'black';
+  if (diffDays < 0) {
+    diffDaysText = '逾期' + Math.abs(diffDays);
+    color = 'red';
+  } else if (diffDays === 0) {
+    diffDaysText = '<1';
+    color = 'red';
+  }
   const isComplete = [TodoStatusMap.Done, TodoStatusMap.DoneButOverdue].includes(status);
-  return isComplete ? '' : diffDays;
+  return isComplete ? undefined : { text: diffDaysText, color };
 }
 
 const handleDelete = async (row) => {
