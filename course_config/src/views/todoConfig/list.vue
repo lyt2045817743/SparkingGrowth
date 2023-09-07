@@ -7,23 +7,30 @@
       </el-header>
       <el-main class="main">
         <el-table ref="tableRef" row-key="date" :data="tableList">
-          <el-table-column type="index" label="序号" min-width="60" />
-          <el-table-column prop="content" label="待办内容" min-width="130" />
-          <el-table-column prop="status" label="状态" min-width="80" :filters="TodoStatusTagConfig"
+          <el-table-column type="index" label="序号" width="60" />
+          <el-table-column prop="content" label="待办内容" width="220" />
+          <el-table-column prop="status" label="状态" width="80" :filters="TodoStatusTagConfig"
             :filter-method="filterTag" filter-placement="bottom-end">
             <template #default="scope">
               <el-tag :type="TodoStatusTagType[scope.row.status]" disable-transitions>{{ TodoStatusLabel[scope.row.status]
               }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="deadline" label="截止时间(倒计时)" min-width="130" :formatter="deadlineFormatter" />
-          <el-table-column prop="type" label="分类(积分)" :formatter="formatter" min-width="70" />
-          <el-table-column prop="desc" label="待办详情" min-width="220">
+          <el-table-column prop="deadline" label="截止时间（倒计时）" width="220">
+            <template #default="scope">
+              <span>
+                {{ scope.row.deadline }}
+                <span v-if="getDeadlineExtraText(scope.row)" :style="{ color: getDeadlineExtraText(scope.row) === '<1' ? 'red' : 'black' }">{{ `（${getDeadlineExtraText(scope.row)}天）` }}</span>
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="type" label="分类（积分）" :formatter="formatter" width="130" />
+          <el-table-column prop="desc" label="待办详情" min-width="180">
             <template #default="scope">
               {{ scope.row.desc || '--' }}
             </template>
           </el-table-column>
-          <el-table-column align="right" label="操作" min-width="135px">
+          <el-table-column align="right" label="操作" width="200px">
             <template #default="scope">
               <div v-if="![TodoStatusMap.Done, TodoStatusMap.DoneButOverdue].includes(scope.row.status)">
                 <el-button size="small" @click="handleEdit(scope.row)">编辑</el-button>
@@ -65,11 +72,14 @@ const formatter = (row) => {
   const { type } = row;
   const types = type.map((item) => TodoTypeLabel[item]).join(',');
   const score = type.reduce((a, b) => a + TodoTypeScore[b], 0);
-  return `${types}(+${score})`;
+  return `${types}（+${score}）`;
 }
 
-const deadlineFormatter = (row) => {
-  return `${row.deadline}`;
+const getDeadlineExtraText = (row) => {
+  const { deadline, status } = row;
+  const diffDays = dayjs(deadline).diff(dayjs(), 'day') || '<1';
+  const isComplete = [TodoStatusMap.Done, TodoStatusMap.DoneButOverdue].includes(status);
+  return isComplete ? '' : diffDays;
 }
 
 const handleDelete = async (row) => {
