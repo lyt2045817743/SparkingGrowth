@@ -40,7 +40,8 @@ export const TodoTypeMap = {
   Note: 12,
   EarlierSleep: 13,
   EarlierGetUp: 14,
-  BugFix: 15
+  BugFix: 15,
+  Coding: 16
 };
 
 export const TodoTypeLabel = {
@@ -55,6 +56,7 @@ export const TodoTypeLabel = {
   [TodoTypeMap.StudyByOtherSite]: "其他权威网站",
   [TodoTypeMap.Dev]: "新功能研发",
   [TodoTypeMap.BugFix]: "Bug修复",
+  [TodoTypeMap.Coding]: "Coding",
   [TodoTypeMap.Read]: "阅读",
   [TodoTypeMap.Idea]: "思考时间",
   [TodoTypeMap.Note]: "记笔记",
@@ -77,7 +79,8 @@ export const TodoTypeScore = {
   [TodoTypeMap.Note]: 2,
   [TodoTypeMap.EarlierSleep]: 1,
   [TodoTypeMap.EarlierGetUp]: 1,
-  [TodoTypeMap.BugFix]: 1
+  [TodoTypeMap.BugFix]: 1,
+  [TodoTypeMap.Coding]: 3
 };
 
 export const PointEventTypeMap = {
@@ -116,12 +119,19 @@ export const TypeCascadeOptions = [
       TodoTypeMap.StudyByOfficial,
       TodoTypeMap.StudyByOtherSite,
       TodoTypeMap.StudyByBlog,
-      TodoTypeMap.Dev,
-      TodoTypeMap.BugFix
     ]),
   },
   {
-    value: 101,
+    value: 102,
+    label: '代码世界',
+    children: getCascadeOptionsByFilter([
+      TodoTypeMap.Dev,
+      TodoTypeMap.BugFix,
+      TodoTypeMap.Coding
+    ])
+  },
+  {
+    value: 103,
     label: "好习惯",
     children: getCascadeOptionsByFilter([
       TodoTypeMap.Schedule,
