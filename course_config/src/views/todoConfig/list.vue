@@ -78,7 +78,7 @@ const showTheTodayTodo = (value) => {
   if (value) {
     tableList.value = totalList.filter((item) => {
       const { deadline, status } = item;
-      const todayEnding = dayjs().add(1, 'day').format('YYYY-MM-DD 23:59:59');
+      const todayEnding = dayjs().add(1, 'day').format('YYYY-MM-DD 00:00:01');
       const isComplete = [TodoStatusMap.Done, TodoStatusMap.DoneButOverdue].includes(status);
       return dayjs(todayEnding).valueOf() > dayjs(deadline).valueOf() && !isComplete;
     })

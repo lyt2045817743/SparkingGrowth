@@ -39,7 +39,8 @@ export const TodoTypeMap = {
   StudyByOtherSite: 11,
   Note: 12,
   EarlierSleep: 13,
-  EarlierGetUp: 14
+  EarlierGetUp: 14,
+  BugFix: 15
 };
 
 export const TodoTypeLabel = {
@@ -52,7 +53,8 @@ export const TodoTypeLabel = {
   [TodoTypeMap.StudyByRead]: "书籍学习",
   [TodoTypeMap.StudyByOfficial]: "官网学习",
   [TodoTypeMap.StudyByOtherSite]: "其他权威网站",
-  [TodoTypeMap.Dev]: "研发",
+  [TodoTypeMap.Dev]: "新功能研发",
+  [TodoTypeMap.BugFix]: "Bug修复",
   [TodoTypeMap.Read]: "阅读",
   [TodoTypeMap.Idea]: "思考时间",
   [TodoTypeMap.Note]: "记笔记",
@@ -74,7 +76,8 @@ export const TodoTypeScore = {
   [TodoTypeMap.Idea]: 1,
   [TodoTypeMap.Note]: 2,
   [TodoTypeMap.EarlierSleep]: 1,
-  [TodoTypeMap.EarlierGetUp]: 1
+  [TodoTypeMap.EarlierGetUp]: 1,
+  [TodoTypeMap.BugFix]: 1
 };
 
 export const PointEventTypeMap = {
@@ -107,13 +110,14 @@ export const TypeCascadeOptions = [
     value: 101,
     label: "学习成长",
     children: getCascadeOptionsByFilter([
+      TodoTypeMap.Note,
       TodoTypeMap.StudyByVideo,
       TodoTypeMap.StudyByRead,
       TodoTypeMap.StudyByOfficial,
       TodoTypeMap.StudyByOtherSite,
       TodoTypeMap.StudyByBlog,
       TodoTypeMap.Dev,
-      TodoTypeMap.Note
+      TodoTypeMap.BugFix
     ]),
   },
   {
