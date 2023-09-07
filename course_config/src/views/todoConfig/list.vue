@@ -8,11 +8,11 @@
       <el-main class="main">
         <el-table ref="tableRef" row-key="date" :data="tableList">
           <el-table-column type="index" label="序号" min-width="60" />
-          <el-table-column prop="content" label="待办内容" min-width="180" />
+          <el-table-column prop="content" label="待办内容" min-width="130" />
           <el-table-column
             prop="status"
             label="状态"
-            min-width="100"
+            min-width="80"
             :filters="TodoStatusTagConfig"
             :filter-method="filterTag"
             filter-placement="bottom-end"
@@ -25,9 +25,9 @@
               >
             </template>
           </el-table-column>
-          <el-table-column prop="deadline" label="截止时间" min-width="180" />
-          <el-table-column prop="type" label="分类" :formatter="formatter" min-width="100" />
-          <el-table-column prop="createTime" label="创建时间" min-width="180" :formatter="dateFormatter" />
+          <el-table-column prop="deadline" label="截止时间" min-width="130" />
+          <el-table-column prop="type" label="分类" :formatter="formatter" min-width="60" />
+          <el-table-column prop="createTime" label="创建时间" min-width="80" :formatter="dateFormatter" />
           <el-table-column prop="desc" label="待办详情" min-width="180">
             <template #default="scope">
               {{ scope.row.desc || '--' }}
@@ -81,7 +81,7 @@ const formatter = (row) => {
 
 const dateFormatter = (row) => {
   if (!row.createTime) return '';
-  return dayjs(row.createTime).format('YYYY-MM-DD hh:mm:ss');
+  return dayjs(row.createTime).format('YYYY-MM-DD');
 }
 
 const handleDelete = async (row) => {
