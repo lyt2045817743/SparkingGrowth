@@ -50,6 +50,16 @@ export const TodoTypeScore = {
   [TodoTypeMap.Dev]: 2
 }
 
+export const PointEventTypeMap = {
+  Todo: 1,
+  Exchange: 2
+}
+
+export const PointEventTypeLabel = {
+  [PointEventTypeMap.Todo]: '完成待办',
+  [PointEventTypeMap.Exchange]: '积分兑换'
+}
+
 function getCascadeOptionsByFilter(filters) {
   return filters.map((key) => ({
     value: key,

@@ -1,11 +1,18 @@
 import { db } from '../../utils/globalState';
 
-const TodoStoreName = 'todo'
+const TodoStoreName = 'todo';
+const PointStoreName = 'point';
 
 async function addTodo(todoInfo) {
   const todo = JSON.parse(JSON.stringify(todoInfo));
   const todoId = await db.add(TodoStoreName, todo);
   return Promise.resolve(todoId);
+}
+
+async function addPoint(pointInfo) {
+  const point = JSON.parse(JSON.stringify(pointInfo));
+  const pointId = await db.add(PointStoreName, point);
+  return Promise.resolve(pointId);
 }
 
 async function getTodoList() {
@@ -46,6 +53,7 @@ async function updateTodo(id, info) {
 
 export {
   addTodo,
+  addPoint,
   deleteTodo,
   getTodoList,
   getTodoById,

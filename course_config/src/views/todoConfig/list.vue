@@ -26,14 +26,13 @@
             </template>
           </el-table-column>
           <el-table-column prop="deadline" label="截止时间" min-width="130" />
-          <el-table-column prop="type" label="分类" :formatter="formatter" min-width="60" />
-          <el-table-column prop="createTime" label="创建时间" min-width="80" :formatter="dateFormatter" />
-          <el-table-column prop="desc" label="待办详情" min-width="180">
+          <el-table-column prop="type" label="分类(积分)" :formatter="formatter" min-width="70" />
+          <el-table-column prop="desc" label="待办详情" min-width="220">
             <template #default="scope">
               {{ scope.row.desc || '--' }}
             </template>
           </el-table-column>
-          <el-table-column align="right" label="操作" width="135px">
+          <el-table-column align="right" label="操作" min-width="135px">
             <template #default="scope">
               <el-button size="small" @click="handleEdit(scope.row)"
                 >编辑</el-button
@@ -43,6 +42,9 @@
                 type="danger"
                 @click="handleDelete(scope.row)"
                 >删除</el-button
+              >
+              <el-button size="small" type="success" plain @click="completeTodo(scope.row)"
+                >完成</el-button
               >
             </template>
           </el-table-column>
@@ -56,8 +58,8 @@
 import { onMounted, ref } from 'vue';
 import { ElMessage, dayjs } from 'element-plus';
 import { useRouter } from 'vue-router';
-import { TodoStatusTagConfig, TodoStatusTagType, TodoStatusLabel, TodoTypeLabel } from './constant';
-import { deleteTodo, getTodoList } from './serve'
+import { TodoStatusTagConfig, TodoStatusTagType, TodoStatusLabel, TodoTypeLabel, TodoTypeScore, TodoStatusMap, PointEventTypeMap } from './constant';
+import { deleteTodo, getTodoList, updateTodo, addPoint } from './serve'
 
 const router = useRouter();
 
@@ -76,12 +78,7 @@ const getData = async () => {
 }
 
 const formatter = (row) => {
-  return TodoTypeLabel[row.type]
-}
-
-const dateFormatter = (row) => {
-  if (!row.createTime) return '';
-  return dayjs(row.createTime).format('YYYY-MM-DD');
+  return `${TodoTypeLabel[row.type]}(+${TodoTypeScore[row.type]})`
 }
 
 const handleDelete = async (row) => {
@@ -113,6 +110,28 @@ const handleEdit = (row) => {
     }
   })
 };
+
+const completeTodo = async (row) => {
+  const { key: id, deadline, type } = row;
+  const now = Date.now();
+  const isOverdue = now > dayjs(deadline).valueOf();
+  const status = isOverdue ? TodoStatusMap.DoneButOverdue : TodoStatusMap.Done;
+  const pointInfo = {
+    eventId: id,
+    eventType: PointEventTypeMap.Todo,
+    score: TodoTypeScore[type]
+  }
+  if (isOverdue) {
+    pointInfo.score = pointInfo.score / 2;
+  }
+  await updateTodo(id, { status, finishTime: now })
+  await addPoint(pointInfo)
+  ElMessage({
+    message: '已更新',
+    type: 'success',
+  });
+  updateView();
+}
 
 const filterTag = (value, row) => {
   return +row.status === +value
