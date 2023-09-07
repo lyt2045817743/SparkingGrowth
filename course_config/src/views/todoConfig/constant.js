@@ -23,22 +23,24 @@ export const TodoStatusTagType = {
 
 export const TodoTypeMap = {
   Undefined: 0,
-  PlanAndSummary: 1,
+  Summary: 1,
   Study: 2,
   Read: 3,
   CycleByWeek: 4,
   CycleByMonth: 5,
   Simple: 6,
-  Dev: 7
+  Dev: 7,
+  Plan: 8
 }
 
 export const TodoTypeLabel = {
   [TodoTypeMap.Undefined]: '未定义',
   [TodoTypeMap.Simple]: '简单待办',
-  [TodoTypeMap.PlanAndSummary]: '计划与总结',
+  [TodoTypeMap.Summary]: '总结',
+  [TodoTypeMap.Plan]: '计划',
   [TodoTypeMap.Study]: '学习',
   [TodoTypeMap.Read]: '阅读',
-  [TodoTypeMap.Dev]: '系统开发',
+  [TodoTypeMap.Dev]: '研发',
   [TodoTypeMap.CycleByWeek]: '周循环',
   [TodoTypeMap.CycleByMonth]: '月循环'
 }
@@ -59,7 +61,7 @@ export const TypeCascadeOptions = [
   {
     value: 101,
     label: '基础分类',
-    children: getCascadeOptionsByFilter([TodoTypeMap.Study, TodoTypeMap.PlanAndSummary, TodoTypeMap.Dev, TodoTypeMap.Read])
+    children: getCascadeOptionsByFilter([TodoTypeMap.Study, TodoTypeMap.Plan, TodoTypeMap.Summary, TodoTypeMap.Dev, TodoTypeMap.Read])
   },
   {
     value: 102,
