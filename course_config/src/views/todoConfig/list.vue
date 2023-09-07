@@ -9,23 +9,14 @@
         <el-table ref="tableRef" row-key="date" :data="tableList">
           <el-table-column type="index" label="序号" min-width="60" />
           <el-table-column prop="content" label="待办内容" min-width="130" />
-          <el-table-column
-            prop="status"
-            label="状态"
-            min-width="80"
-            :filters="TodoStatusTagConfig"
-            :filter-method="filterTag"
-            filter-placement="bottom-end"
-          >
+          <el-table-column prop="status" label="状态" min-width="80" :filters="TodoStatusTagConfig"
+            :filter-method="filterTag" filter-placement="bottom-end">
             <template #default="scope">
-              <el-tag
-                :type="TodoStatusTagType[scope.row.status]"
-                disable-transitions
-                >{{ TodoStatusLabel[scope.row.status] }}</el-tag
-              >
+              <el-tag :type="TodoStatusTagType[scope.row.status]" disable-transitions>{{ TodoStatusLabel[scope.row.status]
+              }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="deadline" label="截止时间" min-width="130" />
+          <el-table-column prop="deadline" label="截止时间(倒计时)" min-width="130" :formatter="deadlineFormatter" />
           <el-table-column prop="type" label="分类(积分)" :formatter="formatter" min-width="70" />
           <el-table-column prop="desc" label="待办详情" min-width="220">
             <template #default="scope">
@@ -34,18 +25,11 @@
           </el-table-column>
           <el-table-column align="right" label="操作" min-width="135px">
             <template #default="scope">
-              <el-button size="small" @click="handleEdit(scope.row)"
-                >编辑</el-button
-              >
-              <el-button
-                size="small"
-                type="danger"
-                @click="handleDelete(scope.row)"
-                >删除</el-button
-              >
-              <el-button size="small" type="success" plain @click="completeTodo(scope.row)"
-                >完成</el-button
-              >
+              <div v-if="![TodoStatusMap.Done, TodoStatusMap.DoneButOverdue].includes(scope.row.status)">
+                <el-button size="small" @click="handleEdit(scope.row)">编辑</el-button>
+                <el-button size="small" type="danger" @click="handleDelete(scope.row)">删除</el-button>
+                <el-button size="small" type="success" plain @click="completeTodo(scope.row)">完成</el-button>
+              </div>
             </template>
           </el-table-column>
         </el-table>
@@ -78,7 +62,14 @@ const getData = async () => {
 }
 
 const formatter = (row) => {
-  return `${TodoTypeLabel[row.type]}(+${TodoTypeScore[row.type]})`
+  const { type } = row;
+  const types = type.map((item) => TodoTypeLabel[item]).join(',');
+  const score = type.reduce((a, b) => a + TodoTypeScore[b], 0);
+  return `${types}(+${score})`;
+}
+
+const deadlineFormatter = (row) => {
+  return `${row.deadline}`;
 }
 
 const handleDelete = async (row) => {
@@ -119,7 +110,7 @@ const completeTodo = async (row) => {
   const pointInfo = {
     eventId: id,
     eventType: PointEventTypeMap.Todo,
-    score: TodoTypeScore[type]
+    score: type.reduce((a, b) => a + TodoTypeScore[b], 0)
   }
   if (isOverdue) {
     pointInfo.score = pointInfo.score / 2;
@@ -147,6 +138,7 @@ const filterTag = (value, row) => {
   margin-top: 5px;
   border-bottom: 1px solid #dcdfe6;
 }
+
 .common-layout {
   :deep(.el-table .cell) {
     white-space: pre-line;
