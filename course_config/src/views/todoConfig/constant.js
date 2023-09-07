@@ -38,6 +38,8 @@ export const TodoTypeMap = {
   StudyByOfficial: 10,
   StudyByOtherSite: 11,
   Note: 12,
+  EarlierSleep: 13,
+  EarlierGetUp: 14
 };
 
 export const TodoTypeLabel = {
@@ -54,6 +56,8 @@ export const TodoTypeLabel = {
   [TodoTypeMap.Read]: "阅读",
   [TodoTypeMap.Idea]: "思考时间",
   [TodoTypeMap.Note]: "记笔记",
+  [TodoTypeMap.EarlierSleep]: "早睡(23:30前)",
+  [TodoTypeMap.EarlierGetUp]: "早起(7:30前)"
 };
 
 export const TodoTypeScore = {
@@ -69,6 +73,8 @@ export const TodoTypeScore = {
   [TodoTypeMap.Read]: 1,
   [TodoTypeMap.Idea]: 1,
   [TodoTypeMap.Note]: 2,
+  [TodoTypeMap.EarlierSleep]: 1,
+  [TodoTypeMap.EarlierGetUp]: 1
 };
 
 export const PointEventTypeMap = {
@@ -99,7 +105,7 @@ export const TypeCascadeOptions = [
   },
   {
     value: 101,
-    label: "学习分类",
+    label: "学习成长",
     children: getCascadeOptionsByFilter([
       TodoTypeMap.StudyByVideo,
       TodoTypeMap.StudyByRead,
@@ -112,12 +118,14 @@ export const TypeCascadeOptions = [
   },
   {
     value: 101,
-    label: "其他分类",
+    label: "好习惯",
     children: getCascadeOptionsByFilter([
       TodoTypeMap.Schedule,
       TodoTypeMap.Summary,
       TodoTypeMap.Read,
       TodoTypeMap.Idea,
+      TodoTypeMap.EarlierSleep,
+      TodoTypeMap.EarlierGetUp
     ]),
   },
 ];
