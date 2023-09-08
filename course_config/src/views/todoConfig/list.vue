@@ -60,8 +60,9 @@ import { onMounted, ref } from 'vue';
 import { ElMessage, dayjs } from 'element-plus';
 import { Refresh } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router';
-import { TodoStatusTagConfig, TodoStatusTagType, TodoStatusLabel, TodoTypeLabel, TodoTypeScore, TodoStatusMap, PointEventTypeMap, CycleMap } from './constant';
-import { deleteTodo , getTodoList, updateTodo, addPoint } from './serve'
+import { PointEventTypeMap } from '../../constant';
+import { TodoStatusTagConfig, TodoStatusTagType, TodoStatusLabel, TodoTypeLabel, TodoTypeScore, TodoStatusMap, CycleMap } from './constant';
+import { deleteTodo , getTodoList, updateTodo, addPoint } from './serve';
 
 const router = useRouter();
 
@@ -166,14 +167,14 @@ const handleEdit = (row) => {
 };
 
 const completeTodo = async (row) => {
-  const { key: id, deadline, type } = row;
+  const { key: id, deadline, type, score } = row;
   const now = Date.now();
   const isOverdue = now > dayjs(deadline).valueOf();
   const status = isOverdue ? TodoStatusMap.DoneButOverdue : TodoStatusMap.Done;
   const pointInfo = {
     eventId: id,
     eventType: PointEventTypeMap.Todo,
-    score: type.reduce((a, b) => a + TodoTypeScore[b], 0)
+    score: score ?? type.reduce((a, b) => a + TodoTypeScore[b], 0)
   }
   if (isOverdue) {
     pointInfo.score = pointInfo.score / 2;

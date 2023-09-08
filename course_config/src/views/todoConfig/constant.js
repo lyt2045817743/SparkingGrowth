@@ -71,23 +71,13 @@ export const TodoTypeScore = {
   [TodoTypeMap.StudyByRead]: 5,
   [TodoTypeMap.StudyByOfficial]: 5,
   [TodoTypeMap.StudyByOtherSite]: 3,
-  [TodoTypeMap.Dev]: 2,
+  [TodoTypeMap.Dev]: 3,
   [TodoTypeMap.Read]: 1,
   [TodoTypeMap.Idea]: 1,
   [TodoTypeMap.Note]: 2,
   [TodoTypeMap.BugFix]: 1,
   [TodoTypeMap.Coding]: 3,
   [TodoTypeMap.GoodHabit]: 0.5
-};
-
-export const PointEventTypeMap = {
-  Todo: 1,
-  Exchange: 2,
-};
-
-export const PointEventTypeLabel = {
-  [PointEventTypeMap.Todo]: "完成待办",
-  [PointEventTypeMap.Exchange]: "积分兑换",
 };
 
 function getCascadeOptionsByFilter(filters) {

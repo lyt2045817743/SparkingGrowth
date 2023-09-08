@@ -4,6 +4,8 @@ const Edit = () => import('../views/courseConfig/edit.vue');
 const TodoList = () => import('../views/todoConfig/list.vue')
 const TodoEdit = () => import('../views/todoConfig/edit.vue');
 
+const PointList = () => import('../views/pointConfig/list.vue');
+
 export const routes = [
   {
     path: '/',
@@ -57,5 +59,12 @@ export const routes = [
       hidden: true
     },
     component: TodoEdit,
+  },
+  {
+    path: '/point',
+    meta: {
+      title: '积分兑换'
+    },
+    component: PointList,
   },
 ];
