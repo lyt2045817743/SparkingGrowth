@@ -27,7 +27,7 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column prop="type" label="分类（积分）" :formatter="formatter" width="130" />
+          <el-table-column prop="type" label="分类（积分）" :formatter="formatter" width="160" />
           <el-table-column prop="desc" label="待办详情" min-width="220">
             <template #default="scope">
               {{ scope.row.desc || '--' }}

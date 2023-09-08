@@ -41,7 +41,8 @@ export const TodoTypeMap = {
   EarlierSleep: 13,
   EarlierGetUp: 14,
   BugFix: 15,
-  Coding: 16
+  Coding: 16,
+  DailySkinCare: 17
 };
 
 export const TodoTypeLabel = {
@@ -61,7 +62,8 @@ export const TodoTypeLabel = {
   [TodoTypeMap.Idea]: "思考时间",
   [TodoTypeMap.Note]: "记笔记",
   [TodoTypeMap.EarlierSleep]: "早睡(23:30前)",
-  [TodoTypeMap.EarlierGetUp]: "早起(7:30前)"
+  [TodoTypeMap.EarlierGetUp]: "早起(7:30前)",
+  [TodoTypeMap.DailySkinCare]: "日常护肤"
 };
 
 export const TodoTypeScore = {
@@ -80,7 +82,8 @@ export const TodoTypeScore = {
   [TodoTypeMap.EarlierSleep]: 1,
   [TodoTypeMap.EarlierGetUp]: 1,
   [TodoTypeMap.BugFix]: 1,
-  [TodoTypeMap.Coding]: 3
+  [TodoTypeMap.Coding]: 3,
+  [TodoTypeMap.DailySkinCare]: 0.5
 };
 
 export const PointEventTypeMap = {
@@ -139,7 +142,8 @@ export const TypeCascadeOptions = [
       TodoTypeMap.Read,
       TodoTypeMap.Idea,
       TodoTypeMap.EarlierSleep,
-      TodoTypeMap.EarlierGetUp
+      TodoTypeMap.EarlierGetUp,
+      TodoTypeMap.DailySkinCare
     ]),
   },
 ];
