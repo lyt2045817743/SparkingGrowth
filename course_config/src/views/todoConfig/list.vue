@@ -179,13 +179,13 @@ const completeTodo = async (row) => {
   if (isOverdue) {
     pointInfo.score = pointInfo.score / 2;
   }
-  await updateTodo(id, { status, finishTime: now })
-  await addPoint(pointInfo)
+  await updateTodo(id, { status, finishTime: now });
+  await addPoint(pointInfo);
+  await updateView();
   ElMessage({
     message: '已更新',
     type: 'success',
   });
-  updateView();
 }
 
 const filterTag = (value, row) => {
