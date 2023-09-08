@@ -78,7 +78,8 @@ const updateView = () => {
 }
 
 const getData = async (isInit) => {
-  tableList.value = await getTodoList();
+  const data = await getTodoList();
+  tableList.value = data.filter((item) => [TodoStatusMap.Undo, TodoStatusMap.Overdue].includes(item.status)).sort((a, b) => dayjs(a.deadline).valueOf() - dayjs(b.deadline).valueOf());
   totalList = tableList.value;
   if (!isInit && onlyShowToday.value) showTheTodayTodo(true);
 }
