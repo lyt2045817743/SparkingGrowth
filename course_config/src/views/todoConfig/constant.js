@@ -140,13 +140,18 @@ export const TypeCascadeOptions = [
   },
 ];
 
-export const cycleOptions = [
+export const CycleMap = {
+  UnCycle: 0,
+  Everyday: 1
+}
+
+export const CycleOptions = [
   {
-    value: 0,
+    value: [CycleMap.UnCycle],
     label: '不循环'
   },
   {
-    value: 1,
+    value: [CycleMap.Everyday],
     label: '每日'
   }
 ]

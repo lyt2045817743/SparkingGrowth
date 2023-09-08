@@ -4,9 +4,12 @@
       <el-header class="header">
         <div style="display: flex; align-items: center;">
           <h5>待办列表</h5>
-          <el-checkbox checked style="margin-left: 15px;" label="仅展示今晚前截止的待办" size="large" @change="showTheTodayTodo" />
+          <el-checkbox v-model="onlyShowToday" style="margin-left: 15px;" label="仅展示今晚前截止的待办" size="large" @change="showTheTodayTodo" />
         </div>
-        <el-button class="add-btn" type="primary" round @click="handleAdd">新增待办</el-button>
+        <div style="display: flex; align-items: center;">
+          <el-button :icon="Refresh" round @click="onRefreshCycleTodo">刷新循环待办</el-button>
+          <el-button class="add-btn" type="primary" round @click="handleAdd">新增待办</el-button>
+        </div>
       </el-header>
       <el-main class="main">
         <el-table ref="tableRef" row-key="date" :data="tableList">
@@ -37,7 +40,11 @@
             <template #default="scope">
               <div v-if="![TodoStatusMap.Done, TodoStatusMap.DoneButOverdue].includes(scope.row.status)">
                 <el-button size="small" @click="handleEdit(scope.row)">编辑</el-button>
-                <el-button size="small" type="danger" @click="handleDelete(scope.row)">删除</el-button>
+                <el-popconfirm title="是否确认删除？" @confirm="handleDelete(scope.row)">
+                  <template #reference>
+                    <el-button size="small" type="danger">删除</el-button>
+                  </template>
+                </el-popconfirm>
                 <el-button size="small" type="success" plain @click="completeTodo(scope.row)">完成</el-button>
               </div>
             </template>
@@ -51,30 +58,47 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { ElMessage, dayjs } from 'element-plus';
+import { Refresh } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router';
-import { TodoStatusTagConfig, TodoStatusTagType, TodoStatusLabel, TodoTypeLabel, TodoTypeScore, TodoStatusMap, PointEventTypeMap } from './constant';
-import { deleteTodo, getTodoList, updateTodo, addPoint } from './serve'
+import { TodoStatusTagConfig, TodoStatusTagType, TodoStatusLabel, TodoTypeLabel, TodoTypeScore, TodoStatusMap, PointEventTypeMap, CycleMap } from './constant';
+import { deleteTodo , getTodoList, updateTodo, addPoint } from './serve'
 
 const router = useRouter();
 
+const onlyShowToday = ref(false);
 const tableList = ref([]);
 let totalList;
 
 onMounted(() => {
-  getData();
+  getData(true);
 })
 
 const updateView = () => {
   getData();
 }
 
-const getData = async () => {
+const getData = async (isInit) => {
   tableList.value = await getTodoList();
   totalList = tableList.value;
-  showTheTodayTodo(true);
+  if (!isInit && onlyShowToday.value) showTheTodayTodo(true);
+}
+
+const onRefreshCycleTodo = async () => {
+  const now = Date.now();
+  tableList.value.forEach(async (item) => {
+    const { key } = item;
+    const deadline = dayjs(item.deadline).valueOf();
+    if ([CycleMap.Everyday].includes(item.cycleType) && now > deadline) {
+      const todoInfo =  { status: TodoStatusMap.Undo, deadline: dayjs(now).add(1, 'day').format('YYYY-MM-DD 00:00:00') };
+      await updateTodo(key, todoInfo);
+    }
+  });
+  updateView();
+  ElMessage.success('刷新完成');
 }
 
 const showTheTodayTodo = (value) => {
+  onlyShowToday.value = value;
   if (value) {
     tableList.value = totalList.filter((item) => {
       const { deadline, status } = item;

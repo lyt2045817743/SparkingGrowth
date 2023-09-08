@@ -54,10 +54,10 @@
           <el-form-item label="是否循环：">
             <el-select v-model="form.cycleType" placeholder="请选择">
               <el-option
-                v-for="item in cycleOptions"
+                v-for="item in CycleOptions"
                 :key="item.value"
                 :label="item.label"
-                :value="item.value"
+                :value="+item.value"
               />
             </el-select>
           </el-form-item>
@@ -78,7 +78,7 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage, dayjs } from 'element-plus';
 import { addTodo, getTodoById, updateTodo } from './serve.js';
-import { TodoTypeMap, TypeCascadeOptions, cycleOptions, TodoTypeScore } from './constant';
+import { TodoTypeMap, TypeCascadeOptions, CycleOptions, TodoTypeScore } from './constant';
 
 const route = useRoute();
 const router = useRouter();
