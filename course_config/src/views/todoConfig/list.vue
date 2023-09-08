@@ -88,10 +88,10 @@ const showTheTodayTodo = (value) => {
 }
 
 const formatter = (row) => {
-  const { type } = row;
+  const { type, score } = row;
   const types = type.map((item) => TodoTypeLabel[item]).join(',');
-  const score = type.reduce((a, b) => a + TodoTypeScore[b], 0);
-  return `${types}（+${score}）`;
+  const scoreNew = score ?? type.reduce((a, b) => a + TodoTypeScore[b], 0);
+  return `${types}（+${scoreNew}）`;
 }
 
 const getDeadlineExtraText = (row) => {

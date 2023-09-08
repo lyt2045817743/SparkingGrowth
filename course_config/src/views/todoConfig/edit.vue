@@ -19,6 +19,9 @@
           <el-input v-model="form.content" style="width: 350px" placeholder="请输入" />
         </el-form-item>
         <div v-if="form.configType === 1">
+          <el-form-item label="待办详情：">
+            <el-input v-model="form.desc" placeholder="请输入" type="textarea" :rows="4" style="width: 700px" />
+          </el-form-item>
           <el-form-item label="待办类型：">
             <el-cascader
               v-model="form.type"
@@ -29,6 +32,7 @@
               style="width: 250px"
               placeholder="请选择"
               :options="TypeCascadeOptions"
+              @change="onTypeChange"
             />
           </el-form-item>
           <el-form-item label="截止时间：">
@@ -47,8 +51,18 @@
               placeholder="具体时间"
             />
           </el-form-item>
-          <el-form-item label="待办详情：">
-            <el-input v-model="form.desc" placeholder="请输入" type="textarea" :rows="4" style="width: 700px" />
+          <el-form-item label="是否循环：">
+            <el-select v-model="form.cycleType" placeholder="请选择">
+              <el-option
+                v-for="item in cycleOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="积分调整：">
+            <el-input v-model="form.score" style="width: 100px" type="number" />
           </el-form-item>
         </div>
         <el-form-item>
@@ -64,7 +78,7 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage, dayjs } from 'element-plus';
 import { addTodo, getTodoById, updateTodo } from './serve.js';
-import { TodoTypeMap, TypeCascadeOptions } from './constant';
+import { TodoTypeMap, TypeCascadeOptions, cycleOptions, TodoTypeScore } from './constant';
 
 const route = useRoute();
 const router = useRouter();
@@ -77,7 +91,9 @@ const form = ref({
   deadlineDate: '',
   deadlineTime: '',
   desc: '',
-  type: []
+  type: [],
+  cycleType: 0,
+  score: 0
 })
 
 const props = {
@@ -94,14 +110,15 @@ onMounted(() => {
 })
 
 const init = async () => {
-  const { content, createTime, deadline, desc, type, status } = await getTodoById(id);
+  const { content, createTime, deadline, desc, type, status, cycleType, score } = await getTodoById(id);
   const deadlineDate = deadline.slice(0, 10)
   const deadlineTime = deadline.slice(11, 16)
-  form.value = Object.assign(form.value, { content, createTime, desc, type, status, deadlineDate, deadlineTime })
+  const scoreNew = score ?? type.reduce((a, b) => a + TodoTypeScore[b], 0);
+  form.value = Object.assign(form.value, { content, createTime, desc, type, status, deadlineDate, deadlineTime, cycleType: cycleType ?? 0, score: scoreNew })
 }
 
 const onSubmit = async () => {
-  const { content, desc, type, deadlineDate, deadlineTime } = form.value;
+  const { content, desc, type, deadlineDate, deadlineTime, cycleType, score } = form.value;
   const createTime = Date.now()
   const deadline = deadlineDate && deadlineTime ? `${dayjs(deadlineDate).format('YYYY-MM-DD')} ${deadlineTime}:00` : '';
   const todoInfo = {
@@ -109,6 +126,8 @@ const onSubmit = async () => {
     createTime,
     deadline: deadline || dayjs(createTime).add(1, 'day').format('YYYY-MM-DD 00:00:00'),
     status: 0,
+    cycleType,
+    score,
     type: type.includes(TodoTypeMap.Undefined) || type.length === 0 ? [TodoTypeMap.Undefined] : type,
     desc
   };
@@ -126,6 +145,10 @@ const onSubmit = async () => {
     type: 'success',
   });
   router.push('/todo');
+}
+
+const onTypeChange = (value) => {
+  form.value.score = value.reduce((a, b) => a + TodoTypeScore[b], 0);
 }
 
 const onCancel = () => {

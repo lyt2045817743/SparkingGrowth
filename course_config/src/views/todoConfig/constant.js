@@ -38,11 +38,9 @@ export const TodoTypeMap = {
   StudyByOfficial: 10,
   StudyByOtherSite: 11,
   Note: 12,
-  EarlierSleep: 13,
-  EarlierGetUp: 14,
   BugFix: 15,
   Coding: 16,
-  DailySkinCare: 17
+  GoodHabit: 18
 };
 
 export const TodoTypeLabel = {
@@ -61,9 +59,7 @@ export const TodoTypeLabel = {
   [TodoTypeMap.Read]: "阅读",
   [TodoTypeMap.Idea]: "思考时间",
   [TodoTypeMap.Note]: "记笔记",
-  [TodoTypeMap.EarlierSleep]: "早睡(23:30前)",
-  [TodoTypeMap.EarlierGetUp]: "早起(7:30前)",
-  [TodoTypeMap.DailySkinCare]: "日常护肤"
+  [TodoTypeMap.GoodHabit]: "好习惯"
 };
 
 export const TodoTypeScore = {
@@ -79,11 +75,9 @@ export const TodoTypeScore = {
   [TodoTypeMap.Read]: 1,
   [TodoTypeMap.Idea]: 1,
   [TodoTypeMap.Note]: 2,
-  [TodoTypeMap.EarlierSleep]: 1,
-  [TodoTypeMap.EarlierGetUp]: 1,
   [TodoTypeMap.BugFix]: 1,
   [TodoTypeMap.Coding]: 3,
-  [TodoTypeMap.DailySkinCare]: 0.5
+  [TodoTypeMap.GoodHabit]: 0.5
 };
 
 export const PointEventTypeMap = {
@@ -135,15 +129,24 @@ export const TypeCascadeOptions = [
   },
   {
     value: 103,
-    label: "好习惯",
+    label: "其他",
     children: getCascadeOptionsByFilter([
       TodoTypeMap.Schedule,
       TodoTypeMap.Summary,
       TodoTypeMap.Read,
       TodoTypeMap.Idea,
-      TodoTypeMap.EarlierSleep,
-      TodoTypeMap.EarlierGetUp,
-      TodoTypeMap.DailySkinCare
+      TodoTypeMap.GoodHabit
     ]),
   },
 ];
+
+export const cycleOptions = [
+  {
+    value: 0,
+    label: '不循环'
+  },
+  {
+    value: 1,
+    label: '每日'
+  }
+]
