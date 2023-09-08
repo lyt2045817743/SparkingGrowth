@@ -15,17 +15,17 @@
         <el-table ref="tableRef" row-key="date" :data="tableList">
           <el-table-column type="index" label="序号" width="60" />
           <el-table-column prop="content" label="待办内容" min-width="150" />
-          <el-table-column prop="status" label="状态" width="80" :filters="TodoStatusTagConfig"
+          <!-- <el-table-column prop="status" label="状态" width="80" :filters="TodoStatusTagConfig"
             :filter-method="filterTag" filter-placement="bottom-end">
             <template #default="scope">
               <el-tag :type="TodoStatusTagType[scope.row.status]" disable-transitions>{{ TodoStatusLabel[scope.row.status]
               }}</el-tag>
             </template>
-          </el-table-column>
-          <el-table-column prop="deadline" label="截止时间（倒计时）" width="260">
+          </el-table-column> -->
+          <el-table-column prop="deadline" label="截止时间（倒计时）" width="200">
             <template #default="scope">
               <span>
-                {{ scope.row.deadline }}
+                {{ scope.row.deadline.slice(0, 16) }}
                 <span v-if="getDeadlineExtraText(scope.row)" :style="{ color: getDeadlineExtraText(scope.row).color }">{{ `（${getDeadlineExtraText(scope.row).text}天）` }}</span>
               </span>
             </template>
@@ -61,7 +61,7 @@ import { ElMessage, dayjs } from 'element-plus';
 import { Refresh } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router';
 import { PointEventTypeMap } from '../../constant';
-import { TodoStatusTagConfig, TodoStatusTagType, TodoStatusLabel, TodoTypeLabel, TodoTypeScore, TodoStatusMap, CycleMap } from './constant';
+import {  TodoTypeLabel, TodoTypeScore, TodoStatusMap, CycleMap } from './constant';
 import { deleteTodo , getTodoList, updateTodo, addPoint } from './serve';
 
 const router = useRouter();

@@ -50,7 +50,6 @@ onMounted(() => {
 const getData = async () => {
   const { data, total } = await getPointList();
   tableList.value = data;
-  console.log(data, totalPoint);
   totalPoint.value = total;
 }
 
@@ -60,9 +59,9 @@ const formatter = (row) => {
 
 const handleExchange = () => {
   router.push({
-    path: '/todoAdd',
+    path: '/exchangePoint',
     query: {
-      pageType: 'add'
+      point: totalPoint.value
     }
   })
 }

@@ -5,6 +5,7 @@ const TodoList = () => import('../views/todoConfig/list.vue')
 const TodoEdit = () => import('../views/todoConfig/edit.vue');
 
 const PointList = () => import('../views/pointConfig/list.vue');
+const exchangePointList = () => import('../views/pointConfig/exchange');
 
 export const routes = [
   {
@@ -63,8 +64,16 @@ export const routes = [
   {
     path: '/point',
     meta: {
-      title: '积分兑换'
+      title: '积分记录与兑换'
     },
     component: PointList,
   },
+  {
+    path: '/exchangePoint',
+    meta: {
+      title: '兑换活动',
+      hidden: true
+    },
+    component: exchangePointList,
+  }
 ];

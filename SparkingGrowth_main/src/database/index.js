@@ -3,7 +3,7 @@
   // indexDB数据库信息配置
   const DatabaseConfig = {
     name: 'learning_assistance',
-    version: 4
+    version: 5
   };
 
   export {
