@@ -7,7 +7,7 @@
             <el-breadcrumb-item :to="{ path: '/point' }">积分记录</el-breadcrumb-item>
             <el-breadcrumb-item>兑换活动</el-breadcrumb-item>
           </el-breadcrumb>
-          <span style="color: #606266; font-size: 14px;">（可用积分：{{ point }}）</span>
+          <!-- <span style="color: #606266; font-size: 14px;">（可用积分：{{ point }}）</span> -->
         </div>
         <div style="display: flex; align-items: center;">
           <el-button class="add-btn" type="primary" round @click="handleAdd">新增活动</el-button>
@@ -28,7 +28,11 @@
                     <el-button size="small" type="danger">删除</el-button>
                   </template>
                 </el-popconfirm>
-                <el-button size="small" type="success" plain @click="onExchange(scope.row)">兑换</el-button>
+                <el-popconfirm :title="`确认花费${scope.row.costScore}积分兑换？`" @confirm="onExchange(scope.row)">
+                  <template #reference>
+                    <el-button size="small" type="warning" plain>兑换</el-button>
+                  </template>
+                </el-popconfirm>
             </template>
           </el-table-column>
         </el-table>
@@ -47,7 +51,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
-        <el-button type="primary" @click="onExchange">
+        <el-button type="primary" @click="onEdit">
           确定
         </el-button>
       </span>
@@ -60,6 +64,8 @@ import { onMounted, ref } from 'vue';
 import { dayjs, ElMessage } from 'element-plus';
 import { useRoute } from 'vue-router';
 import { addActivity, getActivityList, updateActivity, deleteActivity } from './serve';
+import { addPoint } from '../todoConfig/serve';
+import { PointEventTypeMap } from '../../constant'
 
 const route = useRoute();
 
@@ -85,7 +91,21 @@ const formatter = (row) => {
   return dayjs(row.createTime).format('YYYY-MM-DD HH:mm:ss');
 };
 
-const onExchange = async () => {
+const onExchange = async (row) => {
+  const { costScore, id, count } = row;
+  const pointInfo = {
+    eventId: id,
+    eventType: PointEventTypeMap.Exchange,
+    score: 0 - costScore,
+    createTime: Date.now()
+  };
+  await addPoint(pointInfo);
+  await updateActivity(id, { count: count + 1 });
+  ElMessage.success('兑换成功！');
+  getData();
+}
+
+const onEdit = async () => {
   const { name, costScore, id } = form.value;
   const activityInfo = {
     createTime: Date.now(),

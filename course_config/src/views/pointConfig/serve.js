@@ -38,6 +38,9 @@ async function getPointList() {
       const todo = await db.get(TodoStoreName, eventId);
       list[i].eventName = todo.content;
       list[i].createTime = todo.finishTime;
+    } else if (eventType === PointEventTypeMap.Exchange) {
+      const activity = await db.get(ActivityStoreName, eventId);
+      list[i].eventName = activity.name;
     }
     total += score;
     data.push(list[i]);
