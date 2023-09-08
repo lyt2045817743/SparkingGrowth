@@ -127,7 +127,7 @@ const onSubmit = async () => {
     deadline: deadline || dayjs(createTime).add(1, 'day').format('YYYY-MM-DD 00:00:00'),
     status: 0,
     cycleType,
-    score,
+    score: score ? Number(score) : 0,
     type: type.includes(TodoTypeMap.Undefined) || type.length === 0 ? [TodoTypeMap.Undefined] : type,
     desc
   };
