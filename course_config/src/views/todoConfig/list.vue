@@ -31,15 +31,13 @@
           </el-table-column>
           <el-table-column align="right" label="操作" width="200px">
             <template #default="scope">
-              <div v-if="![TodoStatusMap.Done, TodoStatusMap.DoneButOverdue].includes(scope.row.status)">
-                <el-button size="small" @click="handleEdit(scope.row)">编辑</el-button>
-                <el-popconfirm title="是否确认删除？" @confirm="handleDelete(scope.row)">
-                  <template #reference>
-                    <el-button size="small" type="danger">删除</el-button>
-                  </template>
-                </el-popconfirm>
-                <el-button size="small" type="success" plain @click="completeTodo(scope.row)">完成</el-button>
-              </div>
+              <el-button size="small" @click="handleEdit(scope.row)">编辑</el-button>
+              <el-popconfirm title="是否确认删除？" @confirm="handleDelete(scope.row)">
+                <template #reference>
+                  <el-button size="small" type="danger">删除</el-button>
+                </template>
+              </el-popconfirm>
+              <el-button size="small" type="success" plain @click="completeTodo(scope.row)">完成</el-button>
             </template>
           </el-table-column>
         </el-table>
