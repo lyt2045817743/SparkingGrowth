@@ -74,7 +74,7 @@ export const TodoTypeScore = {
   [TodoTypeMap.Dev]: 3,
   [TodoTypeMap.Read]: 1,
   [TodoTypeMap.Idea]: 1,
-  [TodoTypeMap.Note]: 2,
+  [TodoTypeMap.Note]: 3,
   [TodoTypeMap.BugFix]: 1,
   [TodoTypeMap.Coding]: 3,
   [TodoTypeMap.GoodHabit]: 0.5
