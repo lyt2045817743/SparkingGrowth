@@ -15,13 +15,6 @@
         <el-table ref="tableRef" row-key="date" :data="tableList">
           <el-table-column type="index" label="序号" width="60" />
           <el-table-column prop="content" label="待办内容" min-width="150" />
-          <!-- <el-table-column prop="status" label="状态" width="80" :filters="TodoStatusTagConfig"
-            :filter-method="filterTag" filter-placement="bottom-end">
-            <template #default="scope">
-              <el-tag :type="TodoStatusTagType[scope.row.status]" disable-transitions>{{ TodoStatusLabel[scope.row.status]
-              }}</el-tag>
-            </template>
-          </el-table-column> -->
           <el-table-column prop="deadline" label="截止时间（倒计时）" width="200">
             <template #default="scope">
               <span>
@@ -87,14 +80,15 @@ const getData = async (isInit) => {
 
 const onRefreshCycleTodo = async () => {
   const now = Date.now();
-  tableList.value.forEach(async (item) => {
-    const { key } = item;
-    const deadline = dayjs(item.deadline).valueOf();
-    if ([CycleMap.Everyday].includes(item.cycleType) && now > deadline) {
+  const data = await getTodoList();
+  for (let i = 0; i< data.length; i++) {
+    const { key, cycleType } = data[i];
+    const deadline = dayjs(data[i].deadline).valueOf();
+    if ([CycleMap.Everyday].includes(cycleType) && now > deadline) {
       const todoInfo =  { status: TodoStatusMap.Undo, deadline: dayjs(now).add(1, 'day').format('YYYY-MM-DD 00:00:00') };
       await updateTodo(key, todoInfo);
     }
-  });
+  }
   updateView();
   ElMessage.success('刷新完成');
 }
@@ -187,10 +181,6 @@ const completeTodo = async (row) => {
     type: 'success',
   });
 }
-
-const filterTag = (value, row) => {
-  return +row.status === +value
-};
 
 </script>
 
