@@ -33,11 +33,11 @@ async function getPointList() {
   let total = 0;
   const data = [];
   for (let i = 0; i < list.length; i++) {
-    const { eventType, eventId, score } = list[i];
+    const { eventType, eventId, score, createTime } = list[i];
     if (eventType === PointEventTypeMap.Todo ) {
       const todo = await db.get(TodoStoreName, eventId);
       list[i].eventName = todo.content;
-      list[i].createTime = todo.finishTime;
+      list[i].createTime = createTime ?? todo.finishTime;
     } else if (eventType === PointEventTypeMap.Exchange) {
       const activity = await db.get(ActivityStoreName, eventId);
       list[i].eventName = activity.name;

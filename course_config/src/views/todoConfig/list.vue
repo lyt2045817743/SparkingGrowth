@@ -159,7 +159,7 @@ const handleEdit = (row) => {
 };
 
 const completeTodo = async (row) => {
-  const { key: id, deadline, type, score } = row;
+  const { key: id, deadline, type, score, cycleType } = row;
   const now = Date.now();
   const isOverdue = now > dayjs(deadline).valueOf();
   const status = isOverdue ? TodoStatusMap.DoneButOverdue : TodoStatusMap.Done;
@@ -170,6 +170,9 @@ const completeTodo = async (row) => {
   }
   if (isOverdue) {
     pointInfo.score = pointInfo.score / 2;
+  }
+  if (cycleType !== CycleMap.UnCycle) {
+    pointInfo.createTime = now;
   }
   await updateTodo(id, { status, finishTime: now });
   await addPoint(pointInfo);
