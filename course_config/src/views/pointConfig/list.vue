@@ -66,7 +66,7 @@ const formatData = (data) => {
     } else {
       newDataMap[date] = {
         id: dayjs(createTime).format('YYYYMMDD'),
-        content: `${dayjs(createTime).format('YYYY年MM月DD日')} 所得积分`,
+        eventName: `${dayjs(createTime).format('YYYY年MM月DD日')} 所得积分`,
         score,
         createTime,
         eventType: -1,
@@ -74,12 +74,7 @@ const formatData = (data) => {
       }
     }
   }
-  const newData = Object.keys(newDataMap).map((key) => (
-    {
-      eventName: key,
-      ...newDataMap[key]
-    }
-  ));
+  const newData = Object.keys(newDataMap).map((key) => newDataMap[key]);
   return newData.sort((a, b) => b.id - a.id);
 }
 
