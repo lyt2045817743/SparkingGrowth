@@ -11,7 +11,7 @@
         </div>
       </el-header>
       <el-main class="main">
-        <el-table :data="tableList">
+        <el-table :data="tableList" row-key="id">
           <el-table-column type="index" label="序号" min-width="60" />
           <el-table-column prop="eventName" label="记录内容" min-width="150" />
           <el-table-column prop="score" label="分值" min-width="80">
@@ -22,7 +22,7 @@
           <el-table-column prop="createTime" label="完成时间" min-width="180" :formatter="formatter" />
           <el-table-column prop="type" label="积分类型" min-width="100">
             <template #default="scope">
-              {{ PointEventTypeLabel[scope.row.eventType] }}
+              {{ PointEventTypeLabel[scope.row.eventType] ?? '--' }}
             </template>
           </el-table-column>
         </el-table>
@@ -49,8 +49,38 @@ onMounted(() => {
 
 const getData = async () => {
   const { data, total } = await getPointList();
-  tableList.value = data;
+  tableList.value = formatData(data);;
   totalPoint.value = total;
+}
+
+const formatData = (data) => {
+  const newDataMap = {};
+  for (let i = 0; i < data.length; i++) {
+    const { createTime, score } = data[i];
+    const date = dayjs(createTime).format('YYYY-MM-DD');
+    if (newDataMap[date]) {
+      const parentItem = newDataMap[date];
+      parentItem.score += score;
+      parentItem.createTime = Math.max(parentItem.createTime, createTime);
+      parentItem.children.push(data[i]);
+    } else {
+      newDataMap[date] = {
+        id: dayjs(createTime).format('YYYYMMDD'),
+        content: `${dayjs(createTime).format('YYYY年MM月DD日')} 所得积分`,
+        score,
+        createTime,
+        eventType: -1,
+        children: [data[i]]
+      }
+    }
+  }
+  const newData = Object.keys(newDataMap).map((key) => (
+    {
+      eventName: key,
+      ...newDataMap[key]
+    }
+  ));
+  return newData.sort((a, b) => b.id - a.id);
 }
 
 const formatter = (row) => {
