@@ -15,7 +15,7 @@
         <el-table ref="tableRef" row-key="date" :data="tableList">
           <el-table-column type="index" label="序号" width="60" />
           <el-table-column prop="content" label="待办内容" min-width="150" />
-          <el-table-column prop="deadline" label="截止时间（倒计时）" width="200">
+          <el-table-column prop="deadline" label="截止时间（倒计时）" width="230">
             <template #default="scope">
               <span>
                 {{ scope.row.deadline.slice(0, 16) }}
@@ -123,6 +123,9 @@ const getDeadlineExtraText = (row) => {
   } else if (diffDays === 0) {
     diffDaysText = '<1';
     color = 'red';
+    if (dayjs(deadline).valueOf() < Date.now()) {
+      diffDaysText = '逾期' + diffDaysText;
+    }
   }
   const isComplete = [TodoStatusMap.Done, TodoStatusMap.DoneButOverdue].includes(status);
   return isComplete ? undefined : { text: diffDaysText, color };
