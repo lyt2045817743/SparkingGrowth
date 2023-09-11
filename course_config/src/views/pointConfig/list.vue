@@ -34,19 +34,19 @@
     <div style="margin-top: -23px; padding-top: 18px; padding-left: 10px; border-top: 1px solid #f2f3f5;" />
     <el-table :data="ExtraPointTableData">
       <el-table-column property="levelName" label="档数" width="80" />
-      <el-table-column property="workdayScore" label="工作日所需分值" align="center" min-width="150">
+      <el-table-column property="workdayScore" label="工作日所需分值（分）" align="center" min-width="150">
         <template #default="scope">
-          <span :style="getCellStyle(scope.row, DateType.Workday)">{{ getScoreCellText(scope.row, DateType.Workday, scope.row.workdayScore) }}</span>
+          <span :style="getCellStyle(scope.row, DateType.Workday)">{{ scope.row.workdayScore }}</span>
         </template>
       </el-table-column>
-      <el-table-column property="weekdayScore" label="休息日所需分值" align="center" min-width="150">
+      <el-table-column property="weekdayScore" label="休息日所需分值（分）" align="center" min-width="150">
         <template #default="scope">
-          <span :style="getCellStyle(scope.row, DateType.Weekday)">{{ getScoreCellText(scope.row, DateType.Weekday, scope.row.weekdayScore)  }}</span>
+          <span :style="getCellStyle(scope.row, DateType.Weekday)">{{ scope.row.weekdayScore }}</span>
         </template>
       </el-table-column>
-      <el-table-column property="pointStandard" label="补偿分值" align="center" min-width="150">
+      <el-table-column property="pointStandard" label="补偿分值（分）" align="center" min-width="150">
         <template #default="scope">
-          <span :style="getCellStyle(scope.row)">{{ scope.row.pointStandard }}</span>
+          <span :style="getCellStyle(scope.row)">{{ getScoreCellText(scope.row, scope.row.pointStandard) }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -55,9 +55,11 @@
       <span class="dialog-footer">
         <el-button @click="showDialog = false">{{ extraPointInfo.level === ExtraPointLevel.NoLevel ? '我知道了' : '再等等'
         }}</el-button>
-        <el-button v-if="extraPointInfo.level !== ExtraPointLevel.NoLevel" type="primary" @click="addExtraPoint">
-          现在获取
-        </el-button>
+        <el-popconfirm v-if="extraPointInfo.level !== ExtraPointLevel.NoLevel" :title="extraPointInfo.tip" @confirm="addExtraPoint">
+          <template #reference>
+            <el-button type="primary">现在获取</el-button>
+          </template>
+        </el-popconfirm>
       </span>
     </template>
   </el-dialog>
@@ -71,7 +73,7 @@ import { useRouter } from 'vue-router';
 import { getPointList } from './serve';
 import { addPoint } from '../todoConfig/serve'
 import { PointEventTypeLabel, PointEventTypeMap } from '../../constant';
-import { ExtraPointTableData, DateType, DateTypePointStandard, ExtraPointLevel } from './constant';
+import { ExtraPointTableData, DateType, DateTypePointStandard, ExtraPointLevel, ExtraPointLevelScore } from './constant';
 
 const router = useRouter();
 
@@ -130,22 +132,27 @@ const initExtraPointInfo = () => {
   const scoreMap = DateTypePointStandard[dateType];
   let dialogTitle = `今日已累计${todayPoint.value}分，`;
   let level = ExtraPointLevel.NoLevel;
+  let tip = '';
   if (todayPoint.value < scoreMap[ExtraPointLevel.First]) {
-    dialogTitle += `尚未达到任意档，距离下一档还需${scoreMap[ExtraPointLevel.First] - todayPoint.value}分，继续努力哦。`
+    dialogTitle += `尚未达到任意档，无补偿积分`;
+    tip = `距离下一档还需${scoreMap[ExtraPointLevel.First] - todayPoint.value}分，继续努力哦。`
   } else if (todayPoint.value < scoreMap[ExtraPointLevel.Second]) {
     level = ExtraPointLevel.First;
-    dialogTitle += `已满足第${level}档，距离下一档还需${scoreMap[ExtraPointLevel.Second] - todayPoint.value}分，是否现在就获取？（每日仅可获取一次）`;
+    dialogTitle += `满足第${level}档，可得${ExtraPointLevelScore[level]}分`;
+    tip = `距离下一档还需${scoreMap[ExtraPointLevel.Second] - todayPoint.value}分，是否现在就获取？（每日仅可获取一次）`;
   } else if (todayPoint.value < scoreMap[ExtraPointLevel.Third]) {
     level = ExtraPointLevel.Second;
-    dialogTitle += `已满足第${level}档，距离下一档还需${scoreMap[ExtraPointLevel.Third] - todayPoint.value}分，是否现在就获取？（每日仅可获取一次）`;
+    dialogTitle += `满足第${level}档，可得${ExtraPointLevelScore[level]}分`;
+    tip = `距离下一档还需${scoreMap[ExtraPointLevel.Third] - todayPoint.value}分，是否现在就获取？（每日仅可获取一次）`;
   } else {
     level = ExtraPointLevel.Third;
-    dialogTitle += `已满足最高档，再忙也要劳逸结合哦！`;
+    dialogTitle += `满足最高档，可得${ExtraPointLevelScore[level]}分，再忙也要劳逸结合哦！`;
   }
   extraPointInfo.value = {
     dateType,
     level,
-    dialogTitle
+    dialogTitle,
+    tip
   }
 }
 
@@ -165,14 +172,13 @@ const getCellStyle = (row, dateType) => {
   }
 }
 
-const getScoreCellText = (row, dateType, value) => {
-  if (dateType && dateType !== extraPointInfo.value.dateType) return value;
+const getScoreCellText = (row, value) => {
   const { level } = row;
   if (level === extraPointInfo.value.level) {
-    return `${value} (当前达到的档)`;
+    return `${value} (当前可得)`;
   }
   if (level === extraPointInfo.value.level + 1) {
-    return `${value} (即将达到的档)`;
+    return `${value} (下一档可得)`;
   }
   return value;
 }
@@ -189,6 +195,7 @@ const addExtraPoint = async () => {
   await addPoint(pointInfo);
   hasApplyExtraPoint.value = true;
   ElMessage.success('已获得今日补偿积分');
+  showDialog.value = false;
 }
 
 const formatter = (row) => {
