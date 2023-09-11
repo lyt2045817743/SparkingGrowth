@@ -184,9 +184,8 @@ const getScoreCellText = (row, value) => {
 }
 
 const addExtraPoint = async () => {
-  const { dateType, level } = extraPointInfo.value;
-  const scoreMap = DateTypePointStandard[dateType];
-  const score = scoreMap[level];
+  const { level } = extraPointInfo.value;
+  const score = ExtraPointLevelScore[level];
   const pointInfo = {
     eventType: PointEventTypeMap.ExtraPoint,
     score,
@@ -196,6 +195,7 @@ const addExtraPoint = async () => {
   hasApplyExtraPoint.value = true;
   ElMessage.success('已获得今日补偿积分');
   showDialog.value = false;
+  getData();
 }
 
 const formatter = (row) => {
