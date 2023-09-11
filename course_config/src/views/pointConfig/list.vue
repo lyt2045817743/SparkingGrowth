@@ -183,8 +183,8 @@ const addExtraPoint = async () => {
   const score = scoreMap[level];
   const pointInfo = {
     eventType: PointEventTypeMap.ExtraPoint,
-    createTime: Date.now(),
-    score
+    score,
+    createTime: Date.now()
   }
   await addPoint(pointInfo);
   hasApplyExtraPoint.value = true;

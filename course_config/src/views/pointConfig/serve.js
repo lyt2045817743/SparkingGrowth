@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { db } from '../../utils/globalState';
 import { PointEventTypeMap } from '../../constant';
 
@@ -41,6 +42,9 @@ async function getPointList() {
     } else if (eventType === PointEventTypeMap.Exchange) {
       const activity = await db.get(ActivityStoreName, eventId);
       list[i].eventName = activity.name;
+    } else if (eventType === PointEventTypeMap.ExtraPoint) {
+      const date = dayjs(createTime).format('M月D日');
+      list[i].eventName = date + '积分补偿';
     }
     total += score;
     data.push(list[i]);
