@@ -7,7 +7,7 @@
           <h5>（当前积分：{{ totalPoint }}）</h5>
         </div>
         <div style="display: flex; align-items: center;">
-          <el-button round @click="openDialog">获取今日补偿积分</el-button>
+          <el-button v-if="!hasApplyExtraPoint" round @click="openDialog">获取今日补偿积分</el-button>
           <el-button class="add-btn" type="primary" round @click="handleExchange">兑换活动</el-button>
         </div>
       </el-header>
@@ -55,7 +55,7 @@
       <span class="dialog-footer">
         <el-button @click="showDialog = false">{{ extraPointInfo.level === ExtraPointLevel.NoLevel ? '我知道了' : '再等等'
         }}</el-button>
-        <el-button v-if="extraPointInfo.level !== ExtraPointLevel.NoLevel" type="primary" @click="getExtraPoint">
+        <el-button v-if="extraPointInfo.level !== ExtraPointLevel.NoLevel" type="primary" @click="addExtraPoint">
           现在获取
         </el-button>
       </span>
@@ -65,11 +65,12 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { dayjs } from 'element-plus';
+import { ElMessage, dayjs } from 'element-plus';
 import ww from 'chinese-workday';
 import { useRouter } from 'vue-router';
 import { getPointList } from './serve';
-import { PointEventTypeLabel } from '../../constant';
+import { addPoint } from '../todoConfig/serve'
+import { PointEventTypeLabel, PointEventTypeMap } from '../../constant';
 import { ExtraPointTableData, DateType, DateTypePointStandard, ExtraPointLevel } from './constant';
 
 const router = useRouter();
@@ -79,6 +80,7 @@ const totalPoint = ref(0);
 const tableList = ref([]);
 const todayPoint = ref(0);
 const extraPointInfo = ref({});
+const hasApplyExtraPoint = ref(false);
 
 onMounted(() => {
   getData();
@@ -92,9 +94,14 @@ const getData = async () => {
 
 const formatData = (data) => {
   const newDataMap = {};
+  const today = dayjs().format('YYYY-MM-DD');
   for (let i = 0; i < data.length; i++) {
-    const { createTime, score } = data[i];
+    const { createTime, score, eventType } = data[i];
     const date = dayjs(createTime).format('YYYY-MM-DD');
+    // 初始化今日是否获取过补偿积分
+    if (eventType === PointEventTypeMap.ExtraPoint && date === today) {
+      hasApplyExtraPoint.value = true;
+    }
     if (newDataMap[date]) {
       const parentItem = newDataMap[date];
       parentItem.score += score;
@@ -121,19 +128,19 @@ const initExtraPointInfo = () => {
   const isWorkday = ww.isWorkday(weekNum);
   const dateType = isWorkday ? DateType.Workday : DateType.Weekday;
   const scoreMap = DateTypePointStandard[dateType];
-  let dialogTitle = '';
+  let dialogTitle = `今日已累计${todayPoint.value}分，`;
   let level = ExtraPointLevel.NoLevel;
   if (todayPoint.value < scoreMap[ExtraPointLevel.First]) {
-    dialogTitle = `当前尚未达到任意档，还需${scoreMap[ExtraPointLevel.First] - todayPoint.value}分，还需继续努力哦。`
+    dialogTitle += `尚未达到任意档，距离下一档还需${scoreMap[ExtraPointLevel.First] - todayPoint.value}分，继续努力哦。`
   } else if (todayPoint.value < scoreMap[ExtraPointLevel.Second]) {
     level = ExtraPointLevel.First;
-    dialogTitle = `当前已满足第${level}档，距离下一档还有${scoreMap[ExtraPointLevel.Second] - todayPoint.value}分，是否现在就获取？（每日仅可获取一次）`;
+    dialogTitle += `已满足第${level}档，距离下一档还需${scoreMap[ExtraPointLevel.Second] - todayPoint.value}分，是否现在就获取？（每日仅可获取一次）`;
   } else if (todayPoint.value < scoreMap[ExtraPointLevel.Third]) {
     level = ExtraPointLevel.Second;
-    dialogTitle = `当前已满足第${level}档，距离下一档还有${scoreMap[ExtraPointLevel.Third] - todayPoint.value}分，是否现在就获取？（每日仅可获取一次）`;
+    dialogTitle += `已满足第${level}档，距离下一档还需${scoreMap[ExtraPointLevel.Third] - todayPoint.value}分，是否现在就获取？（每日仅可获取一次）`;
   } else {
     level = ExtraPointLevel.Third;
-    dialogTitle = `当前已满足最高档，再忙也要劳逸结合哦！`;
+    dialogTitle += `已满足最高档，再忙也要劳逸结合哦！`;
   }
   extraPointInfo.value = {
     dateType,
@@ -170,11 +177,18 @@ const getScoreCellText = (row, dateType, value) => {
   return value;
 }
 
-const getExtraPoint = async () => {
+const addExtraPoint = async () => {
   const { dateType, level } = extraPointInfo.value;
   const scoreMap = DateTypePointStandard[dateType];
   const score = scoreMap[level];
-  console.log(score);
+  const pointInfo = {
+    eventType: PointEventTypeMap.ExtraPoint,
+    createTime: Date.now(),
+    score
+  }
+  await addPoint(pointInfo);
+  hasApplyExtraPoint.value = true;
+  ElMessage.success('已获得今日补偿积分');
 }
 
 const formatter = (row) => {
