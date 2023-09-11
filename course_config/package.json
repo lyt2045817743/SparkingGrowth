@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "chinese-workday": "^1.9.0",
     "core-js": "^3.6.5",
     "element-plus": "^2.3.9",
     "vue": "^3.0.0",
