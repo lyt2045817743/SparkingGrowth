@@ -27,12 +27,12 @@
           </el-table-column>
           <el-table-column prop="percent" label="当前阅读进度" min-width="180">
             <template #default="scope">
-              <el-progress :percentage="getPercent(scope.row)" :status="scope.row.progressCount >= scope.row.totalCount ? 'success': ''" />
+              <el-progress :percentage="getPercent(scope.row)" :status="getPercentStatus(scope.row)" />
             </template>
           </el-table-column>
           <el-table-column align="right" label="操作" width="200px">
             <template #default="scope">
-              <el-button v-if="scope.row.status !== BooksStatusMap.Done" size="small" type="primary" plain @click="onVisibleChange(scope.row)">更新进度</el-button>
+              <el-button v-if="![BooksStatusMap.Done, BooksStatusMap.Abandon].includes(scope.row.status)" size="small" type="primary" plain @click="onVisibleChange(scope.row)">更新进度</el-button>
               <el-button size="small" @click="editHandle(scope.row)">编辑</el-button>
             </template>
           </el-table-column>
@@ -82,6 +82,14 @@ onMounted(() => {
 
 const getData = async () => {
   tableList.value = await getBookList();
+}
+
+const getPercentStatus = (row) => {
+  const { progressCount, totalCount, status } = row;
+  if (status === BooksStatusMap.Abandon) {
+    return 'exception';
+  }
+  return progressCount >= totalCount ? 'success': '';
 }
 
 const getPercent = (row) => {

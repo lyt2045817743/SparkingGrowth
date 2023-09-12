@@ -94,6 +94,9 @@ const onSubmit = async () => {
     if (abandonReason) {
       bookInfo.abandonReason = abandonReason;
     }
+    if (status === BooksStatusMap.Done) {
+      bookInfo.progressCount = totalCount;
+    }
     await updateBook(id, bookInfo);
     message = '修改成功';
   } else {
