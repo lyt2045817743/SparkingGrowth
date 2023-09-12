@@ -2,7 +2,7 @@
   <el-container>
     <el-header class="header">
       <el-breadcrumb class="breadcrumb">
-        <el-breadcrumb-item :to="{ path: '/todo' }">待办列表</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/todo' }">书籍列表</el-breadcrumb-item>
         <el-breadcrumb-item>{{ pageType === 'edit' ? '编辑' : '新增' }}</el-breadcrumb-item>
       </el-breadcrumb>
       <el-button class="back-btn" type="info" round @click="onCancel">返回</el-button>

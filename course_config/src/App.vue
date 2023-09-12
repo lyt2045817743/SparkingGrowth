@@ -8,6 +8,7 @@
         <router-view :key="$route.path" />
       </el-main>
     </el-container>
+    <el-backtop :right="20" :bottom="30" :visibility-height="150" />
   </div>
 </template>
 
