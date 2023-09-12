@@ -5,7 +5,7 @@ import { setGlobalState } from '../utils';
 
 let db, curTransaction;
 export async function initDatabase() {
-  const { name, version } = DatabaseConfig;
+  const { name, version, basicStores } = DatabaseConfig;
   db = await openDB(name, version, {
     upgrade(curDB, oldVersion, newVersion, transaction, event) {
       db = curDB;
@@ -13,9 +13,7 @@ export async function initDatabase() {
       initCourseStore();
       initStudyLogStore();
       initConfigStore();
-      initTodoStore();
-      initPointStore();
-      initActivityStore();
+      initBasicStore(basicStores);
     },
   })
   setGlobalState('db', db);
@@ -46,22 +44,13 @@ function initConfigStore() {
   }
 }
 
-function initTodoStore() {
-  if (!db.objectStoreNames.contains('todo')) {
-    db.createObjectStore('todo', { keyPath: 'key', autoIncrement: true });
-  }
-}
-
-function initPointStore() {
-  if (!db.objectStoreNames.contains('point')) {
-    db.createObjectStore('point', { keyPath: 'id', autoIncrement: true });
-  }
-}
-
-function initActivityStore() {
-  if (!db.objectStoreNames.contains('activity')) {
-    db.createObjectStore('activity', { keyPath: 'id', autoIncrement: true });
-  }
+function initBasicStore(stores) {
+  stores.forEach((item) => {
+    const { name, keyPath } = item;
+    if (!db.objectStoreNames.contains(name)) {
+      db.createObjectStore(name, { keyPath, autoIncrement: true });
+    }
+  })
 }
 
 export {
