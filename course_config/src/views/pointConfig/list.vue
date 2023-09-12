@@ -134,8 +134,7 @@ const initExtraPointInfo = () => {
   let level = ExtraPointLevel.NoLevel;
   let tip = '';
   if (todayPoint.value < scoreMap[ExtraPointLevel.First]) {
-    dialogTitle += `尚未达到任意档，无补偿积分`;
-    tip = `距离下一档还需${scoreMap[ExtraPointLevel.First] - todayPoint.value}分，继续努力哦。`
+    dialogTitle += `距离第一档还需${scoreMap[ExtraPointLevel.First] - todayPoint.value}分。当前无补偿积分，继续努力哦。`;
   } else if (todayPoint.value < scoreMap[ExtraPointLevel.Second]) {
     level = ExtraPointLevel.First;
     dialogTitle += `满足第${level}档，可得${ExtraPointLevelScore[level]}分`;
