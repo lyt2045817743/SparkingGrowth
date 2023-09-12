@@ -4,6 +4,22 @@ export const BooksTypeOptions = [
   {
     label: '杂志',
     value: 1
+  },
+  {
+    label: '文学',
+    value: 2
+  },
+  {
+    label: '传记',
+    value: 3
+  },
+  {
+    label: '历史',
+    value: 4
+  },
+  {
+    label: '小说',
+    value: 5
   }
 ]
 
