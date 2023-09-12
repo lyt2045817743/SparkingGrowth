@@ -55,11 +55,12 @@
       <span class="dialog-footer">
         <el-button @click="showDialog = false">{{ extraPointInfo.level === ExtraPointLevel.NoLevel ? '我知道了' : '再等等'
         }}</el-button>
-        <el-popconfirm v-if="extraPointInfo.level !== ExtraPointLevel.NoLevel" :title="extraPointInfo.tip" @confirm="addExtraPoint">
+        <el-popconfirm v-if="[ExtraPointLevel.First, ExtraPointLevel.Second].includes(extraPointInfo.level)" :title="extraPointInfo.tip" @confirm="addExtraPoint">
           <template #reference>
             <el-button type="primary">现在获取</el-button>
           </template>
         </el-popconfirm>
+        <el-button v-if="extraPointInfo.level === ExtraPointLevel.Third" type="primary" @click="addExtraPoint">现在获取</el-button>
       </span>
     </template>
   </el-dialog>
