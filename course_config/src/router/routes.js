@@ -7,13 +7,39 @@ const TodoEdit = () => import('../views/todoConfig/edit.vue');
 const PointList = () => import('../views/pointConfig/list.vue');
 const exchangePointList = () => import('../views/pointConfig/exchange');
 
+const BookList = () => import('../views/bookConfig/list.vue');
+const BookEdit = () => import('../views/bookConfig/edit.vue');
+
 export const routes = [
   {
     path: '/',
     meta: {
       hidden: true
     },
-    redirect: '/list',
+    redirect: '/todo',
+  },
+  {
+    path: '/todo',
+    meta: {
+      title: '待办管理'
+    },
+    component: TodoList,
+  },
+  {
+    path: '/todoAdd',
+    meta: {
+      title: '添加待办',
+      hidden: true
+    },
+    component: TodoEdit,
+  },
+  {
+    path: '/todoEdit',
+    meta: {
+      title: '编辑待办',
+      hidden: true
+    },
+    component: TodoEdit,
   },
   {
     path: '/list',
@@ -39,27 +65,27 @@ export const routes = [
     component: Edit,
   },
   {
-    path: '/todo',
+    path: '/book',
     meta: {
-      title: '待办管理'
+      title: '书籍管理'
     },
-    component: TodoList,
+    component: BookList,
   },
   {
-    path: '/todoAdd',
+    path: '/bookAdd',
     meta: {
-      title: '添加待办',
+      title: '添加书籍',
       hidden: true
     },
-    component: TodoEdit,
+    component: BookEdit,
   },
   {
-    path: '/todoEdit',
+    path: '/bookEdit',
     meta: {
-      title: '编辑待办',
+      title: '修改书籍',
       hidden: true
     },
-    component: TodoEdit,
+    component: BookEdit,
   },
   {
     path: '/point',
