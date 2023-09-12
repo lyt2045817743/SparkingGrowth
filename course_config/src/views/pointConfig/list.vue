@@ -90,7 +90,7 @@ onMounted(() => {
 
 const getData = async () => {
   const { data, total } = await getPointList();
-  tableList.value = formatData(data);;
+  tableList.value = formatData(data);
   totalPoint.value = total;
 }
 

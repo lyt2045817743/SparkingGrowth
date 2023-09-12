@@ -62,14 +62,11 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { dayjs, ElMessage } from 'element-plus';
-import { useRoute } from 'vue-router';
 import { addActivity, getActivityList, updateActivity, deleteActivity } from './serve';
 import { addPoint } from '../todoConfig/serve';
 import { PointEventTypeMap } from '../../constant'
 
-const route = useRoute();
 
-const { point } = route.query;
 const formLabelWidth = '140px';
 
 const dialogFormVisible = ref(false);

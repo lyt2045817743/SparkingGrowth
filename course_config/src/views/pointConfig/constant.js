@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-
 export const DateType = {
   Workday: 1,
   Weekday: 2
