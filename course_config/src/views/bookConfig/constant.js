@@ -1,4 +1,4 @@
-import { getOptionsByLabelMap } from '../../utils'
+import { getOptionsByLabelMap, getMapByOptions } from '../../utils'
 
 export const BooksTypeOptions = [
   {
@@ -22,3 +22,5 @@ export const BooksStatusLabel = {
 }
 
 export const BooksStatusOptions = getOptionsByLabelMap(BooksStatusLabel);
+
+export const BooksTypeLabel = getMapByOptions(BooksTypeOptions);

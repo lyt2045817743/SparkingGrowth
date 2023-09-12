@@ -49,14 +49,13 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
-// import { addBook, getBookById, updateBook } from './serve.js';
+import { addBook, getBookById, updateBook } from './serve.js';
 import { BooksTypeOptions, BooksStatusOptions, BooksStatusMap } from './constant';
 
 const route = useRoute();
 const router = useRouter();
-const { pageType } = route.query;
-// , id: newId
-// const id = Number(newId);
+const { pageType, id: newId } = route.query;
+const id = Number(newId);
 
 const form = ref({
   name: '',
@@ -64,6 +63,7 @@ const form = ref({
   type: '',
   percentType: 1,
   status: 1,
+  totalCount: 0,
   abandonReason: ''
 })
 
@@ -74,30 +74,32 @@ onMounted(() => {
 })
 
 const init = async () => {
-  // const { name, author, type, percentType, status, abandonReason } = await getBookById(id);
-  // form.value = Object.assign(form.value, { name, author, type, percentType, status, abandonReason })
+  const { name, author, type, percentType, status, abandonReason, totalCount } = await getBookById(id);
+  form.value = Object.assign(form.value, { name, author, type, percentType, status, abandonReason, totalCount })
 }
 
 const onSubmit = async () => {
-  const { name, author, type, percentType, status, abandonReason } = form.value;
+  const { name, author, type, percentType, status, abandonReason, totalCount } = form.value;
   const createTime = Date.now()
   const bookInfo = {
     name,
     author,
     status,
     type,
-    percentType
+    percentType,
+    totalCount: totalCount ? Number(totalCount) : 0
   };
   let message = '';
   if (pageType === 'edit') {
-    // await updateBook(id, bookInfo);
     if (abandonReason) {
       bookInfo.abandonReason = abandonReason;
     }
+    await updateBook(id, bookInfo);
     message = '修改成功';
   } else {
     bookInfo.createTime = createTime;
-    // await addBook(bookInfo);
+    bookInfo.progressCount = 0;
+    await addBook(bookInfo);
     message = '添加成功';
   }
   ElMessage({

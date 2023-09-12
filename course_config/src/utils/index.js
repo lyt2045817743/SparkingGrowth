@@ -6,3 +6,9 @@ export const getOptionsByLabelMap = (labelMap) => {
     value: key
   }))
 }
+
+export const getMapByOptions = (options) => {
+  const map = {};
+  options.forEach((item) => map[item.value] = item.label);
+  return map;
+}
