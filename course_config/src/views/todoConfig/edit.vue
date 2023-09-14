@@ -3,13 +3,13 @@
     <el-header class="header">
       <el-breadcrumb class="breadcrumb">
         <el-breadcrumb-item :to="{ path: '/todo' }">待办列表</el-breadcrumb-item>
-        <el-breadcrumb-item>{{ pageType === 'edit' ? '编辑' : '新增' }}</el-breadcrumb-item>
+        <el-breadcrumb-item>{{ PageTypeLabel[pageType] }}</el-breadcrumb-item>
       </el-breadcrumb>
       <el-button class="back-btn" type="info" round @click="onCancel">返回</el-button>
     </el-header>
     <el-main>
-      <el-form :model="form" label-width="120px">
-        <el-form-item v-if="pageType !== 'edit'" label="配置方式：" required>
+      <el-form :model="form" :disabled="pageType === PageTypeMap.View" label-width="120px">
+        <el-form-item v-if="pageType === PageTypeMap.Add" label="配置方式：" required>
           <el-radio-group v-model="form.configType">
             <el-radio :label="0">简单配置</el-radio>
             <el-radio :label="1">完整配置</el-radio>
@@ -19,8 +19,9 @@
           <el-input v-model="form.content" style="width: 350px" placeholder="请输入" />
         </el-form-item>
         <div v-if="form.configType === 1">
-          <el-form-item label="待办详情：">
-            <el-input v-model="form.desc" placeholder="请输入" type="textarea" :rows="4" style="width: 700px" />
+          <el-form-item v-if="form.desc" label="待办详情：">
+            <el-input v-if="pageType !== PageTypeMap.View" v-model="form.desc" placeholder="请输入" type="textarea" :rows="4" style="width: 700px" />
+            <div class="desc-view" v-else>{{ form.desc }}</div>
           </el-form-item>
           <el-form-item label="待办类型：">
             <el-cascader
@@ -66,7 +67,7 @@
           </el-form-item>
         </div>
         <el-form-item>
-          <el-button :disabled="!form.content" type="primary" @click="onSubmit">提交</el-button>
+          <el-button v-if="pageType !== PageTypeMap.View" :disabled="!form.content" type="primary" @click="onSubmit">提交</el-button>
         </el-form-item>
       </el-form>
     </el-main>
@@ -79,11 +80,13 @@ import { useRoute, useRouter } from 'vue-router';
 import { ElMessage, dayjs } from 'element-plus';
 import { addTodo, getTodoById, updateTodo } from './serve.js';
 import { TodoTypeMap, TypeCascadeOptions, CycleOptions, TodoTypeScore } from './constant';
+import { PageTypeLabel, PageTypeMap } from '../../constant'
 
 const route = useRoute();
 const router = useRouter();
-const { pageType, id: newId } = route.query;
+const { pageType: newPageType, id: newId } = route.query;
 const id = Number(newId);
+const pageType = Number(newPageType);
 
 const form = ref({
   configType: 1,
@@ -102,10 +105,10 @@ const props = {
 };
 
 onMounted(() => {
-  if (pageType === 'edit') {
+  if (pageType !== PageTypeMap.Add) {
     init();
   } else {
-    form.value.configType = 0
+    form.value.configType = 0;
   }
 })
 
@@ -132,7 +135,7 @@ const onSubmit = async () => {
     desc
   };
   let message = '添加成功';
-  if (pageType === 'edit') {
+  if (pageType === PageTypeMap.Edit) {
     delete todoInfo.createTime;
     delete todoInfo.status;
     await updateTodo(id, todoInfo);
@@ -170,5 +173,11 @@ const onCancel = () => {
 .text-split {
   text-align: center;
   width: 50px;
+}
+
+.desc-view {
+  border: 1px solid #dcdfe6;
+  padding: 0 8px;
+  white-space: pre-line;
 }
 </style>

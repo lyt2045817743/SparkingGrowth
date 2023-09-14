@@ -14,7 +14,11 @@
       <el-main class="main">
         <el-table ref="tableRef" row-key="date" :data="tableList">
           <el-table-column type="index" label="序号" width="60" />
-          <el-table-column prop="content" label="待办内容" min-width="150" />
+          <el-table-column prop="content" label="待办内容" min-width="150">
+            <template #default="scope">
+              <div class="link-style" @click="handleEdit(scope.row, PageTypeMap.View)">{{ scope.row.content }}</div>
+            </template>
+          </el-table-column>
           <el-table-column prop="deadline" label="截止时间（倒计时）" width="230">
             <template #default="scope">
               <span>
@@ -31,7 +35,7 @@
           </el-table-column>
           <el-table-column align="right" label="操作" width="200px">
             <template #default="scope">
-              <el-button size="small" @click="handleEdit(scope.row)">编辑</el-button>
+              <el-button size="small" @click="handleEdit(scope.row, PageTypeMap.Edit)">编辑</el-button>
               <el-popconfirm title="是否确认删除？" @confirm="handleDelete(scope.row)">
                 <template #reference>
                   <el-button size="small" type="danger">删除</el-button>
@@ -51,7 +55,7 @@ import { onMounted, ref } from 'vue';
 import { ElMessage, dayjs } from 'element-plus';
 import { Refresh } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router';
-import { PointEventTypeMap } from '../../constant';
+import { PointEventTypeMap, PageTypeMap } from '../../constant';
 import {  TodoTypeLabel, TodoTypeScore, TodoStatusMap, CycleMap } from './constant';
 import { deleteTodo , getTodoList, updateTodo, addPoint } from './serve';
 
@@ -145,18 +149,18 @@ const handleAdd = () => {
   router.push({
     path: '/todoAdd',
     query: {
-      pageType: 'add'
+      pageType: PageTypeMap.Add
     }
   })
 }
 
-const handleEdit = (row) => {
+const handleEdit = (row, pageType) => {
   const { key } = row;
   router.push({
     path: '/todoEdit',
     query: {
       id: key,
-      pageType: 'edit'
+      pageType
     }
   })
 };
@@ -201,5 +205,9 @@ const completeTodo = async (row) => {
   :deep(.el-table .cell) {
     white-space: pre-line;
   }
+}
+
+.link-style {
+  cursor: pointer;
 }
 </style>
