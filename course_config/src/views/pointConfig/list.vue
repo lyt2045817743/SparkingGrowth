@@ -14,7 +14,16 @@
       <el-main class="main">
         <el-table :data="tableList" row-key="id">
           <el-table-column type="index" label="序号" min-width="60" />
-          <el-table-column prop="eventName" label="记录内容" min-width="150" />
+          <el-table-column prop="eventName" label="记录内容" min-width="150">
+            <template #default="scope">
+              <span v-if="scope.row.eventType === PointEventTypeMap.Todo" class="link-style" @click="goTodoDetail(scope.row)">
+                {{ scope.row.eventName }}
+              </span>
+              <span v-else>
+                {{ scope.row.eventName }}
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column prop="score" label="分值" min-width="80">
             <template #default="scope">
               {{ `${scope.row.score > 0 ? '+' : ''}${scope.row.score}` }}
@@ -73,7 +82,7 @@ import ww from 'chinese-workday';
 import { useRouter } from 'vue-router';
 import { getPointList } from './serve';
 import { addPoint } from '../todoConfig/serve'
-import { PointEventTypeLabel, PointEventTypeMap } from '../../constant';
+import { PageTypeMap, PointEventTypeLabel, PointEventTypeMap } from '../../constant';
 import { ExtraPointTableData, DateType, DateTypePointStandard, ExtraPointLevel, ExtraPointLevelScore } from './constant';
 
 const router = useRouter();
@@ -211,6 +220,17 @@ const handleExchange = () => {
   })
 };
 
+const goTodoDetail = (row) => {
+  const { eventId } = row;
+  router.push({
+    path: '/todoEdit',
+    query: {
+      id: eventId,
+      pageType: PageTypeMap.View
+    }
+  })
+}
+
 </script>
 
 <style scoped>
@@ -230,5 +250,10 @@ const handleExchange = () => {
   :deep(.el-table .cell) {
     white-space: pre-line;
   }
+}
+
+.link-style {
+  cursor: pointer;
+  color: #457bfc;
 }
 </style>
