@@ -6,7 +6,7 @@
           <h5>书籍列表</h5>
         </div>
         <div style="display: flex; align-items: center;">
-          <el-button round>类型管理</el-button>
+          <!-- <el-button round>类型管理</el-button> -->
           <el-button class="add-btn" type="primary" round @click="addHandle">新增书籍</el-button>
         </div>
       </el-header>
