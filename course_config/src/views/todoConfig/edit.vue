@@ -19,7 +19,7 @@
           <el-input v-model="form.content" style="width: 350px" placeholder="请输入" />
         </el-form-item>
         <div v-if="form.configType === 1">
-          <el-form-item v-if="form.desc" label="待办详情：">
+          <el-form-item v-if="form.desc || pageType !== PageTypeMap.View" label="待办详情：">
             <el-input v-if="pageType !== PageTypeMap.View" v-model="form.desc" placeholder="请输入" type="textarea" :rows="4" style="width: 700px" />
             <div class="desc-view" v-else>{{ form.desc }}</div>
           </el-form-item>
