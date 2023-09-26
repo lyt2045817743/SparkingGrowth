@@ -10,6 +10,8 @@ const exchangePointList = () => import('../views/pointConfig/exchange');
 const BookList = () => import('../views/bookConfig/list.vue');
 const BookEdit = () => import('../views/bookConfig/edit.vue');
 
+const SystemEdit = () => import('../views/systemConfig/edit.vue');
+
 export const routes = [
   {
     path: '/',
@@ -101,5 +103,12 @@ export const routes = [
       hidden: true
     },
     component: exchangePointList,
+  },
+  {
+    path: '/systemEdit',
+    meta: {
+      title: '系统配置',
+    },
+    component: SystemEdit,
   }
 ];

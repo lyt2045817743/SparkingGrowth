@@ -3,20 +3,24 @@ import { DatabaseConfig } from './.';
 import DefaultCourseInfo from './defaultCourseData';
 import { setGlobalState } from '../utils';
 
-let db, curTransaction;
+let db, curTransaction, getDb;
 export async function initDatabase() {
   const { name, version, basicStores } = DatabaseConfig;
-  db = await openDB(name, version, {
-    upgrade(curDB, oldVersion, newVersion, transaction, event) {
-      db = curDB;
-      curTransaction = transaction;
-      initCourseStore();
-      initStudyLogStore();
-      initConfigStore();
-      initBasicStore(basicStores);
-    },
-  })
-  setGlobalState('db', db);
+  getDb = async () => {
+    db = await openDB(name, version, {
+      upgrade(curDB, oldVersion, newVersion, transaction, event) {
+        db = curDB;
+        curTransaction = transaction;
+        initCourseStore();
+        initStudyLogStore();
+        initConfigStore();
+        initBasicStore(basicStores);
+      },
+    })
+    setGlobalState('db', db);
+    return db;
+  }
+  getDb();
 }
 
 function initCourseStore() {
@@ -54,5 +58,6 @@ function initBasicStore(stores) {
 }
 
 export {
-  db
+  db,
+  getDb
 }

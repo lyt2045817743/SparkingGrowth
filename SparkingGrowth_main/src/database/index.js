@@ -1,4 +1,4 @@
-  import { initDatabase, db } from "./init";
+  import { initDatabase, db, getDb } from "./init";
 
   // indexDB数据库信息配置
   const DatabaseConfig = {
@@ -26,6 +26,7 @@
 
   export {
     db,
+    getDb,
     DatabaseConfig,
     initDatabase
   }
