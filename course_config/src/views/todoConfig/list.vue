@@ -74,7 +74,7 @@ onMounted(() => {
 
 const getPointFlag = async () => {
   const config = await getConfigByKey('showPoint');
-  showPoint.value = config.value;
+  showPoint.value = config;
 }
 
 const updateView = () => {
