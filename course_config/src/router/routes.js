@@ -92,7 +92,8 @@ export const routes = [
   {
     path: '/point',
     meta: {
-      title: '积分记录与兑换'
+      title: '积分记录与兑换',
+      hiddenKey: 'showPoint'
     },
     component: PointList,
   },

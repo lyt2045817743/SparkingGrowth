@@ -9,6 +9,11 @@ async function getConfigMap() {
   return Promise.resolve(configMap);
 }
 
+async function getConfigByKey(key) {
+  const config = await db.get(ConfigStoreName, key);
+  return config.value;
+}
+
 // 修改配置信息
 async function updateConfig(key, value) {
   await db.put(ConfigStoreName, { key, value });
@@ -16,5 +21,6 @@ async function updateConfig(key, value) {
 
 export {
   getConfigMap,
-  updateConfig
+  updateConfig,
+  getConfigByKey
 }

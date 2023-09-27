@@ -62,7 +62,7 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="积分调整：">
+          <el-form-item v-if="showPoint" label="积分调整：">
             <el-input v-model="form.score" style="width: 100px" type="number" />
           </el-form-item>
         </div>
@@ -81,6 +81,7 @@ import { ElMessage, dayjs } from 'element-plus';
 import { addTodo, getTodoById, updateTodo } from './serve.js';
 import { TodoTypeMap, TypeCascadeOptions, CycleOptions, TodoTypeScore } from './constant';
 import { PageTypeLabel, PageTypeMap } from '../../constant'
+import { getConfigByKey } from '../systemConfig/serve';
 
 const route = useRoute();
 const router = useRouter();
@@ -88,6 +89,7 @@ const { pageType: newPageType, id: newId } = route.query;
 const id = Number(newId);
 const pageType = Number(newPageType);
 
+const showPoint = ref(false);
 const form = ref({
   configType: 1,
   content: '',
@@ -105,12 +107,18 @@ const props = {
 };
 
 onMounted(() => {
+  getPointFlag();
   if (pageType !== PageTypeMap.Add) {
     init();
   } else {
     form.value.configType = 0;
   }
 })
+
+const getPointFlag = async () => {
+  const config = await getConfigByKey('showPoint');
+  showPoint.value = config.value;
+}
 
 const init = async () => {
   const { content, createTime, deadline, desc, type, status, cycleType, score } = await getTodoById(id);

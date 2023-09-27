@@ -27,7 +27,7 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column prop="type" label="分类（积分）" :formatter="formatter" width="160" />
+          <el-table-column prop="type" :label="`分类${showPoint ? '（积分）': ''}`" :formatter="formatter" width="160" />
           <el-table-column prop="desc" label="待办详情" min-width="220">
             <template #default="scope">
               {{ scope.row.desc || '--' }}
@@ -58,16 +58,24 @@ import { useRouter } from 'vue-router';
 import { PointEventTypeMap, PageTypeMap } from '../../constant';
 import {  TodoTypeLabel, TodoTypeScore, TodoStatusMap, CycleMap } from './constant';
 import { deleteTodo , getTodoList, updateTodo, addPoint } from './serve';
+import { getConfigByKey } from '../systemConfig/serve';
 
 const router = useRouter();
 
 const onlyShowToday = ref(false);
 const tableList = ref([]);
+const showPoint = ref(false);
 let totalList;
 
 onMounted(() => {
   getData(true);
+  getPointFlag();
 })
+
+const getPointFlag = async () => {
+  const config = await getConfigByKey('showPoint');
+  showPoint.value = config.value;
+}
 
 const updateView = () => {
   getData();
@@ -113,7 +121,7 @@ const formatter = (row) => {
   const { type, score } = row;
   const types = type.map((item) => TodoTypeLabel[item]).join(',');
   const scoreNew = score ?? type.reduce((a, b) => a + TodoTypeScore[b], 0);
-  return `${types}（+${scoreNew}）`;
+  return `${types}${showPoint.value ? `（+${scoreNew}）` : ''}`;
 }
 
 const getDeadlineExtraText = (row) => {

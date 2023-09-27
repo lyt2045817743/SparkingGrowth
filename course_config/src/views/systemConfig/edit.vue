@@ -11,7 +11,7 @@
           <el-input v-model="form.systemName" style="width:300px" @change="(val) => changeConfig(val, 'systemName')" />
         </el-form-item>
         <el-form-item label="积分模块：" required>
-          <el-switch v-model="form.showTodo" @change="(val) => changeConfig(val, 'showTodo')" />
+          <el-switch v-model="form.showPoint" @change="(val) => changeConfig(val, 'showPoint')" />
         </el-form-item>
       </el-form>
     </el-main>
@@ -25,16 +25,16 @@ import { getConfigMap, updateConfig } from './serve.js';
 
 const form = ref({
   systemName: '',
-  showTodo: undefined
+  showPoint: undefined
 })
 onMounted(() => {
   init();
 })
 
 const init = async () => {
-  const { systemName = '婷的空间', showTodo = true } = await getConfigMap();
+  const { systemName = '婷的空间', showPoint = true } = await getConfigMap();
   form.value.systemName = systemName;
-  form.value.showTodo = showTodo;
+  form.value.showPoint = showPoint;
 };
 
 const changeConfig = async (val, key) => {
