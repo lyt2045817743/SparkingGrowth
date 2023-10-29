@@ -28,11 +28,12 @@
         </el-form-item>
         <el-form-item v-if="pageType !== 'edit'" label="目录配置：" required>
           <el-radio-group v-model="form.settingType">
+            <el-radio :label="0">暂不配置</el-radio>
             <el-radio :label="1">简单配置（仅章节数）</el-radio>
             <el-radio :label="2">部分配置（带题目）</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item v-if="pageType !== 'edit'">
+        <el-form-item v-if="pageType !== 'edit' && form.settingType !== 0">
           <!-- 简单配置 -->
           <div v-if="form.settingType === 1">
             <div>【简单配置】该学习资源有<input v-model="form.partNum" type="number" @input="initCourseNum" placeholder="请输入篇数" />篇/部分</div>
@@ -157,7 +158,7 @@ const onValid = async () => {
   let flag = false;
   await formEl.value.validate((valid) => {
     if (valid) {
-      if (pageType === 'edit') {
+      if (pageType === 'edit' || form.value.settingType === 0) {
         flag = true;
       } else {
         flag = validateCourseTitle();
