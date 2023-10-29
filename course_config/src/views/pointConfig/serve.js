@@ -37,8 +37,8 @@ async function getPointList() {
     const { eventType, eventId, score, createTime } = list[i];
     if (eventType === PointEventTypeMap.Todo ) {
       const todo = await db.get(TodoStoreName, eventId);
-      list[i].eventName = todo.content;
-      list[i].createTime = createTime ?? todo.finishTime;
+      list[i].eventName = todo?.content ?? '原数据已删除';
+      list[i].createTime = createTime ?? todo?.finishTime;
     } else if (eventType === PointEventTypeMap.Exchange) {
       const activity = await db.get(ActivityStoreName, eventId);
       list[i].eventName = activity.name;
