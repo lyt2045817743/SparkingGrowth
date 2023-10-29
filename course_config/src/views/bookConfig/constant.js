@@ -2,6 +2,10 @@ import { getOptionsByLabelMap, getMapByOptions } from '../../utils'
 
 export const BooksTypeOptions = [
   {
+    label: '计算机',
+    value: 0
+  },
+  {
     label: '杂志',
     value: 1
   },
