@@ -12,9 +12,9 @@
         </div>
       </el-header>
       <el-main class="main">
-        <el-table ref="tableRef" row-key="date" :data="tableList">
+        <el-table ref="tableRef" row-key="key" :data="tableList">
           <el-table-column type="index" label="序号" width="60" />
-          <el-table-column prop="content" label="待办内容" min-width="150">
+          <el-table-column prop="content" label="待办内容" min-width="180">
             <template #default="scope">
               <div class="link-style" @click="handleEdit(scope.row, PageTypeMap.View)">{{ scope.row.content }}</div>
             </template>
@@ -33,12 +33,13 @@
               {{ scope.row.desc || '--' }}
             </template>
           </el-table-column>
-          <el-table-column align="right" label="操作" width="200px">
+          <el-table-column align="right" label="操作" width="300px">
             <template #default="scope">
-              <el-button size="small" @click="handleEdit(scope.row, PageTypeMap.Edit)">编辑</el-button>
+              <el-button size="small" v-if="!scope.row.parentKey" @click="addChild(scope.row)">添加子待办</el-button>
+              <el-button size="small" plain type="primary" @click="handleEdit(scope.row, PageTypeMap.Edit)">编辑</el-button>
               <el-popconfirm title="是否确认删除？" @confirm="handleDelete(scope.row)">
                 <template #reference>
-                  <el-button size="small" type="danger">删除</el-button>
+                  <el-button size="small" plain type="danger">删除</el-button>
                 </template>
               </el-popconfirm>
               <el-button size="small" type="success" plain @click="completeTodo(scope.row)">完成</el-button>
@@ -48,6 +49,28 @@
       </el-main>
     </el-container>
   </div>
+  <el-dialog v-model="showDialog" :title="`【${currentParent?.content}】添加子待办：`">
+    <el-form :model="form">
+      <el-form-item label="待办内容：" required>
+        <el-input v-model="form.content" style="width: 350px" placeholder="请输入" />
+      </el-form-item>
+      <el-form-item label="待办详情：">
+        <el-input v-model="form.desc" placeholder="请输入" type="textarea" :rows="4" style="width: 350px" />
+      </el-form-item>
+      <el-form-item label="待办类型：">
+        <el-cascader
+          v-model="form.type"
+          :show-all-levels="false"
+          :props="props"
+          style="width: 250px"
+          placeholder="请选择"
+          :options="TypeCascadeOptions"
+          @change="onTypeChange"
+        />
+      </el-form-item>
+      <el-button :disabled="!form.content" type="primary" @click="onSubmit">提交</el-button>
+    </el-form>
+  </el-dialog>
 </template>
 
 <script setup>
@@ -56,8 +79,8 @@ import { ElMessage, dayjs } from 'element-plus';
 import { Refresh } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router';
 import { PointEventTypeMap, PageTypeMap } from '../../constant';
-import {  TodoTypeLabel, TodoTypeScore, TodoStatusMap, CycleMap } from './constant';
-import { deleteTodo , getTodoList, updateTodo, addPoint } from './serve';
+import {  TodoTypeLabel, TodoTypeScore, TodoStatusMap, CycleMap, TypeCascadeOptions, TodoTypeMap } from './constant';
+import { deleteTodo , getTodoList, updateTodo, addPoint, addTodo } from './serve';
 import { getConfigByKey } from '../systemConfig/serve';
 
 const router = useRouter();
@@ -65,7 +88,19 @@ const router = useRouter();
 const onlyShowToday = ref(false);
 const tableList = ref([]);
 const showPoint = ref(false);
+const currentParent = ref(null);
+const showDialog = ref(false);
+const form = ref({
+  content: '',
+  desc: '',
+  type: [],
+  score: undefined,
+});
 let totalList;
+
+const props = {
+  emitPath: false
+};
 
 onMounted(() => {
   getData(true);
@@ -83,9 +118,64 @@ const updateView = () => {
 
 const getData = async (isInit) => {
   const data = await getTodoList();
-  tableList.value = data.filter((item) => [TodoStatusMap.Undo, TodoStatusMap.Overdue].includes(item.status)).sort((a, b) => dayjs(a.deadline).valueOf() - dayjs(b.deadline).valueOf());
+  tableList.value = formatData(data);
   totalList = tableList.value;
   if (!isInit && onlyShowToday.value) showTheTodayTodo(true);
+}
+
+const formatData = (data) => {
+  const parentData = [], childrenData = [];
+  for (let i = 0; i < data.length; i++) {
+    const { parentKey } = data[i];
+    if (parentKey) {
+      childrenData.push(data[i]);
+    } else {
+      parentData.push(data[i])
+    }
+  }
+  for (let i = 0; i < childrenData.length; i++) {
+    const { parentKey } = childrenData[i];
+    for (let j = 0; j < parentData.length; j++) {
+      if (parentData[j].key === parentKey) {
+        if (!parentData[j].children) parentData[j].children = [];
+        parentData[j].children.push(childrenData[i]);
+      }
+    }
+  }
+  return parentData;
+}
+
+const addChild = async (row) => {
+  currentParent.value = row;
+  showDialog.value = true;
+}
+
+const onSubmit = async () => {
+  const { content, desc, type, score } = form.value;
+  const { deadline, cycleType, key } = currentParent.value;
+  const createTime = Date.now()
+  const todoInfo = {
+    content,
+    createTime,
+    deadline,
+    status: 0,
+    cycleType,
+    score: score ? Number(score) : 0,
+    type: type ? [type] : [TodoTypeMap.Undefined],
+    desc,
+    parentKey: key,
+  };
+  await addTodo(todoInfo);
+  ElMessage({
+    message: '添加成功',
+    type: 'success',
+  });
+  updateView();
+  showDialog.value = false;
+}
+
+const onTypeChange = (value) => {
+  form.value.score = TodoTypeScore[value];
 }
 
 const onRefreshCycleTodo = async () => {
@@ -216,6 +306,7 @@ const completeTodo = async (row) => {
 }
 
 .link-style {
+  display: inline-block;
   cursor: pointer;
 }
 </style>
