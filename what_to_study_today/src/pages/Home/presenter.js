@@ -14,12 +14,12 @@ class StudyLogManager {
       return time2 - time1;
     });
     studyLogList.forEach((item) => {
-      const { date, titleKey } = item;
-      const allTitle = this.getAllTitle(titleKey);
+      const { date, titleKey, allTitle } = item;
+      const title = allTitle ?? this.getAllTitle(titleKey);
       if (studyLogMap[date]) {
-        studyLogMap[date].push(allTitle);
+        studyLogMap[date].push(title);
       } else {
-        studyLogMap[date] = [allTitle];
+        studyLogMap[date] = [title];
       }
     })
     const result = {
@@ -35,7 +35,7 @@ class StudyLogManager {
     const secondTitleKey = titleKeyArr.slice(0, 2).join('.');
     const [firstTitle, secondTitle, thirdTitle] = [this.titleMap[firstTitleKey], this.titleMap[secondTitleKey], this.titleMap[thirdTitleKey]];
     if([firstTitle, secondTitle, thirdTitle] .includes(undefined)) return '';
-    return `${thirdTitleKey}：【${firstTitle}】.【${secondTitle}】.【${thirdTitle}】`
+    return `${thirdTitleKey}：【${firstTitle}】.【${secondTitle}】.【${thirdTitle}】`;
   }
 }
 

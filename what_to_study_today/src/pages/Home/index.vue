@@ -3,7 +3,7 @@
       <article>
         <div class="title">今天学什么？</div>
         <div class="random-box">
-          <div v-if="partNo || isCustomer" class="random-info-box">
+          <div v-if="(partNo || isCustomer) && hasPartInfo" class="random-info-box">
             <div class="random-info-item">
               <div class="rii-title">
                 第
@@ -38,9 +38,15 @@
               </div>
             </div>
           </div>
+          <div v-if="!hasPartInfo && isCustomer">
+            <div class="rii-des customer-content">
+              <textarea v-model="allTitle" class="textarea" :maxLength="50" :placeholder="`请补充学习内容，将被添加到学习记录中\n推荐格式：Part1.1：【JavaScript 简介】.【JavaScript 简史】`" />
+            </div>
+          </div>
           <div class="btn-box">
-            <button v-if="!isStudying" class="startBtn" @click="onRandom">开始生成随机章节</button>
-            <button v-if="!isStudying" class="startBtn" @click="onEditCustomerCourse">学习自定义章节</button>
+            <button v-if="!isStudying && hasPartInfo" class="startBtn" @click="onRandom">开始生成随机章节</button>
+            <button v-if="!isStudying && hasPartInfo" class="startBtn" @click="onEditCustomerCourse">学习自定义章节</button>
+            <button v-if="!isStudying && !hasPartInfo && showCustomerContentBtn" class="startBtn" @click="onEditCustomerContentCourse">学习自定义内容</button>
             <button v-if="(partNo || isCustomer) && !isStudying" class="startBtn" @click="onStartStudy">开始学习</button>
             <button v-if="isStudying" class="startBtn finishStudyBtn" @click="onFinish">完成学习</button>
           </div>
@@ -100,6 +106,9 @@ const studyLog = ref({});
 const courseInfo = ref({});
 const studyLogTotal = ref(0);
 const courseList = ref([]);
+const hasPartInfo = ref(false);
+const allTitle = ref('');
+const showCustomerContentBtn = ref(true);
 let partInfoListOfCurCourse;
 let studyLogManager;
 
@@ -117,6 +126,7 @@ async function init() {
   const { partInfoList, titleMap, id } = course;
   courseInfo.value = course;
   partInfoListOfCurCourse = partInfoList;
+  hasPartInfo.value = !!partInfoList.length; // 区分没有配置章节目录的课程
   courseTitleMap.value = titleMap;
   studyLogManager = new StudyLogManager(titleMap, id);
   updateStudyLogList();
@@ -153,24 +163,38 @@ function onEditCustomerCourse() {
   sectionNo.value = null;
 }
 
+function onEditCustomerContentCourse() {
+  isCustomer.value = true;
+  showCustomerContentBtn.value = false;
+}
+
 function onStartStudy() {
   isStudying.value = true;
-  changeDisable(true);
+  // changeDisable(true);
 }
 
-function changeDisable(flag) {
-  const inputs = document.querySelectorAll('.numberInput');
-  Array.from(inputs).map((item) => item.disabled = flag);
-}
+// function changeDisable(flag) {
+//   const inputs = document.querySelectorAll('.numberInput');
+//   Array.from(inputs).map((item) => item.disabled = flag);
+// }
 
 function onFinish() {
-  if (!courseTitleMap.value[`Part${partNo.value}`] || !courseTitleMap.value[`Part${partNo.value}.${chapterNo.value}`] || !courseTitleMap.value[`Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`]) {
-    alert('请先输入章节名称');
+  if (!hasPartInfo.value) {
+    if (!allTitle.value) {
+      alert('请先补充学习内容名称');
+    } else {
+      updateStudyLog();
+      showCustomerContentBtn.value = true;
+    }
   } else {
-    isStudying.value = false;
-    changeDisable(false);
-    updateStudyLog();
-    clearStates();
+    if (!courseTitleMap.value[`Part${partNo.value}`] || !courseTitleMap.value[`Part${partNo.value}.${chapterNo.value}`] || !courseTitleMap.value[`Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`]) {
+      alert('请先补充章节名称');
+    } else {
+      isStudying.value = false;
+      updateStudyLog();
+      // changeDisable(false);
+      clearStates();
+    }
   }
 }
 
@@ -183,9 +207,14 @@ async function updateStudyLog() {
   const now = dayjs();
   const nowStamp = now.valueOf();
   const date = now.format('YYYY-MM-DD');
-  const titleKey = `Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`;
   const id = `${courseInfo.value.id}_${nowStamp}`;
-  const studyLog = { date, titleKey, id, courseId: courseInfo.value.id };
+  const studyLog = { date, id, courseId: courseInfo.value.id };
+  if (hasPartInfo.value) {
+    const titleKey = `Part${partNo.value}.${chapterNo.value}.${sectionNo.value}`;
+    studyLog.titleKey = titleKey;
+  } else {
+    studyLog.allTitle = allTitle.value;
+  }
   await addStudyLog(studyLog);
   updateStudyLogList();
 }
@@ -246,6 +275,13 @@ aside {
 .rii-des {
   display: flex;
   align-items: center;
+}
+.textarea {
+  height: 50px;
+  width: 500px;
+}
+.customer-content {
+  margin-bottom: 100px;
 }
 input {
   width: 300px;
