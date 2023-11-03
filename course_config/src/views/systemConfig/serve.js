@@ -11,7 +11,7 @@ async function getConfigMap() {
 
 async function getConfigByKey(key) {
   const config = await db.get(ConfigStoreName, key);
-  return config.value;
+  return config?.value;
 }
 
 // 修改配置信息

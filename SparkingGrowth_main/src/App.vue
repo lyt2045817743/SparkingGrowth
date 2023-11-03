@@ -28,7 +28,7 @@ onMounted(() => {
 const init = async () => {
   const db = await getDb();
   const name = await db.get('config', 'systemName');
-  systemName.value = name.value ?? '婷的空间';
+  systemName.value = name?.value ?? '婷的空间';
 }
 
 const goHome = () => {

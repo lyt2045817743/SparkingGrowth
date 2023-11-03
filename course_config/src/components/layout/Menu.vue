@@ -27,8 +27,7 @@ const loading = ref(true);
 const initRoutes = async () => {
   for (let i = 0; i < routesRef.length; i++) {
     if (routesRef[i].meta.hiddenKey) {
-      const item = await getConfigByKey(routesRef[i].meta.hiddenKey);
-      console.log(item);
+      const item = await getConfigByKey(routesRef[i].meta.hiddenKey) ?? true;
       routesRef[i].meta.hidden = !item;
     }
   }
