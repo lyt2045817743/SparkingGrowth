@@ -8,7 +8,7 @@
       <el-button class="back-btn" type="info" round @click="onCancel">返回</el-button>
     </el-header>
     <el-main>
-      <el-form :model="form" :disabled="pageType === PageTypeMap.View" label-width="120px">
+      <el-form :model="form" :disabled="pageType === PageTypeMap.View" label-width="130px">
         <el-form-item v-if="pageType === PageTypeMap.Add" label="配置方式：" required>
           <el-radio-group v-model="form.configType">
             <el-radio :label="0">简单配置</el-radio>
@@ -66,6 +66,16 @@
             <el-input v-model="form.score" style="width: 100px" type="number" />
           </el-form-item>
         </div>
+        <el-form-item v-if="!form.parentKey" label="关联已有子待办：">
+          <el-select v-model="form.childrenTodo" collapse-tags multiple placeholder="请选择">
+            <el-option
+              v-for="item in todoList"
+              :key="item.key"
+              :label="item.content"
+              :value="+item.key"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button v-if="pageType !== PageTypeMap.View" :disabled="!form.content" type="primary" @click="onSubmit">提交</el-button>
         </el-form-item>
@@ -78,7 +88,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage, dayjs } from 'element-plus';
-import { addTodo, getTodoById, updateTodo } from './serve.js';
+import { addTodo, getTodoById, updateTodo, getTodoList } from './serve.js';
 import { TodoTypeMap, TypeCascadeOptions, CycleOptions, TodoTypeScore } from './constant';
 import { PageTypeLabel, PageTypeMap } from '../../constant'
 import { getConfigByKey } from '../systemConfig/serve';
@@ -90,6 +100,7 @@ const id = Number(newId);
 const pageType = Number(newPageType);
 
 const showPoint = ref(false);
+const todoList = ref([]);
 const form = ref({
   configType: 1,
   content: '',
@@ -98,7 +109,8 @@ const form = ref({
   desc: '',
   type: [],
   cycleType: 0,
-  score: 0
+  score: 0,
+  childrenTodo: []
 })
 
 const props = {
@@ -113,6 +125,7 @@ onMounted(() => {
   } else {
     form.value.configType = 0;
   }
+  getTodoData();
 })
 
 const getPointFlag = async () => {
@@ -121,11 +134,28 @@ const getPointFlag = async () => {
 }
 
 const init = async () => {
-  const { content, createTime, deadline, desc, type, status, cycleType, score } = await getTodoById(id);
+  const { content, createTime, deadline, desc, type, status, cycleType, score, parentKey, key } = await getTodoById(id);
   const deadlineDate = deadline.slice(0, 10)
   const deadlineTime = deadline.slice(11, 16)
   const scoreNew = score ?? type.reduce((a, b) => a + TodoTypeScore[b], 0);
-  form.value = Object.assign(form.value, { content, createTime, desc, type, status, deadlineDate, deadlineTime, cycleType: cycleType ?? 0, score: scoreNew })
+  form.value = Object.assign(form.value, { content, createTime, desc, type, status, deadlineDate, deadlineTime, parentKey, cycleType: cycleType ?? 0, score: scoreNew, key })
+}
+
+const getTodoData = async () => {
+  const data = await getTodoList();
+  const todoListTemp = [];
+  const childTodoList = [];
+  for (let i = 0; i < data.length; i++) {
+    const item = data[i];
+    if (!item.parentKey && !item.isRoot || item.parentKey === form.value.key) {
+      todoListTemp.push(item);
+    }
+    if (form.value.key && item.parentKey === form.value.key) {
+      childTodoList.push(item.key);
+    }
+  }
+  todoList.value = todoListTemp;
+  form.value.childrenTodo = childTodoList;
 }
 
 const onSubmit = async () => {

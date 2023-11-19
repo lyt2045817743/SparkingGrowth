@@ -16,10 +16,12 @@
           <el-table-column type="index" label="序号" width="60" />
           <el-table-column prop="content" label="待办内容" min-width="180">
             <template #default="scope">
-              <div class="link-style" @click="handleEdit(scope.row, PageTypeMap.View)">{{ scope.row.content }}</div>
+              <div class="link-style" @click="handleEdit(scope.row, PageTypeMap.View)">
+                <div style="max-width: 140px">{{ scope.row.content }}</div>
+              </div>
             </template>
           </el-table-column>
-          <el-table-column prop="deadline" label="截止时间（倒计时）" width="230">
+          <el-table-column prop="deadline" label="截止时间（倒计时）" width="200">
             <template #default="scope">
               <span>
                 {{ scope.row.deadline.slice(0, 16) }}
@@ -130,14 +132,13 @@ const formatData = (data) => {
     if (parentKey) {
       childrenData.push(data[i]);
     } else {
-      parentData.push(data[i])
+      parentData.push({...data[i], children: []})
     }
   }
   for (let i = 0; i < childrenData.length; i++) {
     const { parentKey } = childrenData[i];
     for (let j = 0; j < parentData.length; j++) {
       if (parentData[j].key === parentKey) {
-        if (!parentData[j].children) parentData[j].children = [];
         parentData[j].children.push(childrenData[i]);
       }
     }
@@ -166,6 +167,7 @@ const onSubmit = async () => {
     parentKey: key,
   };
   await addTodo(todoInfo);
+  await updateTodo(key, { isRoot: true })
   ElMessage({
     message: '添加成功',
     type: 'success',
