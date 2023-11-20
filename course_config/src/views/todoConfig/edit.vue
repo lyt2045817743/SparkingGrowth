@@ -71,7 +71,7 @@
             <el-table :data="todoList.filter(item => form.childrenTodo?.includes(item.key))">
               <el-table-column prop="content" label="待办内容" min-width="350">
                 <template #default="scope">
-                  <div class="link-style" @click="handleEdit(scope.row, PageTypeMap.View)">
+                  <div class="link-style" @click="handleEdit(scope.row, PageTypeMap.Edit)">
                     <div>{{ scope.row.content }}</div>
                   </div>
                 </template>
@@ -174,7 +174,7 @@ const getTodoData = async () => {
   const childTodoList = [];
   for (let i = 0; i < data.length; i++) {
     const item = data[i];
-    if (!item.parentKey && !item.isRoot || item.parentKey === form.value.key) {
+    if (!item.parentKey && !item.isRoot ||(form.value.key && item.parentKey === form.value.key)) {
       todoListTemp.push(item);
     }
     if (form.value.key && item.parentKey === form.value.key) {
@@ -185,8 +185,22 @@ const getTodoData = async () => {
   form.value.childrenTodo = childTodoList;
 }
 
+const updateChildTodo = async (parentTodo, parentKey) => {
+  const { childrenTodo } = form.value;
+  for (let i = 0; i < childrenTodo.length; i++) {
+    const { key, deadline } = todoList.value.find(item => item.key === childrenTodo[i]);
+    const newDeadLine = dayjs(Math.max(dayjs(parentTodo.deadline).valueOf(), dayjs(deadline).valueOf())).format('YYYY-MM-DD 00:00:00');
+    await updateTodo(key, { parentKey, deadline: newDeadLine });
+  }
+  for (let j = 0; j < todoList.value.length; j++) {
+    if (!childrenTodo.find(item => item === todoList.value[j].key)) {
+      await updateTodo(todoList.value[j].key, { parentKey: null });
+    }
+  }
+}
+
 const onSubmit = async () => {
-  const { content, desc, type, deadlineDate, deadlineTime, cycleType, score } = form.value;
+  const { content, desc, type, deadlineDate, deadlineTime, cycleType, score, childrenTodo, key: parentKey } = form.value;
   const createTime = Date.now()
   const deadline = deadlineDate && deadlineTime ? `${dayjs(deadlineDate).format('YYYY-MM-DD')} ${deadlineTime}:00` : '';
   const todoInfo = {
@@ -197,16 +211,19 @@ const onSubmit = async () => {
     cycleType,
     score: score ? Number(score) : 0,
     type: type.includes(TodoTypeMap.Undefined) || type.length === 0 ? [TodoTypeMap.Undefined] : type,
-    desc
+    desc,
+    isRoot: Boolean(childrenTodo.length)
   };
   let message = '添加成功';
   if (pageType === PageTypeMap.Edit) {
     delete todoInfo.createTime;
     delete todoInfo.status;
     await updateTodo(id, todoInfo);
+    await updateChildTodo(todoInfo, parentKey);
     message = '修改成功';
   } else {
-    await addTodo(todoInfo);
+    const newKey = await addTodo(todoInfo);
+    await updateChildTodo(todoInfo, newKey);
   }
   ElMessage({
     message,
