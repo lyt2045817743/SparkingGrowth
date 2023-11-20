@@ -136,14 +136,18 @@ const formatData = (data) => {
     }
   }
   for (let i = 0; i < childrenData.length; i++) {
-    const { parentKey } = childrenData[i];
+    const { parentKey, deadline } = childrenData[i];
+    let parentDeadline = Number.MAX_VALUE;
     for (let j = 0; j < parentData.length; j++) {
       if (parentData[j].key === parentKey) {
         parentData[j].children.push(childrenData[i]);
+        const newDeadLine = Math.min(parentDeadline, dayjs(deadline).valueOf());
+        parentDeadline = dayjs(deadline).valueOf();
+        parentData[j].deadline = dayjs(newDeadLine).format('YYYY-MM-DD HH:mm:ss');
       }
     }
   }
-  return parentData;
+  return parentData.sort((a, b) => dayjs(a.deadline).valueOf() - dayjs(b.deadline).valueOf());
 }
 
 const addChild = async (row) => {

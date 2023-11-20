@@ -174,7 +174,7 @@ const getTodoData = async () => {
   const childTodoList = [];
   for (let i = 0; i < data.length; i++) {
     const item = data[i];
-    if (!item.parentKey && !item.isRoot ||(form.value.key && item.parentKey === form.value.key)) {
+    if ((!item.parentKey && !item.isRoot && item.key !== form.value.key) || (form.value.key && item.parentKey === form.value.key)) {
       todoListTemp.push(item);
     }
     if (form.value.key && item.parentKey === form.value.key) {

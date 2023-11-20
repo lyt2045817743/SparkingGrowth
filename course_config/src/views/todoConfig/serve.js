@@ -19,7 +19,7 @@ async function addPoint(pointInfo) {
 
 async function getTodoList() {
   let list = await db.getAll(TodoStoreName);
-  list = list?.filter((item) => [TodoStatusMap.Undo, TodoStatusMap.Overdue].includes(item.status)).sort((a, b) => dayjs(a.deadline).valueOf() - dayjs(b.deadline).valueOf()) ?? [];
+  list = list?.filter((item) => [TodoStatusMap.Undo, TodoStatusMap.Overdue].includes(item.status)) ?? [];
   return Promise.resolve(list);
 }
 
