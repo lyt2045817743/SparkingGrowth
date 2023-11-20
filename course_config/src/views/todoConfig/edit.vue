@@ -67,7 +67,23 @@
           </el-form-item>
         </div>
         <el-form-item v-if="!form.parentKey" label="关联已有子待办：">
-          <el-select v-model="form.childrenTodo" collapse-tags multiple placeholder="请选择">
+          <div v-if="pageType === PageTypeMap.View">
+            <el-table :data="todoList.filter(item => form.childrenTodo?.includes(item.key))">
+              <el-table-column prop="content" label="待办内容" min-width="350">
+                <template #default="scope">
+                  <div class="link-style" @click="handleEdit(scope.row, PageTypeMap.View)">
+                    <div>{{ scope.row.content }}</div>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="desc" label="待办详情" width="400">
+                <template #default="scope">
+                  {{ scope.row.desc || '--' }}
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+          <el-select v-else v-model="form.childrenTodo" collapse-tags multiple placeholder="请选择">
             <el-option
               v-for="item in todoList"
               :key="item.key"
@@ -116,6 +132,17 @@ const form = ref({
 const props = {
   multiple: true,
   emitPath: false
+};
+
+const handleEdit = (row, pageType) => {
+  const { key } = row;
+  router.push({
+    path: '/todoEdit',
+    query: {
+      id: key,
+      pageType
+    }
+  })
 };
 
 onMounted(() => {
@@ -217,5 +244,9 @@ const onCancel = () => {
   border: 1px solid #dcdfe6;
   padding: 0 8px;
   white-space: pre-line;
+}
+.link-style {
+  display: inline-block;
+  cursor: pointer;
 }
 </style>
