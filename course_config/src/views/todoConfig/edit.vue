@@ -17,6 +17,7 @@
         </el-form-item>
         <el-form-item label="待办内容：" required>
           <el-input v-model="form.content" style="width: 350px" placeholder="请输入" />
+          <div v-if="pageType !== PageTypeMap.Add && !form.isRoot" style="margin-left: 15px">（父待办内容：{{ parentInfo.content }}）</div>
         </el-form-item>
         <div v-if="form.configType === 1">
           <el-form-item v-if="form.desc || pageType !== PageTypeMap.View" label="待办详情：">
@@ -161,13 +162,14 @@ const getPointFlag = async () => {
 }
 
 const init = async () => {
-  const { content, createTime, deadline, desc, type, status, cycleType, score, parentKey, key } = await getTodoById(id);
+  const { content, createTime, deadline, desc, type, status, cycleType, score, parentKey, key, isRoot } = await getTodoById(id);
   const deadlineDate = deadline.slice(0, 10)
   const deadlineTime = deadline.slice(11, 16)
   const scoreNew = score ?? type.reduce((a, b) => a + TodoTypeScore[b], 0);
-  form.value = Object.assign(form.value, { content, createTime, desc, type, status, deadlineDate, deadlineTime, parentKey, cycleType: cycleType ?? 0, score: scoreNew, key })
+  form.value = Object.assign(form.value, { content, createTime, desc, type, status, deadlineDate, deadlineTime, parentKey, cycleType: cycleType ?? 0, score: scoreNew, key, isRoot })
 }
 
+const parentInfo = ref('');
 const getTodoData = async () => {
   const data = await getTodoList();
   const todoListTemp = [];
@@ -179,6 +181,9 @@ const getTodoData = async () => {
     }
     if (form.value.key && item.parentKey === form.value.key) {
       childTodoList.push(item.key);
+    }
+    if (item.key === form.value.parentKey) {
+      parentInfo.value = item;
     }
   }
   todoList.value = todoListTemp;
