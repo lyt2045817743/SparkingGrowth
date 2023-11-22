@@ -25,7 +25,12 @@
               {{ BooksStatusLabel[scope.row.status] ?? '--' }}
             </template>
           </el-table-column>
-          <el-table-column prop="percent" label="当前阅读进度" min-width="180">
+          <el-table-column prop="percent" label="当前阅读进度" min-width="100">
+            <template #default="scope">
+              <div>{{ (scope.row.progressCount || '-') + ' / ' + (scope.row.totalCount || '-') }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="percent" label="当前阅读进度百分比" min-width="180">
             <template #default="scope">
               <el-progress :percentage="getPercent(scope.row)" :status="getPercentStatus(scope.row)" />
             </template>
