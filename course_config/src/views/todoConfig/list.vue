@@ -21,7 +21,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="deadline" label="截止时间（倒计时）" width="200">
+          <el-table-column prop="deadline" label="截止时间（倒计时）" min-width="200">
             <template #default="scope">
               <span>
                 {{ scope.row.deadline.slice(0, 16) }}
@@ -29,7 +29,7 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column prop="type" :label="`分类${showPoint ? '（积分）': ''}`" :formatter="formatter" width="160" />
+          <el-table-column prop="type" :label="`分类${showPoint ? '（积分）': ''}`" :formatter="formatter" min-width="140" />
           <el-table-column prop="desc" label="待办详情" min-width="220">
             <template #default="scope">
               {{ scope.row.desc || '--' }}
@@ -217,7 +217,7 @@ const formatter = (row) => {
   const { type, score } = row;
   const types = type.map((item) => TodoTypeLabel[item]).join(',');
   const scoreNew = score ?? type.reduce((a, b) => a + TodoTypeScore[b], 0);
-  return `${types}${showPoint.value ? `（+${scoreNew}）` : ''}`;
+  return `${types}${showPoint.value && !type.includes(TodoTypeMap.Undefined) ? `（+${scoreNew}）` : ''}`;
 }
 
 const getDeadlineExtraText = (row) => {

@@ -44,7 +44,7 @@ export const TodoTypeMap = {
 };
 
 export const TodoTypeLabel = {
-  [TodoTypeMap.Undefined]: "未定义",
+  [TodoTypeMap.Undefined]: "一级待办",
   [TodoTypeMap.Simple]: "简单待办",
   [TodoTypeMap.Summary]: "写总结",
   [TodoTypeMap.Schedule]: "定计划",
