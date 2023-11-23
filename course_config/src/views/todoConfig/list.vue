@@ -128,21 +128,21 @@ const getData = async (isInit) => {
 const formatData = (data) => {
   const parentData = [], childrenData = [];
   for (let i = 0; i < data.length; i++) {
-    const { parentKey } = data[i];
+    const { parentKey, deadline, isRoot } = data[i];
     if (parentKey) {
       childrenData.push(data[i]);
     } else {
-      parentData.push({...data[i], children: []})
+      // deadline逻辑：如果为父待办，截止时间为最近截止的子待办截止时间；否则为自己的截止时间
+      parentData.push({ ...data[i], children: [], deadline: isRoot ? null : deadline })
     }
   }
   for (let i = 0; i < childrenData.length; i++) {
     const { parentKey, deadline } = childrenData[i];
-    let parentDeadline = Number.MAX_VALUE;
     for (let j = 0; j < parentData.length; j++) {
       if (parentData[j].key === parentKey) {
         parentData[j].children.push(childrenData[i]);
+        const parentDeadline = parentData[j].deadline ? dayjs(parentData[j].deadline).valueOf() : Number.MAX_VALUE;
         const newDeadLine = Math.min(parentDeadline, dayjs(deadline).valueOf());
-        parentDeadline = dayjs(deadline).valueOf();
         parentData[j].deadline = dayjs(newDeadLine).format('YYYY-MM-DD HH:mm:ss');
       }
     }

@@ -1,3 +1,4 @@
+import { dayjs } from 'element-plus';
 import { TodoStatusMap } from './constant';
 import { db } from '../../utils/globalState';
 
@@ -18,7 +19,7 @@ async function addPoint(pointInfo) {
 
 async function getTodoList() {
   let list = await db.getAll(TodoStoreName);
-  list = list?.filter((item) => [TodoStatusMap.Undo, TodoStatusMap.Overdue].includes(item.status)) ?? [];
+  list = list?.filter((item) => [TodoStatusMap.Undo, TodoStatusMap.Overdue].includes(item.status)).sort((a, b) => dayjs(a.deadline).valueOf() - dayjs(b.deadline).valueOf()) ?? [];
   return Promise.resolve(list);
 }
 
