@@ -15,18 +15,19 @@
 
 > 内容配置后台：
 1. 学习资源管理模块
+2. 待办管理
+3. 书籍管理
+4. 积分记录与兑换
+5. 系统配置
 
 ### TODO:
 [x] 使用本地indexDB存储数据
 [x] 配置学习资源的后台系统
 [ ] 内容配置修改为支持多种目录结构
-[ ] 每日TODO模块
-[ ] 读书记录
-[ ] 新增【休息一下】【TODO】类型的随机模块
+[x] 每日TODO模块
 [ ] 数据导出和导入、定期备份
 [ ] 学习数据统计系统
-[ ] 对在线的学习笔记进行收录
-[ ] 配置后台新增图书模块，内容配置后台更改为内容配置平台
+[x] 配置后台新增图书模块
 
 ## 启动步骤
 ```bash
@@ -34,19 +35,13 @@
 git clone https://github.com/lyt2045817743/SparkingGrowth.git
 
 # 2. enter the project directory
-cd SparkingGrowth
+cd SparkingGrowth/SparkingGrowth_main
 
-# 3. install dependency
-yarn install
+# 3. 安装依赖并启动（第一次启动）
+yarn startAll --install
 
-# 4. 分别启动子应用
-cd what_to_study_today
-yarn serve
-
-cd course_config
-yarn serve
-
-# 5. 启动主应用
-cd sparkingGrowth_main
-yarn serve
+# 仅启动
+yarn startAll
 ```
+
+## 启动完成后，使用浏览器打开：http://127.0.0.1:5173/
