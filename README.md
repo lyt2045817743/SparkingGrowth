@@ -30,6 +30,7 @@
 [x] 配置后台新增图书模块
 
 ## 启动步骤
+### 1. 安装依赖/启动主应用和所有子系统
 ```bash
 # 1. clone the project
 git clone https://github.com/lyt2045817743/SparkingGrowth.git
@@ -44,4 +45,4 @@ yarn startAll --install
 yarn startAll
 ```
 
-## 启动完成后，使用浏览器打开：http://127.0.0.1:5173/
+### 启动完成后，使用浏览器打开：http://127.0.0.1:5173/
