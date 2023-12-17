@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "serve": "vite",
-    "startAll": "node scripts/startAllProcess.cjs",
     "build": "vue-tsc && vite build",
     "preview": "vite preview"
   },

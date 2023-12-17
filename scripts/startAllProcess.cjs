@@ -10,7 +10,7 @@ const projects = [
 // 启动每个项目
 function startProject(project) {
   return new Promise((resolve, reject) => {
-    exec(`cd ../${project.name} && yarn serve -- --port ${project.port}`, (error, stdout, stderr) => {
+    exec(`cd packages/${project.name} && yarn serve -- --port ${project.port}`, (error, stdout, stderr) => {
       if (error) {
         reject(`Error starting ${project.name}: ${error.message}`);
         return;
@@ -24,7 +24,7 @@ function startProject(project) {
 // 安装每个项目的依赖
 function installProject(project) {
   return new Promise((resolve, reject) => {
-    exec(`cd ../${project.name} && yarn install`, (error, stdout, stderr) => {
+    exec(`cd packages/${project.name} && yarn install`, (error, stdout, stderr) => {
       if (error) {
         reject(`Error installing dependencies for ${project.name}: ${error.message}`);
         return;

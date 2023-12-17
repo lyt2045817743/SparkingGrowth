@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "> 【婷的空间】目前包括两个系统。1.今天学什么？2. 内容配置后台",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "startAll": "node scripts/startAllProcess.cjs"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
