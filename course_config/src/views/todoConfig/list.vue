@@ -70,6 +70,22 @@
           @change="onTypeChange"
         />
       </el-form-item>
+      <el-form-item label="截止时间：">
+        <el-date-picker
+          v-model="form.deadlineDate"
+          type="date"
+          placeholder="截止日期"
+          style="width: 200px"
+        />
+        <span class="text-split">-</span>
+        <el-time-select
+          v-model="form.deadlineTime"
+          start="00:00"
+          step="00:30"
+          end="23:30"
+          placeholder="具体时间"
+        />
+      </el-form-item>
       <el-button :disabled="!form.content" type="primary" @click="onSubmit">提交</el-button>
     </el-form>
   </el-dialog>
@@ -97,6 +113,8 @@ const form = ref({
   desc: '',
   type: [],
   score: undefined,
+  deadlineTime: '',
+  deadlineDate: ''
 });
 let totalList;
 
@@ -152,13 +170,17 @@ const formatData = (data) => {
 
 const addChild = async (row) => {
   currentParent.value = row;
+  form.value.deadlineDate = row.deadline.slice(0, 10);
+  form.value.deadlineTime = row.deadline.slice(11, 16);
   showDialog.value = true;
 }
 
 const onSubmit = async () => {
-  const { content, desc, type, score } = form.value;
-  const { deadline, cycleType, key } = currentParent.value;
-  const createTime = Date.now()
+  const { content, desc, type, score, deadlineDate, deadlineTime } = form.value;
+  const { deadline: parentDeadline, cycleType, key } = currentParent.value;
+  const createTime = Date.now();
+  const deadline = deadlineDate && deadlineTime ? `${dayjs(deadlineDate).format('YYYY-MM-DD')} ${deadlineTime}:00` : parentDeadline;
+
   const todoInfo = {
     content,
     createTime,
@@ -309,6 +331,11 @@ const completeTodo = async (row) => {
   :deep(.el-table .cell) {
     white-space: pre-line;
   }
+}
+
+.text-split {
+  text-align: center;
+  width: 50px;
 }
 
 .link-style {
