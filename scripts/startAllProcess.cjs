@@ -1,9 +1,9 @@
 const { exec } = require('child_process');
-const path = require('path');
 
 const projects = [
   { name: 'what_to_study_today', port: 60002 },
   { name: 'course_config', port: 60001 },
+  { name: 'my_calendar', port: 60003 },
   { name: 'sparkingGrowth_main', port: 5173 },
 ];
 

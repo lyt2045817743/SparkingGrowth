@@ -10,5 +10,11 @@ export const microConfigs = [
     entry: '//localhost:60001',
     container: '#container',
     activeRule: '/course_config',
-  }
+  },
+  {
+    name: '我的日历',
+    entry: '//localhost:60003',
+    container: '#container',
+    activeRule: '/my_calendar',
+  },
 ]
