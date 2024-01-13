@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <FullCalendar :options="calendarOptions" />
+    <FullCalendar class="calendar-container" :options="calendarOptions" />
   </div>
 </template>
 
@@ -61,8 +61,14 @@ function handleEvents(events) {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .container {
   margin: 20px;
+}
+
+.calendar-container {
+  ::v-deep(.fc-button-primary) {
+    background-color: $--sg-theme-color;
+  }
 }
 </style>

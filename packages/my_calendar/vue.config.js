@@ -8,6 +8,7 @@ let publicPath = `//localhost:${port}`;
 
 module.exports = {
   publicPath,
+
   configureWebpack: {
     output: {
       library: `${name}-[name]`,
@@ -23,12 +24,20 @@ module.exports = {
     },
     devtool: false
   },
+
   devServer: {
     port,
     open: false,
     disableHostCheck: true,
     headers: {
       'Access-Control-Allow-Origin': '*'
+    }
+  },
+
+  pluginOptions: {
+    'style-resources-loader': {
+      preProcessor: 'scss',
+      patterns: [path.resolve(__dirname, 'src/style/_variables.scss')]
     }
   }
 };
