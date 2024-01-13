@@ -1,15 +1,17 @@
 <template>
   <div class="container">
-    <FullCalendar class="calendar-container" :options="calendarOptions" />
+    <FullCalendar :options="calendarOptions" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { dayjs } from 'element-plus';
 import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import zhCnLocale from '@fullcalendar/core/locales/zh-cn';
 const calendarOptions = ref({
   plugins: [
     dayGridPlugin,
@@ -19,10 +21,24 @@ const calendarOptions = ref({
   headerToolbar: {
     left: 'prev,next today',
     center: 'title',
-    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    right: 'dayGridMonth,timeGridWeek'
+  },
+  views: {
+    week: {
+      titleFormat: { year: 'numeric', month: '2-digit' },
+      nowIndicator: true
+    },
+    month: {
+      titleFormat: { year: 'numeric', month: '2-digit' }
+    }
   },
   initialView: 'dayGridMonth',
-  initialEvents: [], // alternatively, use the `events` setting to fetch from a feed
+  initialEvents: [],
+  // 拖拽粒度
+  snapDuration: '00:15:00',
+  // 时间网格的时间间隔
+  slotDuration: '01:00:00',
+  locale: zhCnLocale,
   editable: true,
   selectable: true,
   selectMirror: true,
@@ -30,6 +46,22 @@ const calendarOptions = ref({
   weekends: true,
   select: handleDateSelect,
   eventClick: handleEventClick,
+  // 默认滚动到的时间点
+  scrollTime: dayjs().format('HH:mm'),
+  buttonText: {
+    month:    '待办日历',
+    week:     '时间追踪日历'
+  },
+  // y轴上显示的时间文本格式
+  slotLabelFormat: {
+    hour: '2-digit',
+    minute: '2-digit',
+    meridiem: false,
+    hour12: false // 设置时间为24小时
+  },
+  allDaySlot: false,
+  contentHeight: '700px',
+  height: '100%',
   eventsSet: handleEvents
 })
 
@@ -63,12 +95,23 @@ function handleEvents(events) {
 
 <style lang="scss" scoped>
 .container {
-  margin: 20px;
-}
-
-.calendar-container {
-  ::v-deep(.fc-button-primary) {
-    background-color: $--sg-theme-color;
+  margin: 20px auto;
+  height: calc(100vh - 100px);
+  overflow: hidden;
+  width: 1040px;
+  ::v-deep(.fc) {
+    .fc-button-primary {
+      background-color: $--sg-theme-color;
+      &.fc-button-active {
+        background-color: $--sg-theme-color__active;
+      }
+    }
+    .fc-timegrid-slot {
+      height: 48px;
+    }
+    .fc-toolbar.fc-header-toolbar {
+      margin-bottom: 1em;
+    }
   }
 }
 </style>
