@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Calendar v-if="currentViewType === CalendarViewType.Month" :viewType="configs.monthView.viewType" @loadData="loadTodoData" />
+    <Calendar v-if="currentViewType === CalendarViewType.Month" :viewType="configs.monthView.viewType" @loadData="loadTodoData" @onClick="pushTodoDetail" />
     <Calendar v-else="currentViewType === CalendarViewType.Week" :viewType="configs.weekView.viewType" />
     <el-select style="position: absolute;top: 10px;width: 200px; right: 0" v-model="currentViewType">
       <el-option label="待办日历" :value="CalendarViewType.Month" />
@@ -41,6 +41,10 @@ const configs = {
     })
 
     successCb(calendarData);
+  }
+
+  const pushTodoDetail = (info) => {
+    window.open(`/course_config/todoEdit?id=${info.id}&pageType=2`)
   }
 </script>
 

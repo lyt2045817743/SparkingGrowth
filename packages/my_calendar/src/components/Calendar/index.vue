@@ -19,7 +19,7 @@ const props = defineProps({
   viewType: Array
 });
 
-const emits = defineEmits(['loadData'])
+const emits = defineEmits(['loadData', 'onClick'])
 
 const calendarRef = ref(null);
 const currentEvents = ref([]);
@@ -106,15 +106,12 @@ function handleDateSelect(selectInfo) {
     })
   }
 }
-function getEvents(info, successCb) {
-  console.log(info);
-
+function getEvents(_info, successCb) {
+  // TODO: 添加根据时间范围查询数据的逻辑
   emits('loadData', successCb);
 }
 function handleEventClick(clickInfo) {
-  if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-    clickInfo.event.remove()
-  }
+  emits('onClick', clickInfo.event)
 }
 function handleEvents(events) {
   currentEvents.value = events
