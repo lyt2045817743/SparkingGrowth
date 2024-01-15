@@ -1,162 +1,55 @@
 <template>
   <div class="container">
-    <FullCalendar ref="calendarRef" :options="calendarOptions" />
+    <Calendar v-if="currentViewType === CalendarViewType.Month" :viewType="configs.monthView.viewType" @loadData="loadTodoData" />
+    <Calendar v-else="currentViewType === CalendarViewType.Week" :viewType="configs.weekView.viewType" />
+    <el-select style="position: absolute;top: 10px;width: 200px; right: 0" v-model="currentViewType">
+      <el-option label="待办日历" :value="CalendarViewType.Month" />
+      <el-option label="时间追踪日历" :value="CalendarViewType.Week" />
+    </el-select>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import Calendar from '@/components/Calendar/index.vue';
+import { CalendarViewType } from '../../components/Calendar/constant';
+import { getTodoList } from './serve';
 import { dayjs } from 'element-plus';
-import FullCalendar from '@fullcalendar/vue3';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import zhCnLocale from '@fullcalendar/core/locales/zh-cn';
-import { CalendarViewType } from './constant';
 
-const calendarRef = ref(null);
-const currentEvents = ref([]);
-const calendarOptions = ref({
-  plugins: [
-    dayGridPlugin,
-    timeGridPlugin,
-    interactionPlugin // needed for dateClick
-  ],
-  headerToolbar: {
-    left: 'prev,next today',
-    center: 'title',
-    right: `${CalendarViewType.Month},${CalendarViewType.Week}`,
-  },
-  views: {
-    week: {
-      titleFormat: { year: 'numeric', month: '2-digit' },
-      nowIndicator: true
+const currentViewType = ref(CalendarViewType.Month);
+const configs = {
+    monthView: {
+      viewType: [CalendarViewType.Month]
     },
-    month: {
-      titleFormat: { year: 'numeric', month: '2-digit' }
-    },
-  },
-  initialView: CalendarViewType.Month,
-  initialEvents: [],
-  // 拖拽粒度
-  snapDuration: '00:15:00',
-  // 时间网格的时间间隔
-  slotDuration: '01:00:00',
-  businessHours: [
-    {
-      daysOfWeek: [1, 2, 3, 4, 5],
-      startTime: '09:00',
-      endTime: '11:30'
-    },
-    {
-      daysOfWeek: [1, 2, 3, 4, 5],
-      startTime: '14:00',
-      endTime: '17:30'
-    },
-    {
-      daysOfWeek: [1, 2, 3, 4, 5],
-      startTime: '19:00',
-      endTime: '20:00'
+    weekView: {
+      viewType: [CalendarViewType.Week]
     }
-  ],
-  locale: zhCnLocale,
-  editable: true,
-  selectable: true,
-  selectMirror: true,
-  dayMaxEvents: true,
-  weekends: true,
-  select: handleDateSelect,
-  eventClick: handleEventClick,
-  // 默认滚动到的时间点
-  scrollTime: dayjs().format('HH:mm'),
-  buttonText: {
-    month: '待办日历',
-    week: '时间追踪日历'
-  },
-  // y轴上显示的时间文本格式
-  slotLabelFormat: {
-    hour: '2-digit',
-    minute: '2-digit',
-    meridiem: false,
-    hour12: false // 设置时间为24小时
-  },
-  allDaySlot: false,
-  contentHeight: '700px',
-  height: '100%',
-  eventsSet: handleEvents,
-  events: getEvents,
-})
+  }
 
-function handleDateSelect(selectInfo) {
-  let title = prompt('Please enter a new title for your event')
-  let calendarApi = selectInfo.view.calendar
+  const loadTodoData = async (successCb) => {
+    const data = await getTodoList();
+    // console.log(data);
 
-  calendarApi.unselect() // clear date selection
-
-  if (title) {
-    calendarApi.addEvent({
-      id: 3,
-      title,
-      start: selectInfo.startStr,
-      end: selectInfo.endStr,
-      allDay: selectInfo.allDay
+    const calendarData = data.map((item) => {
+      const { key, content, deadline, startTime } = item;
+      return {
+        id: key,
+        title: content,
+        start: startTime || deadline,
+        end: startTime ? deadline : dayjs(deadline).add(0.5, 'hour').format('YYYY-MM-DD HH:mm:ss')
+      }
     })
-  }
-}
-function getEvents(info, successCb) {
-  console.log(info);
 
-  setTimeout(() => {
-    successCb([
-      {
-        id: 1,
-        title: '初始化待办数据',
-        start: '2024-01-14 15:00:00',
-        end: '2024-01-14 16:00:00',
-        type: CalendarViewType.Month
-      },
-      {
-        id: 2,
-        title: '时间追踪数据',
-        start: '2024-01-14 15:00:00',
-        end: '2024-01-14 16:00:00',
-        type: CalendarViewType.Week
-      },
-    ]);
-  }, 100)
-}
-function handleEventClick(clickInfo) {
-  if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-    clickInfo.event.remove()
+    successCb(calendarData);
   }
-}
-function handleEvents(events) {
-  currentEvents.value = events
-}
 </script>
 
 <style lang="scss" scoped>
 .container {
   margin: 20px auto;
   height: calc(100vh - 100px);
-  overflow: hidden;
+  // overflow: hidden;
   width: 1040px;
-
-  ::v-deep(.fc) {
-    .fc-button-primary {
-      background-color: $--sg-theme-color;
-
-      &.fc-button-active {
-        background-color: $--sg-theme-color__active;
-      }
-    }
-
-    .fc-timegrid-slot {
-      height: 48px;
-    }
-
-    .fc-toolbar.fc-header-toolbar {
-      margin-bottom: 1em;
-    }
-  }
-}</style>
+  position: relative;
+}
+</style>
