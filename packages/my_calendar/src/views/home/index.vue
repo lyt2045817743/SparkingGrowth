@@ -6,6 +6,7 @@
       @loadData="loadTodoData"
       @onClick="pushTodoDetail"
       @onDateSelect="onTodoDateSelect"
+      @onEventDrop="onTodoEventDrop"
     />
     <Calendar v-else :viewType="configs.weekView.viewType" />
     <el-select style="position: absolute;top: 10px;width: 200px; right: 0" v-model="currentViewType">
@@ -19,7 +20,7 @@
 import { ref } from 'vue';
 import Calendar from '../../components/Calendar/index.vue';
 import { CalendarViewType } from '../../components/Calendar/constant';
-import { getTodoList } from './serve';
+import { getTodoList, updateTodo } from './serve';
 import { dayjs } from 'element-plus';
 
 const currentViewType = ref(CalendarViewType.Month);
@@ -57,6 +58,12 @@ const onTodoDateSelect = (info) => {
   const { startTime } = info;
   const deadline = dayjs(startTime).valueOf();
   window.open(`/course_config/todoEdit?&deadline=${deadline}&configType=1&pageType=1`);
+}
+
+const onTodoEventDrop = (info) => {
+  const { id, end } = info.event;
+  const deadline = dayjs(end).format('YYYY-MM-DD HH:mm:ss');
+  updateTodo(+id, { deadline });
 }
 </script>
 

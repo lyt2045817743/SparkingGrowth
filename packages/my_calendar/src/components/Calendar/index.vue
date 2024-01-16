@@ -18,10 +18,9 @@ const props = defineProps({
   viewType: Array
 });
 
-const emits = defineEmits(['loadData', 'onClick', 'onDateSelect'])
+const emits = defineEmits(['loadData', 'onClick', 'onDateSelect', 'onEventDrop'])
 
 const calendarRef = ref(null);
-const currentEvents = ref([]);
 const calendarOptions = ref({
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
   headerToolbar: {
@@ -85,8 +84,8 @@ const calendarOptions = ref({
   allDaySlot: false,
   contentHeight: '700px',
   height: '100%',
-  eventsSet: handleEvents,
   events: getEvents,
+  eventDrop: eventDrop,
 })
 
 function handleDateSelect(selectInfo) {
@@ -94,15 +93,18 @@ function handleDateSelect(selectInfo) {
   calendarApi.unselect();
   emits('onDateSelect', selectInfo);
 }
+
 function getEvents(_info, successCb) {
   // TODO: 添加根据时间范围查询数据的逻辑
   emits('loadData', successCb);
 }
+
 function handleEventClick(clickInfo) {
   emits('onClick', clickInfo.event)
 }
-function handleEvents(events) {
-  currentEvents.value = events
+
+function eventDrop(info) {
+  emits('onEventDrop', info);
 }
 </script>
 
