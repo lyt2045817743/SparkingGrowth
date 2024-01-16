@@ -5,21 +5,20 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps } from 'vue';
+import { ref, defineProps, defineEmits } from 'vue';
 import { dayjs } from 'element-plus';
 import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import zhCnLocale from '@fullcalendar/core/locales/zh-cn';
-import { CalendarViewType } from './constant';
 
 const props = defineProps({
   customButtons: Object,
   viewType: Array
 });
 
-const emits = defineEmits(['loadData', 'onClick'])
+const emits = defineEmits(['loadData', 'onClick', 'onDateSelect'])
 
 const calendarRef = ref(null);
 const currentEvents = ref([]);
@@ -91,20 +90,9 @@ const calendarOptions = ref({
 })
 
 function handleDateSelect(selectInfo) {
-  let title = prompt('Please enter a new title for your event')
   let calendarApi = selectInfo.view.calendar
-
-  calendarApi.unselect() // clear date selection
-
-  if (title) {
-    calendarApi.addEvent({
-      id: 3,
-      title,
-      start: selectInfo.startStr,
-      end: selectInfo.endStr,
-      allDay: selectInfo.allDay
-    })
-  }
+  calendarApi.unselect();
+  emits('onDateSelect', selectInfo);
 }
 function getEvents(_info, successCb) {
   // TODO: 添加根据时间范围查询数据的逻辑

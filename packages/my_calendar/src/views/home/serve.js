@@ -1,5 +1,3 @@
-import { dayjs } from 'element-plus';
-import { TodoStatusMap } from './constant';
 import { db } from '../../utils/globalState';
 
 const TodoStoreName = 'todo';

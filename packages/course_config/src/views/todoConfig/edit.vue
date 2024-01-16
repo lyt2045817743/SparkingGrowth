@@ -11,15 +11,15 @@
       <el-form :model="form" :disabled="pageType === PageTypeMap.View" label-width="130px">
         <el-form-item v-if="pageType === PageTypeMap.Add" label="配置方式：" required>
           <el-radio-group v-model="form.configType">
-            <el-radio :label="0">简单配置</el-radio>
-            <el-radio :label="1">完整配置</el-radio>
+            <el-radio label="0">简单配置</el-radio>
+            <el-radio label="1">完整配置</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="待办内容：" required>
           <el-input v-model="form.content" style="width: 350px" placeholder="请输入" />
           <div v-if="pageType !== PageTypeMap.Add && !form.isRoot" style="margin-left: 15px">（父待办内容：{{ parentInfo.content }}）</div>
         </el-form-item>
-        <div v-if="form.configType === 1">
+        <div v-if="form.configType === '1'">
           <el-form-item v-if="form.desc || pageType !== PageTypeMap.View" label="待办详情：">
             <el-input v-if="pageType !== PageTypeMap.View" v-model="form.desc" placeholder="请输入" type="textarea" :rows="4" style="width: 700px" />
             <div class="desc-view" v-else>{{ form.desc }}</div>
@@ -112,17 +112,19 @@ import { getConfigByKey } from '../systemConfig/serve';
 
 const route = useRoute();
 const router = useRouter();
-const { pageType: newPageType, id: newId } = route.query;
+const { pageType: newPageType, id: newId, configType, deadline } = route.query;
 const id = Number(newId);
 const pageType = Number(newPageType);
+const deadlineDate = deadline ? dayjs(+deadline).format('YYYY-MM-DD 00:00:00') : '';
+const deadlineTime = deadline ? '23:30' : '';
 
 const showPoint = ref(false);
 const todoList = ref([]);
 const form = ref({
-  configType: 1,
+  configType: configType ?? '1',
   content: '',
-  deadlineDate: '',
-  deadlineTime: '',
+  deadlineDate,
+  deadlineTime,
   desc: '',
   type: [],
   cycleType: 0,
@@ -150,8 +152,8 @@ onMounted(() => {
   getPointFlag();
   if (pageType !== PageTypeMap.Add) {
     init();
-  } else {
-    form.value.configType = 0;
+  } else if (configType !== '1') {
+    form.value.configType = '0';
   }
   getTodoData();
 })
