@@ -1,6 +1,18 @@
 <template>
   <div class="container">
-    <FullCalendar ref="calendarRef" :options="calendarOptions" />
+    <FullCalendar ref="calendarRef" :options="calendarOptions">
+      <template #eventContent="arg">
+        <div
+          class="event-box"
+          :class="[
+            arg.event.classNames,
+            dayjs(arg.event.end).valueOf() < dayjs().valueOf() ? arg.event.extendedProps.pastEventClassName : '' 
+          ]"
+        >
+          <div :class="['event-title']">{{ arg.event.title }}</div>
+        </div>
+      </template>
+    </FullCalendar>
   </div>
 </template>
 
@@ -66,6 +78,7 @@ const calendarOptions = ref({
   selectMirror: true,
   dayMaxEvents: true,
   weekends: true,
+  displayEventTime: false,
   select: handleDateSelect,
   eventClick: handleEventClick,
   // 默认滚动到的时间点
@@ -110,6 +123,38 @@ function eventDrop(info) {
 
 <style lang="scss" scoped>
 .container {
+
+  .event-box {
+    width: 100%;
+  }
+  .line-through {
+    text-decoration: line-through;
+  }
+
+  .red-text {
+    color: red;
+    .event-title {
+      &::before {
+        background: red;
+      }
+    }
+  }
+  .event-title {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    &::before {
+      width: 5px;
+      height: 5px;
+      border-radius: 100%;
+      content: '';
+      display: inline-block;
+      background: black;
+      margin-right: 5px;
+      margin-bottom: 2.5px;
+      margin-left: 5px;
+    }
+  }
 
   ::v-deep(.fc) {
     .fc-button-primary {

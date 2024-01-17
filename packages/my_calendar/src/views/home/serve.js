@@ -17,7 +17,7 @@ async function addPoint(pointInfo) {
 
 async function getTodoList() {
   let list = await db.getAll(TodoStoreName);
-  list = list.filter((item) => item.parentKey);
+  list = list.filter((item) => item.parentKey || !item.isRoot);
   return Promise.resolve(list);
 }
 

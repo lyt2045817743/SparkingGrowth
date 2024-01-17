@@ -21,6 +21,7 @@ import { ref } from 'vue';
 import Calendar from '../../components/Calendar/index.vue';
 import { CalendarViewType } from '../../components/Calendar/constant';
 import { getTodoList, updateTodo } from './serve';
+import { TodoStatusMap } from './constant';
 import { dayjs } from 'element-plus';
 
 const currentViewType = ref(CalendarViewType.Month);
@@ -38,12 +39,14 @@ const loadTodoData = async (successCb) => {
   // console.log(data);
 
   const calendarData = data.map((item) => {
-    const { key, content, deadline, startTime } = item;
+    const { key, content, deadline, startTime, status } = item;
     return {
       id: key,
       title: content,
       start: startTime || deadline,
-      end: startTime ? deadline : dayjs(deadline).add(0.5, 'hour').format('YYYY-MM-DD HH:mm:ss')
+      end: startTime ? deadline : dayjs(deadline).add(0.5, 'hour').format('YYYY-MM-DD HH:mm:ss'),
+      className: status === TodoStatusMap.Done || status === TodoStatusMap.DoneButOverdue ? 'line-through' : '',
+      pastEventClassName: status === TodoStatusMap.Undo || status === TodoStatusMap.Overdue ? 'red-text' : ''
     }
   })
 
