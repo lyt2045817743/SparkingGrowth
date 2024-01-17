@@ -9,30 +9,34 @@
             dayjs(arg.event.end).valueOf() < dayjs().valueOf() ? arg.event.extendedProps.pastEventClassName : '' 
           ]"
         >
-          <div :class="['event-title']">{{ arg.event.title }}</div>
+          <div :class="['event-title']"> {{ arg.event.title }} </div>
         </div>
       </template>
     </FullCalendar>
+    <ContextMenu ref="contextMenuRef" :menuData="menuData" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps, defineEmits } from 'vue';
+import { ref, defineProps, defineEmits, onMounted } from 'vue';
 import { dayjs } from 'element-plus';
 import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import zhCnLocale from '@fullcalendar/core/locales/zh-cn';
+import ContextMenu from '../ContextMenu/index.vue';
 
 const props = defineProps({
   customButtons: Object,
-  viewType: Array
+  viewType: Array,
+  menuData: Array,
 });
 
 const emits = defineEmits(['loadData', 'onClick', 'onDateSelect', 'onEventDrop'])
 
 const calendarRef = ref(null);
+const contextMenuRef = ref(null);
 const calendarOptions = ref({
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
   headerToolbar: {
@@ -101,8 +105,17 @@ const calendarOptions = ref({
   eventDrop: eventDrop,
 })
 
+onMounted(() => {
+  document.oncontextmenu = onContextMenu;
+})
+
 function handleDateSelect(selectInfo) {
-  let calendarApi = selectInfo.view.calendar
+  let calendarApi = selectInfo.view.calendar;
+  calendarApi.unselect();
+  if (contextMenuRef.value.showMenu) {
+    contextMenuRef.value.hideMenu();
+    return;
+  }
   calendarApi.unselect();
   emits('onDateSelect', selectInfo);
 }
@@ -113,11 +126,23 @@ function getEvents(_info, successCb) {
 }
 
 function handleEventClick(clickInfo) {
+  if (contextMenuRef.value.showMenu) {
+    contextMenuRef.value.hideMenu();
+    return;
+  }
+
   emits('onClick', clickInfo.event)
 }
 
 function eventDrop(info) {
   emits('onEventDrop', info);
+}
+
+function onContextMenu(e) {
+  if (e.target.className.indexOf('fc-event') !== -1) {
+    contextMenuRef.value.rightClick(e, { topOffset: -48 });
+  }
+  return null;
 }
 </script>
 

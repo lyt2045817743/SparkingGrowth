@@ -3,6 +3,7 @@
     <Calendar
       v-if="currentViewType === CalendarViewType.Month"
       :viewType="configs.monthView.viewType"
+      :menuData="configs.monthView.menuData"
       @loadData="loadTodoData"
       @onClick="pushTodoDetail"
       @onDateSelect="onTodoDateSelect"
@@ -27,7 +28,24 @@ import { dayjs } from 'element-plus';
 const currentViewType = ref(CalendarViewType.Month);
 const configs = {
   monthView: {
-    viewType: [CalendarViewType.Month]
+    viewType: [CalendarViewType.Month],
+    menuData: [
+      {
+        name: '完成',
+        onClick: () => {
+          // console.log(e);
+          console.log('完成');
+        }
+      },
+      {
+        name: '删除',
+        type: 'trash',
+        onClick: () => {
+          // console.log(e);        
+          console.log('删除');
+        }
+      }
+    ],
   },
   weekView: {
     viewType: [CalendarViewType.Week]
