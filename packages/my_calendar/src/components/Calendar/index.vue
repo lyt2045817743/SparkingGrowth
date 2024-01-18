@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps, defineEmits, onMounted } from 'vue';
+import { ref, defineProps, defineEmits } from 'vue';
 import { dayjs } from 'element-plus';
 import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -105,10 +105,6 @@ const calendarOptions = ref({
   eventDrop: eventDrop,
 })
 
-onMounted(() => {
-  document.oncontextmenu = onContextMenu;
-})
-
 function handleDateSelect(selectInfo) {
   let calendarApi = selectInfo.view.calendar;
   calendarApi.unselect();
@@ -116,8 +112,6 @@ function handleDateSelect(selectInfo) {
     contextMenuRef.value.hideMenu();
     return;
   }
-  calendarApi.unselect();
-  emits('onDateSelect', selectInfo);
 }
 
 function getEvents(_info, successCb) {
@@ -130,19 +124,10 @@ function handleEventClick(clickInfo) {
     contextMenuRef.value.hideMenu();
     return;
   }
-
-  emits('onClick', clickInfo.event)
 }
 
 function eventDrop(info) {
   emits('onEventDrop', info);
-}
-
-function onContextMenu(e) {
-  if (e.target.className.indexOf('fc-event') !== -1) {
-    contextMenuRef.value.rightClick(e, { topOffset: -48 });
-  }
-  return null;
 }
 </script>
 

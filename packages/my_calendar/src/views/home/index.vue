@@ -32,16 +32,26 @@ const configs = {
     menuData: [
       {
         name: '完成',
-        onClick: () => {
-          // console.log(e);
+        type: 'success',
+        disabled: (targetEle) => {
+          if (!targetEle) { return false; }
+          const { status } = targetEle.fcSeg.eventRange.def.extendedProps;
+          if (status === TodoStatusMap.Done || status === TodoStatusMap.DoneButOverdue) {
+            return true;
+          }
+          return false;
+        },
+        onClick: (targetEle) => {
+          const id = targetEle.fcSeg.eventRange.def.publicId;
+          console.log(targetEle.fcSeg.eventRange, id);
           console.log('完成');
         }
       },
       {
         name: '删除',
-        type: 'trash',
-        onClick: () => {
-          // console.log(e);        
+        type: 'danger',
+        onClick: (targetEle) => {
+          console.log(targetEle);
           console.log('删除');
         }
       }
@@ -63,6 +73,7 @@ const loadTodoData = async (successCb) => {
       title: content,
       start: startTime || deadline,
       end: startTime ? deadline : dayjs(deadline).add(0.5, 'hour').format('YYYY-MM-DD HH:mm:ss'),
+      status,
       className: status === TodoStatusMap.Done || status === TodoStatusMap.DoneButOverdue ? 'line-through' : '',
       pastEventClassName: status === TodoStatusMap.Undo || status === TodoStatusMap.Overdue ? 'red-text' : ''
     }
