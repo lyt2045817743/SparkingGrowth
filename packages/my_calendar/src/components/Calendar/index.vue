@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps, defineEmits } from 'vue';
+import { ref, defineProps, defineEmits, defineExpose } from 'vue';
 import { dayjs } from 'element-plus';
 import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -119,16 +119,25 @@ function getEvents(_info, successCb) {
   emits('loadData', successCb);
 }
 
-function handleEventClick(clickInfo) {
+function handleEventClick() {
   if (contextMenuRef.value.showMenu) {
     contextMenuRef.value.hideMenu();
     return;
   }
 }
 
+// 刷新日历数据
+function onRefreshEvents() {
+  calendarRef.value.calendar.refetchEvents();
+}
+
 function eventDrop(info) {
   emits('onEventDrop', info);
 }
+
+defineExpose({
+  onRefreshEvents
+})
 </script>
 
 <style lang="scss" scoped>

@@ -13,6 +13,7 @@
     "@fullcalendar/interaction": "^6.1.10",
     "@fullcalendar/timegrid": "^6.1.10",
     "@fullcalendar/vue3": "^6.1.10",
+    "@sparking/common": "git+https://github.com/lyt2045817743/SparkingGrowth_common.git",
     "core-js": "^3.6.5",
     "element-plus": "^2.5.1",
     "vue": "^3.0.0",

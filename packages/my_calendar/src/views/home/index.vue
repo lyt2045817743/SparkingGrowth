@@ -2,6 +2,7 @@
   <div class="container">
     <Calendar
       v-if="currentViewType === CalendarViewType.Month"
+      ref="todoCalendarRef"
       :viewType="configs.monthView.viewType"
       :menuData="configs.monthView.menuData"
       @loadData="loadTodoData"
@@ -17,14 +18,16 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { ref } from 'vue';
 import Calendar from '../../components/Calendar/index.vue';
 import { CalendarViewType } from '../../components/Calendar/constant';
-import { getTodoList, updateTodo, deleteTodo } from './serve';
-import { TodoStatusMap } from './constant';
 import { dayjs } from 'element-plus';
+import { TodoStatusMap, indexDBApi, formatCompletedTodo } from '@sparking/common';
 
+const { getChildTodoList, updateTodo, deleteTodo, addPoint } = indexDBApi ?? {};
+
+const todoCalendarRef = ref(null);
 const currentViewType = ref(CalendarViewType.Month);
 const configs = {
   monthView: {
@@ -55,10 +58,12 @@ const configs = {
           }
           return false;
         },
-        onClick: (targetEle) => {
-          const id = targetEle.fcSeg.eventRange.def.publicId;
-          console.log(targetEle.fcSeg.eventRange, id);
-          console.log('完成');
+        onClick: async (targetEle) => {
+          const { publicId: key, extendedProps } = targetEle.fcSeg.eventRange.def;
+          const { pointInfo, todoInfo } = formatCompletedTodo({ key: +key, ...extendedProps });
+          await updateTodo(+key, todoInfo);
+          await addPoint(pointInfo);
+          todoCalendarRef.value.onRefreshEvents();
         }
       },
       {
@@ -77,17 +82,21 @@ const configs = {
 }
 
 const loadTodoData = async (successCb) => {
-  const data = await getTodoList();
+  const data = await getChildTodoList();
   // console.log(data);
 
   const calendarData = data.map((item) => {
-    const { key, content, deadline, startTime, status } = item;
+    const { key, content, deadline, startTime, status, type, score, cycleType } = item;
     return {
       id: key,
       title: content,
       start: startTime || deadline,
       end: startTime ? deadline : dayjs(deadline).add(0.5, 'hour').format('YYYY-MM-DD HH:mm:ss'),
       status,
+      deadline,
+      type,
+      score,
+      cycleType,
       className: status === TodoStatusMap.Done || status === TodoStatusMap.DoneButOverdue ? 'line-through' : '',
       pastEventClassName: status === TodoStatusMap.Undo || status === TodoStatusMap.Overdue ? 'red-text' : ''
     }

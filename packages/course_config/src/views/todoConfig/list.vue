@@ -94,9 +94,10 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { ElMessage, dayjs } from 'element-plus';
-import { Refresh } from '@element-plus/icons-vue'
+import { Refresh } from '@element-plus/icons-vue';
+import { formatCompletedTodo } from '@sparking/common';
 import { useRouter } from 'vue-router';
-import { PointEventTypeMap, PageTypeMap } from '../../constant';
+import { PageTypeMap } from '../../constant';
 import {  TodoTypeLabel, TodoTypeScore, TodoStatusMap, CycleMap, TypeCascadeOptions, TodoTypeMap } from './constant';
 import { deleteTodo , getTodoList, updateTodo, addPoint, addTodo } from './serve';
 import { getConfigByKey } from '../systemConfig/serve';
@@ -292,22 +293,8 @@ const handleEdit = (row, pageType) => {
 };
 
 const completeTodo = async (row) => {
-  const { key: id, deadline, type, score, cycleType } = row;
-  const now = Date.now();
-  const isOverdue = now > dayjs(deadline).valueOf();
-  const status = isOverdue ? TodoStatusMap.DoneButOverdue : TodoStatusMap.Done;
-  const pointInfo = {
-    eventId: id,
-    eventType: PointEventTypeMap.Todo,
-    score: score ?? type.reduce((a, b) => a + TodoTypeScore[b], 0)
-  }
-  if (isOverdue) {
-    pointInfo.score = pointInfo.score / 2;
-  }
-  if (cycleType !== CycleMap.UnCycle) {
-    pointInfo.createTime = now;
-  }
-  await updateTodo(id, { status, finishTime: now });
+  const { todoInfo, pointInfo } = formatCompletedTodo(row);
+  await updateTodo(row.key, todoInfo);
   await addPoint(pointInfo);
   await updateView();
   ElMessage({

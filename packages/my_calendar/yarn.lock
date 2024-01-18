@@ -1166,6 +1166,10 @@
   resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@soda/get-current-script/-/get-current-script-1.0.2.tgz"
   integrity sha1-pTUV2yXYA4N0OBtzryC7Ty5QjYc=
 
+"@sparking/common@git+https://github.com/lyt2045817743/SparkingGrowth_common.git":
+  version "1.0.0"
+  resolved "git+https://github.com/lyt2045817743/SparkingGrowth_common.git#2beea0e41e7d51fcf95f46674ad57bbd6fd38f19"
+
 "@types/body-parser@*":
   version "1.19.5"
   resolved "https://pkgs.d.xiaomi.net:443/artifactory/api/npm/mi-npm/@types/body-parser/-/body-parser-1.19.5.tgz"
