@@ -21,7 +21,7 @@
 import { ref } from 'vue';
 import Calendar from '../../components/Calendar/index.vue';
 import { CalendarViewType } from '../../components/Calendar/constant';
-import { getTodoList, updateTodo } from './serve';
+import { getTodoList, updateTodo, deleteTodo } from './serve';
 import { TodoStatusMap } from './constant';
 import { dayjs } from 'element-plus';
 
@@ -30,6 +30,20 @@ const configs = {
   monthView: {
     viewType: [CalendarViewType.Month],
     menuData: [
+      {
+        name: '查看详情',
+        onClick: (targetEle) => {
+          const id = targetEle.fcSeg.eventRange.def.publicId;
+          pushTodoDetail({ id, pageType: 3 });
+        }
+      },
+      {
+        name: '编辑',
+        onClick: (targetEle) => {
+          const id = targetEle.fcSeg.eventRange.def.publicId;
+          pushTodoDetail({ id, pageType: 2 });
+        }
+      },
       {
         name: '完成',
         type: 'success',
@@ -51,8 +65,8 @@ const configs = {
         name: '删除',
         type: 'danger',
         onClick: (targetEle) => {
-          console.log(targetEle);
-          console.log('删除');
+          const id = targetEle.fcSeg.eventRange.def.publicId;
+          deleteTodo(+id);
         }
       }
     ],
@@ -83,7 +97,7 @@ const loadTodoData = async (successCb) => {
 }
 
 const pushTodoDetail = (info) => {
-  window.open(`/course_config/todoEdit?id=${info.id}&pageType=2`);
+  window.open(`/course_config/todoEdit?id=${info.id}&pageType=${info.pageType}`);
 }
 
 const onTodoDateSelect = (info) => {
