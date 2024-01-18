@@ -3,6 +3,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import router from './router/index';
 import App from './App.vue';
+import { getApiSourceType } from '@sparking/common';
 
 let instance;
 
@@ -25,6 +26,7 @@ export async function bootstrap() {
 export async function mount(props) {
   // console.log('mount');
   instance = await render(props);
+  await getApiSourceType();
 }
 
 export async function unmount() {

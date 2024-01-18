@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@sparking/common": "git+https://github.com/lyt2045817743/SparkingGrowth_common.git",
     "chinese-workday": "^1.9.0",
     "core-js": "^3.6.5",
     "element-plus": "^2.3.9",
