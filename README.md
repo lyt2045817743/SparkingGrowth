@@ -30,10 +30,7 @@
 # 1. clone the project
 git clone https://github.com/lyt2045817743/SparkingGrowth.git
 
-# 2. enter the project directory
-cd SparkingGrowth/SparkingGrowth_main
-
-# 3. 安装依赖并启动（第一次启动）
+# 2. 安装依赖并启动（第一次启动）
 yarn startAll --install
 
 # 仅启动
