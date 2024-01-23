@@ -4,7 +4,7 @@
       <li v-for="item in menuData" :key="item.name">
         <el-button
           @click="() => onMenuItemClick(item)"
-          link
+          text
           :type="item.type"
           :disabled="item.disabled ? item.disabled(currentTargetEle) : false"
           >{{ item.name }}</el-button
@@ -91,7 +91,6 @@ ul {
 .menu > li {
   font: inherit;
   border: 0;
-  padding: 10px 30px 10px 15px;
   display: flex;
   align-items: center;
   position: relative;
@@ -106,9 +105,8 @@ ul {
   -ms-transition: 0.5s linear;
   -o-transition: 0.5s linear;
 
-  &:hover {
-    background: #f1f3f7;
-    color: #4b00ff;
+  ::v-deep(.el-button) {
+    width: 100%;
   }
 }
 </style>
