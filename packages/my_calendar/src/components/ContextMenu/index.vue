@@ -1,7 +1,7 @@
 <template>
   <div id="contextMenu" class="context-menu" style="display: none">
     <ul class="menu">
-      <li v-for="item in menuData" :key="item.name">
+      <li v-for="item in menu" :key="item.name">
         <el-button
           @click="() => onMenuItemClick(item)"
           text
@@ -14,14 +14,17 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { onMounted, defineExpose, ref, defineProps } from "vue";
-defineProps({
-  menuData: Object,
+import { TargetClassNameMap } from './config';
+
+const props = defineProps({
+  menuDataMap: Object,
 });
 
 const showMenu = ref(false);
 const currentTargetEle = ref(null);
+const menu = ref([]);
 
 onMounted(() => {
   document.onclick = hideMenu;
@@ -33,7 +36,8 @@ function hideMenu() {
   showMenu.value = false;
 }
 
-function rightClick(e, { topOffset }) {
+function rightClick(e, options = {}) {
+  const { topOffset = -78, leftOffset = -20 } = options;
   e.preventDefault();
   if (document.getElementById("contextMenu").style.display == "block") {
     hideMenu();
@@ -41,7 +45,7 @@ function rightClick(e, { topOffset }) {
     var menu = document.getElementById("contextMenu");
     menu.style.display = "block";
     showMenu.value = true;
-    menu.style.left = e.pageX + "px";
+    menu.style.left = e.pageX + leftOffset + "px";
     menu.style.top = e.pageY + topOffset + "px";
   }
 }
@@ -53,11 +57,23 @@ function onMenuItemClick(item) {
 
 function onContextMenu(e) {
   const className = e.target.className;
-  // 日历事件右键
-  if (className.indexOf("fc-event") !== -1) {
+
+  const handler = (className) => {
+    menu.value = props.menuDataMap[className];
     currentTargetEle.value = e.target;
-    rightClick(e, { topOffset: -48 });
+    rightClick(e);
   }
+
+  // 日历事件右键
+  if (className.indexOf(TargetClassNameMap.Event) !== -1) {
+    handler(TargetClassNameMap.Event);
+  }
+
+  // 日历格子右键
+  if (className.indexOf(TargetClassNameMap.DayContainer) !== -1) {
+    handler(TargetClassNameMap.DayContainer);
+  }
+
   return null;
 }
 

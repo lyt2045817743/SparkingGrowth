@@ -13,11 +13,11 @@
         </div>
       </template>
     </FullCalendar>
-    <ContextMenu ref="contextMenuRef" :menuData="menuData" />
+    <ContextMenu ref="contextMenuRef" :menuDataMap="menuDataMap" />
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { ref, defineProps, defineEmits, defineExpose } from 'vue';
 import { dayjs } from 'element-plus';
 import FullCalendar from '@fullcalendar/vue3';
@@ -30,7 +30,7 @@ import ContextMenu from '../ContextMenu/index.vue';
 const props = defineProps({
   customButtons: Object,
   viewType: Array,
-  menuData: Array,
+  menuDataMap: Object,
 });
 
 const emits = defineEmits(['loadData', 'onClick', 'onDateSelect', 'onEventDrop'])

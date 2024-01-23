@@ -4,7 +4,7 @@
       v-if="currentViewType === CalendarViewType.Month"
       ref="todoCalendarRef"
       :viewType="configs.monthView.viewType"
-      :menuData="configs.monthView.menuData"
+      :menuDataMap="configs.monthView.menuDataMap"
       @loadData="loadTodoData"
       @onClick="pushTodoDetail"
       @onDateSelect="onTodoDateSelect"
@@ -22,6 +22,7 @@
 import { ref } from 'vue';
 import Calendar from '../../components/Calendar/index.vue';
 import { CalendarViewType } from '../../components/Calendar/constant';
+import { TargetClassNameMap } from '../../components/ContextMenu/config'; 
 import { dayjs } from 'element-plus';
 import { TodoStatusMap, indexDBApi, formatCompletedTodo } from '@sparking/common';
 
@@ -32,49 +33,60 @@ const currentViewType = ref(CalendarViewType.Month);
 const configs = {
   monthView: {
     viewType: [CalendarViewType.Month],
-    menuData: [
-      {
-        name: '查看详情',
-        onClick: (targetEle) => {
-          const id = targetEle.fcSeg.eventRange.def.publicId;
-          pushTodoDetail({ id, pageType: 3 });
-        }
-      },
-      {
-        name: '编辑',
-        onClick: (targetEle) => {
-          const id = targetEle.fcSeg.eventRange.def.publicId;
-          pushTodoDetail({ id, pageType: 2 });
-        }
-      },
-      {
-        name: '完成',
-        type: 'success',
-        disabled: (targetEle) => {
-          if (!targetEle) { return false; }
-          const { status } = targetEle.fcSeg.eventRange.def.extendedProps;
-          if (status === TodoStatusMap.Done || status === TodoStatusMap.DoneButOverdue) {
-            return true;
+    menuDataMap: {
+      [TargetClassNameMap.Event]: [
+        {
+          name: '查看详情',
+          onClick: (targetEle) => {
+            const id = targetEle.fcSeg.eventRange.def.publicId;
+            pushTodoDetail({ id, pageType: 3 });
           }
-          return false;
         },
-        onClick: async (targetEle) => {
-          const { publicId: key, extendedProps } = targetEle.fcSeg.eventRange.def;
-          const { pointInfo, todoInfo } = formatCompletedTodo({ key: +key, ...extendedProps });
-          await updateTodo(+key, todoInfo);
-          await addPoint(pointInfo);
-          todoCalendarRef.value.onRefreshEvents();
+        {
+          name: '编辑',
+          onClick: (targetEle) => {
+            const id = targetEle.fcSeg.eventRange.def.publicId;
+            pushTodoDetail({ id, pageType: 2 });
+          }
+        },
+        {
+          name: '完成',
+          type: 'success',
+          disabled: (targetEle) => {
+            if (!targetEle) { return false; }
+            const { status } = targetEle.fcSeg.eventRange.def.extendedProps;
+            if (status === TodoStatusMap.Done || status === TodoStatusMap.DoneButOverdue) {
+              return true;
+            }
+            return false;
+          },
+          onClick: async (targetEle) => {
+            const { publicId: key, extendedProps } = targetEle.fcSeg.eventRange.def;
+            const { pointInfo, todoInfo } = formatCompletedTodo({ key: +key, ...extendedProps });
+            await updateTodo(+key, todoInfo);
+            await addPoint(pointInfo);
+            todoCalendarRef.value.onRefreshEvents();
+          }
+        },
+        {
+          name: '删除',
+          type: 'danger',
+          onClick: (targetEle) => {
+            const id = targetEle.fcSeg.eventRange.def.publicId;
+            deleteTodo(+id);
+          }
         }
-      },
-      {
-        name: '删除',
-        type: 'danger',
-        onClick: (targetEle) => {
-          const id = targetEle.fcSeg.eventRange.def.publicId;
-          deleteTodo(+id);
+      ],
+      [TargetClassNameMap.DayContainer]: [
+        {
+          name: '新增',
+          onClick: (targetEle) => {
+            const deadlineDate = targetEle.parentNode.dataset.date;
+            pushTodoDetail({ deadline: dayjs(`${deadlineDate} 00:00:00`).valueOf(), pageType: 1, configType: 1 })
+          }
         }
-      }
-    ],
+      ]
+    },
   },
   weekView: {
     viewType: [CalendarViewType.Week]
@@ -106,7 +118,7 @@ const loadTodoData = async (successCb) => {
 }
 
 const pushTodoDetail = (info) => {
-  window.open(`/course_config/todoEdit?id=${info.id}&pageType=${info.pageType}`);
+  window.open(`/course_config/todoEdit?id=${info.id}&pageType=${info.pageType}&deadline=${info.deadline}&configType=${info.configType}`);
 }
 
 const onTodoDateSelect = (info) => {
