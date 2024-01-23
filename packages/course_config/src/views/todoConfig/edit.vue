@@ -67,7 +67,7 @@
             <el-input v-model="form.score" style="width: 100px" type="number" />
           </el-form-item>
         </div>
-        <el-form-item v-if="!form.parentKey" label="关联已有子待办：">
+        <el-form-item v-if="!form.parentKey" label="关联子待办：">
           <div v-if="pageType === PageTypeMap.View">
             <el-table :data="todoList.filter(item => form.childrenTodo?.includes(item.key))">
               <el-table-column prop="content" label="待办内容" min-width="350">
