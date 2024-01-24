@@ -9,7 +9,10 @@
             dayjs(arg.event.end).valueOf() < dayjs().valueOf() ? arg.event.extendedProps.pastEventClassName : '' 
           ]"
         >
-          <div :class="['event-title']"> {{ arg.event.title }} </div>
+          <el-tooltip v-if="arg.event.title.length > 14" :content="arg.event.title" :show-after="500">
+            <div :class="['event-title']"> {{ arg.event.title }} </div>
+          </el-tooltip>
+          <div :class="['event-title']" v-else> {{ arg.event.title }} </div>
         </div>
       </template>
     </FullCalendar>
