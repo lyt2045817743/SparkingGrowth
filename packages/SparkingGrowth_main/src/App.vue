@@ -69,9 +69,11 @@ div {
   align-items: center;
   justify-content: space-between;
 }
+
 a {
   color: #ffffff;
   font-size: 15px;
   text-decoration: none;
+  margin-left: 10px;
 }
 </style>
