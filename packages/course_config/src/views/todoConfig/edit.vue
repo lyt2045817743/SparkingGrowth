@@ -19,23 +19,26 @@
           <el-input v-model="form.content" style="width: 350px" placeholder="请输入" />
           <div v-if="parentInfo.content" style="margin-left: 15px">（父待办内容：{{ parentInfo.content }}）</div>
         </el-form-item>
+        <el-form-item label="待办类型：">
+          <el-cascader
+            v-model="form.type"
+            collapse-tags
+            collapse-tags-tooltip
+            :show-all-levels="false"
+            :props="props"
+            style="width: 250px"
+            placeholder="请选择"
+            :options="TypeCascadeOptions"
+            @change="onTypeChange"
+          />
+        </el-form-item>
+        <el-form-item v-if="showPoint && form.type.length" label="积分调整：">
+          <el-input v-model="form.score" style="width: 100px" type="number" />
+        </el-form-item>
         <div v-if="form.configType === '1'">
           <el-form-item v-if="form.desc || pageType !== PageTypeMap.View" label="待办详情：">
             <el-input v-if="pageType !== PageTypeMap.View" v-model="form.desc" placeholder="请输入" type="textarea" :rows="4" style="width: 700px" />
             <div class="desc-view" v-else>{{ form.desc }}</div>
-          </el-form-item>
-          <el-form-item label="待办类型：">
-            <el-cascader
-              v-model="form.type"
-              collapse-tags
-              collapse-tags-tooltip
-              :show-all-levels="false"
-              :props="props"
-              style="width: 250px"
-              placeholder="请选择"
-              :options="TypeCascadeOptions"
-              @change="onTypeChange"
-            />
           </el-form-item>
           <el-form-item label="截止时间：">
             <el-date-picker
@@ -53,7 +56,7 @@
               placeholder="具体时间"
             />
           </el-form-item>
-          <el-form-item label="是否循环：">
+          <!-- <el-form-item label="是否循环：">
             <el-select v-model="form.cycleType" placeholder="请选择">
               <el-option
                 v-for="item in CycleOptions"
@@ -62,37 +65,34 @@
                 :value="+item.value"
               />
             </el-select>
-          </el-form-item>
-          <el-form-item v-if="showPoint" label="积分调整：">
-            <el-input v-model="form.score" style="width: 100px" type="number" />
+          </el-form-item> -->
+          <el-form-item v-if="!form.parentKey" label="关联子待办：">
+            <div v-if="pageType === PageTypeMap.View">
+              <el-table :data="todoList.filter(item => form.childrenTodo?.includes(item.key))">
+                <el-table-column prop="content" label="待办内容" min-width="350">
+                  <template #default="scope">
+                    <div class="link-style" @click="handleEdit(scope.row, PageTypeMap.Edit)">
+                      <div>{{ scope.row.content }}</div>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="desc" label="待办详情" width="400">
+                  <template #default="scope">
+                    {{ scope.row.desc || '--' }}
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+            <el-select v-else v-model="form.childrenTodo" collapse-tags multiple placeholder="请选择">
+              <el-option
+                v-for="item in todoList"
+                :key="item.key"
+                :label="item.content"
+                :value="+item.key"
+              />
+            </el-select>
           </el-form-item>
         </div>
-        <el-form-item v-if="!form.parentKey" label="关联子待办：">
-          <div v-if="pageType === PageTypeMap.View">
-            <el-table :data="todoList.filter(item => form.childrenTodo?.includes(item.key))">
-              <el-table-column prop="content" label="待办内容" min-width="350">
-                <template #default="scope">
-                  <div class="link-style" @click="handleEdit(scope.row, PageTypeMap.Edit)">
-                    <div>{{ scope.row.content }}</div>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column prop="desc" label="待办详情" width="400">
-                <template #default="scope">
-                  {{ scope.row.desc || '--' }}
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
-          <el-select v-else v-model="form.childrenTodo" collapse-tags multiple placeholder="请选择">
-            <el-option
-              v-for="item in todoList"
-              :key="item.key"
-              :label="item.content"
-              :value="+item.key"
-            />
-          </el-select>
-        </el-form-item>
         <el-form-item>
           <el-button v-if="pageType !== PageTypeMap.View" :disabled="!form.content" type="primary" @click="onSubmit">提交</el-button>
         </el-form-item>
