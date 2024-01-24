@@ -23,10 +23,11 @@
           </el-table-column>
           <el-table-column prop="deadline" label="截止时间（倒计时）" min-width="200">
             <template #default="scope">
-              <span>
+              <span v-if="scope.row.deadline">
                 {{ scope.row.deadline.slice(0, 16) }}
                 <span v-if="getDeadlineExtraText(scope.row)" :style="{ color: getDeadlineExtraText(scope.row).color }">{{ `（${getDeadlineExtraText(scope.row).text}天）` }}</span>
               </span>
+              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column prop="type" :label="`分类${showPoint ? '（积分）': ''}`" :formatter="formatter" min-width="140" />
@@ -94,12 +95,11 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { ElMessage, dayjs } from 'element-plus';
-import { Refresh } from '@element-plus/icons-vue';
 import { formatCompletedTodo } from '@sparking/common';
 import { useRouter } from 'vue-router';
 import { PageTypeMap } from '../../constant';
-import {  TodoTypeLabel, TodoTypeScore, TodoStatusMap, CycleMap, TypeCascadeOptions, TodoTypeMap } from './constant';
-import { deleteTodo , getTodoList, updateTodo, addPoint, addTodo } from './serve';
+import {  TodoTypeLabel, TodoTypeScore, TodoStatusMap, TypeCascadeOptions, TodoTypeMap } from './constant';
+import { deleteTodo , getTodoList, updateTodo, addPoint, addTodo, sortFunc } from './serve';
 import { getConfigByKey } from '../systemConfig/serve';
 
 const router = useRouter();
@@ -161,18 +161,18 @@ const formatData = (data) => {
       if (parentData[j].key === parentKey) {
         parentData[j].children.push(childrenData[i]);
         const parentDeadline = parentData[j].deadline ? dayjs(parentData[j].deadline).valueOf() : Number.MAX_VALUE;
-        const newDeadLine = Math.min(parentDeadline, dayjs(deadline).valueOf());
-        parentData[j].deadline = dayjs(newDeadLine).format('YYYY-MM-DD HH:mm:ss');
+        const newDeadLine = !parentDeadline && !deadline ? '' : Math.min(parentDeadline, dayjs(deadline).valueOf());
+        parentData[j].deadline = newDeadLine ? dayjs(newDeadLine).format('YYYY-MM-DD HH:mm:ss') : '';
       }
     }
   }
-  return parentData.sort((a, b) => dayjs(a.deadline).valueOf() - dayjs(b.deadline).valueOf());
+  return parentData.sort(sortFunc);
 }
 
 const addChild = async (row) => {
   currentParent.value = row;
-  form.value.deadlineDate = row.deadline.slice(0, 10);
-  form.value.deadlineTime = row.deadline.slice(11, 16);
+  form.value.deadlineDate = row.deadline ? row.deadline.slice(0, 10) : '';
+  form.value.deadlineTime = row.deadline ? row.deadline.slice(11, 16) : '';
   showDialog.value = true;
 }
 
@@ -207,20 +207,20 @@ const onTypeChange = (value) => {
   form.value.score = TodoTypeScore[value];
 }
 
-const onRefreshCycleTodo = async () => {
-  const now = Date.now();
-  const data = await getTodoList();
-  for (let i = 0; i< data.length; i++) {
-    const { key, cycleType } = data[i];
-    const deadline = dayjs(data[i].deadline).valueOf();
-    if ([CycleMap.Everyday].includes(cycleType) && now > deadline) {
-      const todoInfo =  { status: TodoStatusMap.Undo, deadline: dayjs(now).add(1, 'day').format('YYYY-MM-DD 00:00:00') };
-      await updateTodo(key, todoInfo);
-    }
-  }
-  updateView();
-  ElMessage.success('刷新完成');
-}
+// const onRefreshCycleTodo = async () => {
+//   const now = Date.now();
+//   const data = await getTodoList();
+//   for (let i = 0; i< data.length; i++) {
+//     const { key, cycleType } = data[i];
+//     const deadline = dayjs(data[i].deadline).valueOf();
+//     if ([CycleMap.Everyday].includes(cycleType) && now > deadline) {
+//       const todoInfo =  { status: TodoStatusMap.Undo, deadline: dayjs(now).add(1, 'day').format('YYYY-MM-DD 00:00:00') };
+//       await updateTodo(key, todoInfo);
+//     }
+//   }
+//   updateView();
+//   ElMessage.success('刷新完成');
+// }
 
 const showTheTodayTodo = (value) => {
   onlyShowToday.value = value;
@@ -229,7 +229,7 @@ const showTheTodayTodo = (value) => {
       const { deadline, status } = item;
       const todayEnding = dayjs().add(1, 'day').format('YYYY-MM-DD 00:00:01');
       const isComplete = [TodoStatusMap.Done, TodoStatusMap.DoneButOverdue].includes(status);
-      return dayjs(todayEnding).valueOf() > dayjs(deadline).valueOf() && !isComplete;
+      return deadline && dayjs(todayEnding).valueOf() > dayjs(deadline).valueOf() && !isComplete;
     })
   } else {
     tableList.value = totalList;

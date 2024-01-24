@@ -7,8 +7,6 @@
       :menuDataMap="configs.monthView.menuDataMap"
       :eventOrder="configs.monthView.eventOrder"
       @loadData="loadTodoData"
-      @onClick="pushTodoDetail"
-      @onDateSelect="onTodoDateSelect"
       @onEventDrop="onTodoEventDrop"
     />
     <Calendar v-else :viewType="configs.weekView.viewType" />
@@ -123,12 +121,6 @@ const loadTodoData = async (successCb) => {
 const pushTodoDetail = (query) => {
   const fullUrl = getFullUrl('/course_config/todoEdit', { query });
   window.open(fullUrl);
-}
-
-const onTodoDateSelect = (info) => {
-  const { startTime } = info;
-  const deadline = dayjs(startTime).valueOf();
-  window.open(`/course_config/todoEdit?&deadline=${deadline}&configType=1&pageType=1`);
 }
 
 const onTodoEventDrop = (info) => {

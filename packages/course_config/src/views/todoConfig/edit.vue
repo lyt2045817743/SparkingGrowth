@@ -106,7 +106,7 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage, dayjs } from 'element-plus';
 import { addTodo, getTodoById, updateTodo, getTodoList } from './serve.js';
-import { TodoTypeMap, TypeCascadeOptions, CycleOptions, TodoTypeScore } from './constant';
+import { TodoTypeMap, TypeCascadeOptions, TodoTypeScore } from './constant';
 import { PageTypeLabel, PageTypeMap } from '../../constant'
 import { getConfigByKey } from '../systemConfig/serve';
 
@@ -165,8 +165,8 @@ const getPointFlag = async () => {
 
 const init = async () => {
   const { content, createTime, deadline, desc, type, status, cycleType, score, parentKey, key, isRoot } = await getTodoById(id);
-  const deadlineDate = deadline.slice(0, 10)
-  const deadlineTime = deadline.slice(11, 16)
+  const deadlineDate = deadline ? deadline.slice(0, 10) : '';
+  const deadlineTime = deadline ? deadline.slice(11, 16) : '';
   const scoreNew = score ?? type.reduce((a, b) => a + TodoTypeScore[b], 0);
   form.value = Object.assign(form.value, { content, createTime, desc, type, status, deadlineDate, deadlineTime, parentKey, cycleType: cycleType ?? 0, score: scoreNew, key, isRoot })
 }
@@ -195,9 +195,9 @@ const getTodoData = async () => {
 const updateChildTodo = async (parentTodo, parentKey) => {
   const { childrenTodo } = form.value;
   for (let i = 0; i < childrenTodo.length; i++) {
-    const { key, deadline } = todoList.value.find(item => item.key === childrenTodo[i]);
-    const newDeadLine = dayjs(Math.max(dayjs(parentTodo.deadline).valueOf(), dayjs(deadline).valueOf())).format('YYYY-MM-DD HH:mm:ss');
-    await updateTodo(key, { parentKey, deadline: newDeadLine });
+    const { key, deadline = 0 } = todoList.value.find(item => item.key === childrenTodo[i]);
+    const newDeadLine = dayjs(Math.max(dayjs(parentTodo.deadline ?? 0).valueOf(), dayjs(deadline).valueOf())).format('YYYY-MM-DD HH:mm:ss');
+    await updateTodo(key, { parentKey, deadline:  parentTodo.deadline && deadline ? newDeadLine : '' });
   }
   for (let j = 0; j < todoList.value.length; j++) {
     if (!childrenTodo.find(item => item === todoList.value[j].key)) {
@@ -213,7 +213,7 @@ const onSubmit = async () => {
   const todoInfo = {
     content,
     createTime,
-    deadline: deadline || dayjs(createTime).add(1, 'day').format('YYYY-MM-DD 00:00:00'),
+    deadline,
     status: 0,
     cycleType,
     score: score ? Number(score) : 0,
