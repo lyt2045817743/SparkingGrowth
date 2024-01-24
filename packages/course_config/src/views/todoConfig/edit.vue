@@ -196,7 +196,7 @@ const updateChildTodo = async (parentTodo, parentKey) => {
   const { childrenTodo } = form.value;
   for (let i = 0; i < childrenTodo.length; i++) {
     const { key, deadline } = todoList.value.find(item => item.key === childrenTodo[i]);
-    const newDeadLine = dayjs(Math.max(dayjs(parentTodo.deadline).valueOf(), dayjs(deadline).valueOf())).format('YYYY-MM-DD 00:00:00');
+    const newDeadLine = dayjs(Math.max(dayjs(parentTodo.deadline).valueOf(), dayjs(deadline).valueOf())).format('YYYY-MM-DD HH:mm:ss');
     await updateTodo(key, { parentKey, deadline: newDeadLine });
   }
   for (let j = 0; j < todoList.value.length; j++) {

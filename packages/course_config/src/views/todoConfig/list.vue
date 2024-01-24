@@ -37,7 +37,7 @@
           </el-table-column>
           <el-table-column align="right" label="操作" width="300px">
             <template #default="scope">
-              <el-button size="small" v-if="!scope.row.parentKey" @click="addChild(scope.row)">添加子待办</el-button>
+              <el-button size="small" v-if="!scope.row.parentKey" @click="addChild(scope.row)">新增子待办</el-button>
               <el-button size="small" plain type="primary" @click="handleEdit(scope.row, PageTypeMap.Edit)">编辑</el-button>
               <el-popconfirm title="是否确认删除？" @confirm="handleDelete(scope.row)">
                 <template #reference>
@@ -51,7 +51,7 @@
       </el-main>
     </el-container>
   </div>
-  <el-dialog v-model="showDialog" :title="`【${currentParent?.content}】添加子待办：`">
+  <el-dialog v-model="showDialog" :title="`【${currentParent?.content}】新增子待办：`">
     <el-form :model="form">
       <el-form-item label="待办内容：" required>
         <el-input v-model="form.content" style="width: 350px" placeholder="请输入" />
