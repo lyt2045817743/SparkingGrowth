@@ -31,6 +31,7 @@ const props = defineProps({
   customButtons: Object,
   viewType: Array,
   menuDataMap: Object,
+  eventOrder: Array,
 });
 
 const emits = defineEmits(['loadData', 'onClick', 'onDateSelect', 'onEventDrop'])
@@ -85,6 +86,8 @@ const calendarOptions = ref({
   displayEventTime: false,
   select: handleDateSelect,
   eventClick: handleEventClick,
+  eventOrder: props.eventOrder ?? [],
+  eventOrderStrict: true,
   // 默认滚动到的时间点
   scrollTime: dayjs().format('HH:mm'),
   buttonText: {

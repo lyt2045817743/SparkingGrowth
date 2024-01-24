@@ -1,7 +1,7 @@
 export const TodoStatusMap = {
+  Overdue: -1,
   Undo: 0,
   Done: 1,
-  Overdue: 2,
   DoneButOverdue: 3,
 };
 

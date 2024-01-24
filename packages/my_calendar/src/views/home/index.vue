@@ -5,6 +5,7 @@
       ref="todoCalendarRef"
       :viewType="configs.monthView.viewType"
       :menuDataMap="configs.monthView.menuDataMap"
+      :eventOrder="configs.monthView.eventOrder"
       @loadData="loadTodoData"
       @onClick="pushTodoDetail"
       @onDateSelect="onTodoDateSelect"
@@ -71,9 +72,10 @@ const configs = {
         {
           name: '删除',
           type: 'danger',
-          onClick: (targetEle) => {
+          onClick: async (targetEle) => {
             const id = targetEle.fcSeg.eventRange.def.publicId;
-            deleteTodo(+id);
+            await deleteTodo(+id);
+            todoCalendarRef.value.onRefreshEvents();
           }
         }
       ],
@@ -87,6 +89,7 @@ const configs = {
         }
       ]
     },
+    eventOrder: [ (a, b) => { return a.extendedProps.status - b.extendedProps.status }]
   },
   weekView: {
     viewType: [CalendarViewType.Week]
