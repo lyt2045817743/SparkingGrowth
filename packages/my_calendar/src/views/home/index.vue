@@ -24,7 +24,7 @@ import Calendar from '../../components/Calendar/index.vue';
 import { CalendarViewType } from '../../components/Calendar/constant';
 import { TargetClassNameMap } from '../../components/ContextMenu/config'; 
 import { dayjs } from 'element-plus';
-import { TodoStatusMap, indexDBApi, formatCompletedTodo } from '@sparking/common';
+import { TodoStatusMap, indexDBApi, formatCompletedTodo, getFullUrl } from '@sparking/common';
 
 const { getChildTodoList, updateTodo, deleteTodo, addPoint } = indexDBApi ?? {};
 
@@ -117,8 +117,9 @@ const loadTodoData = async (successCb) => {
   successCb(calendarData);
 }
 
-const pushTodoDetail = (info) => {
-  window.open(`/course_config/todoEdit?id=${info.id}&pageType=${info.pageType}&deadline=${info.deadline}&configType=${info.configType}`);
+const pushTodoDetail = (query) => {
+  const fullUrl = getFullUrl('/course_config/todoEdit', { query });
+  window.open(fullUrl);
 }
 
 const onTodoDateSelect = (info) => {

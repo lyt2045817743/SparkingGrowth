@@ -17,7 +17,7 @@
         </el-form-item>
         <el-form-item label="待办内容：" required>
           <el-input v-model="form.content" style="width: 350px" placeholder="请输入" />
-          <div v-if="pageType !== PageTypeMap.Add && !form.isRoot" style="margin-left: 15px">（父待办内容：{{ parentInfo.content }}）</div>
+          <div v-if="parentInfo.content" style="margin-left: 15px">（父待办内容：{{ parentInfo.content }}）</div>
         </el-form-item>
         <div v-if="form.configType === '1'">
           <el-form-item v-if="form.desc || pageType !== PageTypeMap.View" label="待办详情：">
