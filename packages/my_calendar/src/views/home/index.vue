@@ -26,8 +26,8 @@ const currentViewType = ref(CalendarViewType.Month);
 
 const judgeIsFinish = (targetEle) => {
   if (!targetEle) { return false; }
-  const { status } = targetEle.fcSeg.eventRange.def.extendedProps;
-  if (status === TodoStatusMap.Done || status === TodoStatusMap.DoneButOverdue) {
+  const { status, deadline } = getEventData(targetEle);
+  if (status === TodoStatusMap.Done || status === TodoStatusMap.DoneButOverdue || !deadline) {
     return true;
   }
   return false;
@@ -47,22 +47,22 @@ const configs = {
         {
           name: '查看详情',
           onClick: (targetEle) => {
-            const id = targetEle.fcSeg.eventRange.def.publicId;
-            pushTodoDetail({ id, pageType: 3 });
+            const { key } = getEventData(targetEle);
+            pushTodoDetail({ id: key, pageType: 3 });
           }
         },
         {
           name: '编辑',
           onClick: (targetEle) => {
-            const id = targetEle.fcSeg.eventRange.def.publicId;
-            pushTodoDetail({ id, pageType: 2 });
+            const { key } = getEventData(targetEle);
+            pushTodoDetail({ id: key, pageType: 2 });
           }
         },
         {
           name: '调整为待安排',
           disabled: judgeIsFinish,
           onClick: async (targetEle) => {
-            const key = targetEle.fcSeg.eventRange.def.publicId;
+            const { key } = getEventData(targetEle);
             await updateTodo(+key, { deadline: "" });
             todoCalendarRef.value.onRefreshEvents();
             todoCalendarRef.value.onLoadUnscheduledTodo();
@@ -73,7 +73,7 @@ const configs = {
           type: 'success',
           disabled: judgeIsFinish,
           onClick: async (targetEle) => {
-            const { publicId: key, extendedProps } = targetEle.fcSeg.eventRange.def;
+            const { key, ...extendedProps } = getEventData(targetEle);
             const { pointInfo, todoInfo } = formatCompletedTodo({ key: +key, ...extendedProps });
             await updateTodo(+key, todoInfo);
             await addPoint(pointInfo);
@@ -84,8 +84,8 @@ const configs = {
           name: '删除',
           type: 'danger',
           onClick: async (targetEle) => {
-            const id = targetEle.fcSeg.eventRange.def.publicId;
-            await deleteTodo(+id);
+            const { key } = getEventData(targetEle);
+            await deleteTodo(+key);
             todoCalendarRef.value.onRefreshEvents();
           }
         }
@@ -124,9 +124,16 @@ const configs = {
 }
 
 const getEventData = (el) => {
+  if (el.fcSeg) {
+    const data = el.fcSeg.eventRange.def;
+    return {
+      key: data.publicId,
+      ...data.extendedProps,
+    }
+  }
   let data = {};
   try {
-    data = JSON.parse(el.dataset.eventInfo);
+    data = JSON.parse(el.dataset.eventInfo ?? el.parentNode.dataset.eventInfo);
   } catch (error) {
     console.error(error);
   }
