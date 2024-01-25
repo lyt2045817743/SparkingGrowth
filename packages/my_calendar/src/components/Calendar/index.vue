@@ -22,7 +22,10 @@
         class="fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event"
         :data-event-info="JSON.stringify(item)"
       >
-        <div class="fc-event-main">{{ item.content }}</div>
+        <el-tooltip v-if="item.content.length > 14" :content="item.content" :show-after="500">
+          <div class="fc-event-main">{{ item.content }}</div>
+        </el-tooltip>
+        <div v-else class="fc-event-main">{{ item.content }}</div>
       </div>
     </div>
     <FullCalendar
@@ -41,9 +44,9 @@
           ]"
         >
           <el-tooltip
-            v-if="arg.event.title.length > 14"
+            v-if="arg.event.title.length > 12"
             :content="arg.event.title"
-            :show-after="500"
+            :show-after="800"
           >
             <div :class="['event-title']">{{ arg.event.title }}</div>
           </el-tooltip>
@@ -223,6 +226,12 @@ defineExpose({
   #external-events .fc-event {
     cursor: move;
     margin: 3px 0;
+    .fc-event-main {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 0 5px;
+    }
   }
 
   .calendar-box {
