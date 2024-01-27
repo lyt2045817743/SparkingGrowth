@@ -16,10 +16,8 @@ import Calendar from '../../components/Calendar/index.vue';
 import { CalendarViewType } from '../../components/Calendar/constant';
 import { TargetClassNameMap } from '../../components/ContextMenu/config';
 import { dayjs } from 'element-plus';
-import { TodoStatusMap, indexDBApi, formatCompletedTodo, getFullUrl } from '@sparking/common';
-import { getUnscheduledTodoList, getChildTodoList } from './serve';
-
-const { updateTodo, deleteTodo, addPoint } = indexDBApi ?? {};
+import { TodoStatusMap, formatCompletedTodo, getFullUrl } from '@sparking/common';
+import api from '@/api';
 
 const todoCalendarRef = ref(null);
 const currentViewType = ref(CalendarViewType.Month);
@@ -36,7 +34,7 @@ const judgeIsFinish = (targetEle) => {
 const onTodoEventDrop = (info) => {
   const { id, end } = info.event;
   const deadline = dayjs(end).format('YYYY-MM-DD HH:mm:ss');
-  updateTodo(+id, { deadline });
+  api.updateTodo(+id, { deadline });
 }
 const configs = {
   monthView: {
@@ -63,7 +61,7 @@ const configs = {
           disabled: judgeIsFinish,
           onClick: async (targetEle) => {
             const { key } = getEventData(targetEle);
-            await updateTodo(+key, { deadline: "" });
+            await api.updateTodo(+key, { deadline: "" });
             todoCalendarRef.value.onRefreshEvents();
             todoCalendarRef.value.onLoadUnscheduledTodo();
           }
@@ -75,8 +73,8 @@ const configs = {
           onClick: async (targetEle) => {
             const { key, ...extendedProps } = getEventData(targetEle);
             const { pointInfo, todoInfo } = formatCompletedTodo({ key: +key, ...extendedProps });
-            await updateTodo(+key, todoInfo);
-            await addPoint(pointInfo);
+            await api.updateTodo(+key, todoInfo);
+            await api.addPoint(pointInfo);
             todoCalendarRef.value.onRefreshEvents();
           }
         },
@@ -85,7 +83,7 @@ const configs = {
           type: 'danger',
           onClick: async (targetEle) => {
             const { key } = getEventData(targetEle);
-            await deleteTodo(+key);
+            await api.deleteTodo(+key);
             todoCalendarRef.value.onRefreshEvents();
           }
         }
@@ -113,7 +111,7 @@ const configs = {
     eventDrop: onTodoEventDrop,
     drop: async function (info) {
       const key = +getEventData(info.draggedEl)?.key;
-      await updateTodo(key, { deadline: `${info.dateStr} 23:30:00` });
+      await api.updateTodo(key, { deadline: `${info.dateStr} 23:30:00` });
       todoCalendarRef.value.onRefreshEvents();
       info.draggedEl.parentNode.removeChild(info.draggedEl);
     }
@@ -158,7 +156,7 @@ const formatCalendarTodoData = (item) => {
 }
 
 const loadTodoData = async (successCb) => {
-  const data = await getChildTodoList();
+  const data = await api.getChildTodoList();
   // console.log(data);
 
   const calendarData = data.map((item) => {
@@ -169,7 +167,7 @@ const loadTodoData = async (successCb) => {
 }
 
 const loadUnscheduledTodo = async (successCb) => {
-  const data = await getUnscheduledTodoList();
+  const data = await api.getUnscheduledTodoList();
   successCb(data)
 }
 
