@@ -247,12 +247,12 @@ const addChild = async (row) => {
 
 const onSubmit = async () => {
   const { content, desc, type, score, deadlineDate, deadlineTime } = form.value;
-  const { deadline: parentDeadline, cycleType, key } = currentParent.value;
+  const { cycleType, key } = currentParent.value;
   const createTime = Date.now();
   const deadline =
     deadlineDate && deadlineTime
       ? `${dayjs(deadlineDate).format("YYYY-MM-DD")} ${deadlineTime}:00`
-      : parentDeadline;
+      : '';
 
   const todoInfo = {
     content,
