@@ -112,7 +112,7 @@ const configs = {
     drop: async function (info) {
       const key = +getEventData(info.draggedEl)?.key;
       await api.updateTodo(key, { deadline: `${info.dateStr} 23:30:00` });
-      todoCalendarRef.value.onRefreshEvents();
+      // todoCalendarRef.value.onRefreshEvents();
       info.draggedEl.parentNode.removeChild(info.draggedEl);
     }
   },
