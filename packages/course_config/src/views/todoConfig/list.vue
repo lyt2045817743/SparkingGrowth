@@ -229,16 +229,9 @@ const formatData = (data) => {
     for (let j = 0; j < parentData.length; j++) {
       if (parentData[j].key === parentKey) {
         parentData[j].children.push(childrenData[i]);
-        const parentDeadline = parentData[j].deadline
-          ? dayjs(parentData[j].deadline).valueOf()
-          : Number.MAX_VALUE;
-        const newDeadLine =
-          !parentDeadline && !deadline
-            ? ""
-            : Math.min(parentDeadline, dayjs(deadline).valueOf());
-        parentData[j].deadline = newDeadLine
-          ? dayjs(newDeadLine).format("YYYY-MM-DD HH:mm:ss")
-          : "";
+        const parentDeadline = parentData[j].deadline ? dayjs(parentData[j].deadline).valueOf() : Number.MAX_VALUE;
+        const newDeadLine = !parentDeadline && !deadline ? "" : Math.min(parentDeadline, dayjs(deadline).valueOf());
+        parentData[j].deadline = deadline ? (newDeadLine ? dayjs(newDeadLine).format("YYYY-MM-DD HH:mm:ss") : "") : parentData[j].deadline;
       }
     }
   }
