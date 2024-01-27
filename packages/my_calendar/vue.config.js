@@ -1,7 +1,7 @@
 const path = require('path');
 const { name } = require('./package.json');
 
-const port = 60003;
+const port = 63001;
 
 // 资源文件路径处理
 let publicPath = `//localhost:${port}`;

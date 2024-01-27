@@ -1,7 +1,7 @@
 export const microConfigs = [
   {
     name: '今天学什么？',
-    entry: '//localhost:60002',
+    entry: '//localhost:62001',
     container: '#container',
     activeRule: '/what_to_study_today',
   },
@@ -13,7 +13,7 @@ export const microConfigs = [
   },
   {
     name: '我的日历',
-    entry: '//localhost:60003',
+    entry: '//localhost:63001',
     container: '#container',
     activeRule: '/my_calendar',
   },
