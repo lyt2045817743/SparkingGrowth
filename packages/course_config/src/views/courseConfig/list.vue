@@ -40,7 +40,7 @@
 import { onMounted, ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
-import { getCourseList, deleteCourse } from './sever';
+import api from '@/api';
 import { CourseTitleMap } from '../../common';
 
 const router = useRouter();
@@ -57,12 +57,12 @@ const updateView = () => {
 }
 
 const getData = async () => {
-  tableList.value = await getCourseList();
+  tableList.value = await api.getCourseList();
 }
 
 const handleDelete = async (row) => {
   const { id } = row;
-  await deleteCourse(id);
+  await api.deleteCourse(id);
   ElMessage({
     message: '删除成功！',
     type: 'success',

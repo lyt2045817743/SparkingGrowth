@@ -68,7 +68,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { getBookList, updateBook } from './serve';
+import api from '@/api';
 import { BooksTypeLabel, BooksStatusLabel, BooksStatusMap } from './constant';
 import { ElMessage } from 'element-plus';
 
@@ -86,7 +86,7 @@ onMounted(() => {
 })
 
 const getData = async () => {
-  tableList.value = await getBookList();
+  tableList.value = await api.getBookList();
 }
 
 const getPercentStatus = (row) => {
@@ -137,7 +137,7 @@ const onProgressChange = async () => {
     progressCount,
     status: isFinish ? BooksStatusMap.Done : isReading ? BooksStatusMap.Reading : status
   }
-  await updateBook(currentBookInfo.value.id, bookInfo);
+  await api.updateBook(currentBookInfo.value.id, bookInfo);
   ElMessage.success('更新成功');
   showDialog.value = false;
   getData();

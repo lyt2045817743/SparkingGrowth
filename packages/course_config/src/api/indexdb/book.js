@@ -1,6 +1,6 @@
 import { db } from '../../utils/globalState';
 
-const BookStoreName = 'book';
+export const BookStoreName = 'book';
 
 async function getBookList() {
   const list = await db.getAll(BookStoreName);

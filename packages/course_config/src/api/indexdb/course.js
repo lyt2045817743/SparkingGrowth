@@ -1,41 +1,38 @@
 import { db } from '../../utils/globalState';
 
+export const CourseStoreName = 'course';
+
 async function getCourseList() {
-  const list = await db.getAll('course');
+  const list = await db.getAll(CourseStoreName);
   return Promise.resolve(list);
 }
 
 async function getCourseById(id) {
-  const course = db.get('course', id);
+  const course = db.get(CourseStoreName, id);
   return Promise.resolve(course);
 }
 
 async function addCourse(courseInfo) {
   const course = JSON.parse(JSON.stringify(courseInfo));
-  const courseId = await db.add('course', course);
+  const courseId = await db.add(CourseStoreName, course);
   return Promise.resolve(courseId);
 }
 
 async function updateCourse(id, info) {
-  const course = await db.get('course', id);
+  const course = await db.get(CourseStoreName, id);
   Object.keys(info).forEach((key) => {
     course[key] = info[key];
   })
-  await db.put('course', course);
+  await db.put(CourseStoreName, course);
 }
 
 async function deleteCourse(key) {
-  await db.delete('course', key);
-}
-
-async function updateConfig(key, value) {
-  await db.put('config', { key, value });
+  await db.delete(CourseStoreName, key);
 }
 
 export {
   getCourseList,
   addCourse,
-  updateConfig,
   deleteCourse,
   getCourseById,
   updateCourse

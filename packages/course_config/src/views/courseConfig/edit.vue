@@ -89,7 +89,6 @@ import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import api from '@/api';
 import { CourseTitleMap } from '../../common';
-import { addCourse, getCourseById, updateCourse } from './sever';
 
 const route = useRoute();
 const router = useRouter();
@@ -117,7 +116,7 @@ onMounted(() => {
 })
 
 const init = async () => {
-  const { name, url, type } = await getCourseById(id);
+  const { name, url, type } = await api.getCourseById(id);
   form.value.name = name;
   form.value.url = url;
   form.value.hasUrl = url ? 1 : 0;
@@ -188,7 +187,7 @@ const onRealSubmit = async (callback) => {
       })),
       titleMap
     }
-    const courseId = await addCourse(courseInfo);
+    const courseId = await api.addCourse(courseInfo);
     callback(courseId);
   }
 }
@@ -212,7 +211,7 @@ const onEditSubmit = async () => {
       url: hasUrl ? url : '',
       type
     }
-    await updateCourse(id, params);
+    await api.updateCourse(id, params);
     ElMessage({
       message: '修改成功！',
       type: 'success',

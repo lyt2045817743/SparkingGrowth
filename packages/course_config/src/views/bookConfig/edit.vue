@@ -49,7 +49,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import { addBook, getBookById, updateBook } from './serve.js';
+import api from '@/api';
 import { BooksTypeOptions, BooksStatusOptions, BooksStatusMap } from './constant';
 
 const route = useRoute();
@@ -74,7 +74,7 @@ onMounted(() => {
 })
 
 const init = async () => {
-  const { name, author, type, percentType, status, abandonReason, totalCount } = await getBookById(id);
+  const { name, author, type, percentType, status, abandonReason, totalCount } = await api.getBookById(id);
   form.value = Object.assign(form.value, { name, author, type, percentType, status, abandonReason, totalCount })
 }
 
@@ -97,12 +97,12 @@ const onSubmit = async () => {
     if (status === BooksStatusMap.Done) {
       bookInfo.progressCount = totalCount;
     }
-    await updateBook(id, bookInfo);
+    await api.updateBook(id, bookInfo);
     message = '修改成功';
   } else {
     bookInfo.createTime = createTime;
     bookInfo.progressCount = 0;
-    await addBook(bookInfo);
+    await api.addBook(bookInfo);
     message = '添加成功';
   }
   ElMessage({
