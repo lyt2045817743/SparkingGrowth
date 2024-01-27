@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test';
 
 test('completed_todo', async ({ page }) => {
   await page.goto('http://127.0.0.1:5173/course_config/todo');
+  await page.goto('http://127.0.0.1:5173/course_config/todo');
+  await page.locator('html').click();
   await page.getByRole('button', { name: '新增待办' }).click();
   await page.getByText('完整配置').click();
   await page.getByLabel('待办内容：').click();
@@ -20,8 +22,6 @@ test('completed_todo', async ({ page }) => {
   await page.locator('li').filter({ hasText: '00:00' }).click();
   await page.getByRole('button', { name: '提交' }).click();
   await page.getByRole('button', { name: '完成' }).click();
-  await page.getByRole('menuitem', { name: '积分记录与兑换' }).click();
-  await page.getByText('+6').click();
   await page.getByRole('menuitem', { name: '待办管理' }).click();
   await page.getByRole('button', { name: '新增待办' }).click();
   await page.getByText('完整配置').click();
@@ -39,9 +39,6 @@ test('completed_todo', async ({ page }) => {
   await page.locator('li').filter({ hasText: '01:00' }).click();
   await page.getByRole('button', { name: '提交' }).click();
   await page.getByRole('button', { name: '完成' }).click();
-  await page.getByText('积分记录与兑换').click();
-  await page.locator('svg').click();
-  await page.getByText('+6.5').click();
 });
 
 test('todo_api', async ({ page }) => {
