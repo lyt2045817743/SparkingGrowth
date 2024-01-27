@@ -57,7 +57,7 @@ function onMenuItemClick(item) {
 
 function onContextMenu(e) {
   const className = e.target.className;
-  // console.log(className);
+  // console.log(className, e);
 
   const handler = (className) => {
     menu.value = props.menuDataMap[className];

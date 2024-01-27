@@ -99,23 +99,7 @@ const calendarOptions = ref({
   snapDuration: "00:15:00",
   // 时间网格的时间间隔
   slotDuration: "01:00:00",
-  businessHours: [
-    {
-      daysOfWeek: [1, 2, 3, 4, 5],
-      startTime: "09:00",
-      endTime: "11:30",
-    },
-    {
-      daysOfWeek: [1, 2, 3, 4, 5],
-      startTime: "14:00",
-      endTime: "17:30",
-    },
-    {
-      daysOfWeek: [1, 2, 3, 4, 5],
-      startTime: "19:00",
-      endTime: "20:00",
-    },
-  ],
+  firstDay: 0,
   locale: zhCnLocale,
   editable: true,
   selectable: true,
