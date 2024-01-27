@@ -62,10 +62,8 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { dayjs, ElMessage } from 'element-plus';
-import { addActivity, getActivityList, updateActivity, deleteActivity } from './serve';
-import { addPoint } from '../todoConfig/serve';
-import { PointEventTypeMap } from '../../constant'
-
+import api from '@/api';
+import { PointEventTypeMap } from '@sparking/common';
 
 const formLabelWidth = '140px';
 
@@ -81,7 +79,7 @@ onMounted(() => {
 })
 
 const getData = async () => {
-  tableList.value = await getActivityList();
+  tableList.value = await api.getActivityList();
 }
 
 const formatter = (row) => {
@@ -96,8 +94,8 @@ const onExchange = async (row) => {
     score: 0 - costScore,
     createTime: Date.now()
   };
-  await addPoint(pointInfo);
-  await updateActivity(id, { count: count + 1 });
+  await api.addPoint(pointInfo);
+  await api.updateActivity(id, { count: count + 1 });
   ElMessage.success('兑换成功！');
   getData();
 }
@@ -111,10 +109,10 @@ const onEdit = async () => {
     costScore
   }
   if (id === undefined) {
-    await addActivity(activityInfo);
+    await api.addActivity(activityInfo);
     ElMessage.success('添加成功！');
   } else {
-    await updateActivity(id, { name, costScore });
+    await api.updateActivity(id, { name, costScore });
     ElMessage.success('修改成功！');
   }
   getData();
@@ -138,7 +136,7 @@ const handleEdit = async (row) => {
 
 const handleDelete = async (row) => {
   const { id } = row;
-  await deleteActivity(id);
+  await api.deleteActivity(id);
   ElMessage.success('删除成功！');
   getData();
 };

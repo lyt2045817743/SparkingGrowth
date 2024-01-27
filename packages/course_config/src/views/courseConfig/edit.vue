@@ -87,8 +87,9 @@
 import { reactive, ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
+import api from '@/api';
 import { CourseTitleMap } from '../../common';
-import { addCourse, updateConfig, getCourseById, updateCourse } from './sever';
+import { addCourse, getCourseById, updateCourse } from './sever';
 
 const route = useRoute();
 const router = useRouter();
@@ -222,7 +223,7 @@ const onEditSubmit = async () => {
 
 const onSubmitAndTry = async () => {
   onRealSubmit((courseId) => {
-    updateConfig('currentCourseId', courseId);
+    api.updateConfig('currentCourseId', courseId);
     window.location.replace('/what_to_study_today');
   });
 }

@@ -80,8 +80,7 @@ import { onMounted, ref } from 'vue';
 import { ElMessage, dayjs } from 'element-plus';
 import ww from 'chinese-workday';
 import { useRouter } from 'vue-router';
-import { getPointList } from './serve';
-import { addPoint } from '../todoConfig/serve'
+import api from '@/api';
 import { PageTypeMap, PointEventTypeLabel, PointEventTypeMap } from '../../constant';
 import { ExtraPointTableData, DateType, DateTypePointStandard, ExtraPointLevel, ExtraPointLevelScore } from './constant';
 
@@ -99,7 +98,7 @@ onMounted(() => {
 })
 
 const getData = async () => {
-  const { data, total } = await getPointList();
+  const { data, total } = await api.getPointList();
   tableList.value = formatData(data);
   totalPoint.value = total;
 }
@@ -200,7 +199,7 @@ const addExtraPoint = async () => {
     score,
     createTime: Date.now()
   }
-  await addPoint(pointInfo);
+  await api.addPoint(pointInfo);
   hasApplyExtraPoint.value = true;
   ElMessage.success('已获得今日补偿积分');
   showDialog.value = false;
