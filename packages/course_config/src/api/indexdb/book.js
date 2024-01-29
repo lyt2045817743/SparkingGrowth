@@ -2,11 +2,6 @@ import { db } from '../../utils/globalState';
 
 export const BookStoreName = 'book';
 
-async function getBookList() {
-  const list = await db.getAll(BookStoreName);
-  return Promise.resolve(list);
-}
-
 async function addBook(bookInfo) {
   const book = JSON.parse(JSON.stringify(bookInfo));
   const bookId = await db.add(BookStoreName, book);
@@ -27,7 +22,6 @@ async function updateBook(id, info) {
 }
 
 export {
-  getBookList,
   addBook,
   getBookById,
   updateBook

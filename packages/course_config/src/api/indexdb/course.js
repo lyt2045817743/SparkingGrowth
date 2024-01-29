@@ -2,11 +2,6 @@ import { db } from '../../utils/globalState';
 
 export const CourseStoreName = 'course';
 
-async function getCourseList() {
-  const list = await db.getAll(CourseStoreName);
-  return Promise.resolve(list);
-}
-
 async function getCourseById(id) {
   const course = db.get(CourseStoreName, id);
   return Promise.resolve(course);
@@ -31,7 +26,6 @@ async function deleteCourse(key) {
 }
 
 export {
-  getCourseList,
   addCourse,
   deleteCourse,
   getCourseById,
