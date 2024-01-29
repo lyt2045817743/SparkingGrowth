@@ -1,4 +1,4 @@
-import { getStudyLogListById } from './server';
+import api from '@/api';
 
 class StudyLogManager {
   constructor(titleMap, courseId) {
@@ -7,7 +7,7 @@ class StudyLogManager {
   }
 
   async getStudyLogMap() {
-    let studyLogList = await getStudyLogListById(this.currentCourseId);
+    let studyLogList = await api.getStudyLogListById(this.currentCourseId);
     const studyLogMap = {};
     studyLogList = studyLogList.sort((a, b) => {
       const [time1, time2] = [a.id.split('_')[1], b.id.split('_')[1]];

@@ -93,7 +93,7 @@
 import { ref, onMounted } from 'vue';
 import dayjs from 'dayjs';
 import Tooltip from '@/components/Tooltip';
-import { getCurrentCourseInfo, updateCourseTitleMapById, addStudyLog, getCourseList, updateConfig } from './server';
+import api from '@/api';
 import { StudyLogManager } from './presenter'
 
 const partNo = ref(null);
@@ -118,11 +118,11 @@ onMounted(() => {
 })
 
 async function queryCourseList() {
-  courseList.value = await getCourseList();
+  courseList.value = await api.getCourseList();
 }
 
 async function init() {
-  const course = await getCurrentCourseInfo();
+  const course = await api.getCurrentCourseInfo();
   const { partInfoList, titleMap, id } = course;
   courseInfo.value = course;
   partInfoListOfCurCourse = partInfoList;
@@ -215,18 +215,18 @@ async function updateStudyLog() {
   } else {
     studyLog.allTitle = allTitle.value;
   }
-  await addStudyLog(studyLog);
+  await api.addStudyLog(studyLog);
   updateStudyLogList();
 }
 
 function updateCourseTitleMap(event, key) {
   if (!event.target.value) return;
   courseTitleMap.value[key] = event.target.value;
-  updateCourseTitleMapById(courseInfo.value.id, key,  event.target.value);
+  api.updateCourseTitleMapById(courseInfo.value.id, key,  event.target.value);
 }
 
 async function onCourseChange(event) {
-  await updateConfig('currentCourseId', +event.target.value);
+  await api.updateConfig('currentCourseId', +event.target.value);
   init();
   clearStates();
 }

@@ -1096,6 +1096,10 @@
   resolved "https://registry.yarnpkg.com/@soda/get-current-script/-/get-current-script-1.0.2.tgz#a53515db25d8038374381b73af20bb4f2e508d87"
   integrity sha512-T7VNNlYVM1SgQ+VsMYhnDkcGmWhQdL0bDyGm5TlQ3GBXnJscEClUUOKduWTmm2zCnvNLC1hc3JpuXjs/nFOc5w==
 
+"@sparking/common@git+https://github.com/lyt2045817743/SparkingGrowth_common.git":
+  version "1.0.0"
+  resolved "git+https://github.com/lyt2045817743/SparkingGrowth_common.git#c5428af4d4751e99dc15825256fe1a0a7345c78b"
+
 "@types/body-parser@*":
   version "1.19.2"
   resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.19.2.tgz#aea2059e28b7658639081347ac4fab3de166e6f0"
