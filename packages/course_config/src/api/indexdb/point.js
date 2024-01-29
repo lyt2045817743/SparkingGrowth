@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
-import { db } from '../../utils/globalState';
-import { PointEventTypeMap } from '../../constant';
+import { PointEventTypeMap, db } from '@sparking/common';
 import { TodoStoreName } from './todo';
 import { ActivityStoreName } from './activity'
 

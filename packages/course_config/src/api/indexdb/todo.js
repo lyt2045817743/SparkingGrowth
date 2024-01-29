@@ -1,6 +1,5 @@
 import { dayjs } from 'element-plus';
-import { TodoStatusMap } from '@sparking/common';
-import { db } from '../../utils/globalState';
+import { TodoStatusMap, db } from '@sparking/common';
 
 export const TodoStoreName = 'todo';
 

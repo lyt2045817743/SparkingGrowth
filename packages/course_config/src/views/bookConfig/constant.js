@@ -1,4 +1,4 @@
-import { getOptionsByLabelMap, getMapByOptions } from '../../utils'
+import { getOptionsByLabelMap, getMapByOptions } from '@sparking/common';
 
 export const BooksTypeOptions = [
   {

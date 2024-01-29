@@ -80,8 +80,8 @@ import { onMounted, ref } from 'vue';
 import { ElMessage, dayjs } from 'element-plus';
 import ww from 'chinese-workday';
 import { useRouter } from 'vue-router';
+import { PageTypeMap, PointEventTypeLabel, PointEventTypeMap } from '@sparking/common';
 import api from '@/api';
-import { PageTypeMap, PointEventTypeLabel, PointEventTypeMap } from '../../constant';
 import { ExtraPointTableData, DateType, DateTypePointStandard, ExtraPointLevel, ExtraPointLevelScore } from './constant';
 
 const router = useRouter();
