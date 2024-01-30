@@ -41,7 +41,7 @@ onMounted(() => {
 })
 
 const init = async () => {
-  const { systemName = '婷的空间', showPoint = true, dataSourceType } = await apis.getConfigMap();
+  const { systemName = '婷的空间', dataSourceType } = await apis.getConfigMap();
   form.value.systemName = systemName;
   // form.value.showPoint = showPoint;
   form.value.dataSourceType = dataSourceType ?? DataSourceType.getDefault();

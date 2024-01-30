@@ -160,7 +160,6 @@ import {
   PageTypeMap,
   TodoTypeMap,
   TypeCascadeOptions,
-  TodoTypeScore,
 } from "@sparking/common";
 
 const route = useRoute();
