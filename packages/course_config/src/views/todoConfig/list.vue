@@ -51,7 +51,7 @@
           </el-table-column>
           <el-table-column
             prop="type"
-            :label="`分类${showPoint ? '（积分）' : ''}`"
+            label="分类"
             :formatter="formatter"
             min-width="140"
           />
@@ -170,7 +170,6 @@ const router = useRouter();
 
 const onlyShowToday = ref(false);
 const tableList = ref([]);
-const showPoint = ref(false);
 const currentParent = ref(null);
 const showDialog = ref(false);
 const form = ref({
@@ -189,13 +188,7 @@ const props = {
 
 onMounted(() => {
   getData(true);
-  getPointFlag();
 });
-
-const getPointFlag = async () => {
-  const config = (await api.getConfigByKey("showPoint")) ?? true;
-  showPoint.value = config;
-};
 
 const updateView = () => {
   getData();
@@ -316,14 +309,9 @@ const showTheTodayTodo = (value) => {
 };
 
 const formatter = (row) => {
-  const { type, score } = row;
+  const { type } = row;
   const types = type.map((item) => TodoTypeLabel[item]).join(",");
-  const scoreNew = score ?? type.reduce((a, b) => a + TodoTypeScore[b], 0);
-  return `${types}${
-    showPoint.value && !type.includes(TodoTypeMap.Undefined)
-      ? `（+${scoreNew}）`
-      : ""
-  }`;
+  return `${types}`;
 };
 
 const getDeadlineExtraText = (row) => {
@@ -379,9 +367,8 @@ const handleEdit = (row, pageType) => {
 };
 
 const completeTodo = async (row) => {
-  const { todoInfo, pointInfo } = formatCompletedTodo(row);
+  const { todoInfo } = formatCompletedTodo(row);
   await api.updateTodo(row.key, todoInfo);
-  await api.addPoint(pointInfo);
   await updateView();
   ElMessage({
     message: "已更新",

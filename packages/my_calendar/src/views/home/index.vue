@@ -72,9 +72,8 @@ const configs = {
           disabled: judgeIsFinish,
           onClick: async (targetEle) => {
             const { key, ...extendedProps } = getEventData(targetEle);
-            const { pointInfo, todoInfo } = formatCompletedTodo({ key: +key, ...extendedProps });
+            const { todoInfo } = formatCompletedTodo({ key: +key, ...extendedProps });
             await api.updateTodo(+key, todoInfo);
-            await api.addPoint(pointInfo);
             todoCalendarRef.value.onRefreshEvents();
           }
         },

@@ -10,9 +10,9 @@
         <el-form-item label="系统名称：" required>
           <el-input v-model="form.systemName" style="width:300px" @change="(val) => changeConfig(val, 'systemName')" />
         </el-form-item>
-        <el-form-item label="积分模块：" required>
+        <!-- <el-form-item label="积分模块：" required>
           <el-switch v-model="form.showPoint" @change="(val) => changeConfig(val, 'showPoint')" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="数据来源：" required>
           <el-radio-group v-model="form.dataSourceType" style="margin-top: -4px;" @change="(val) => changeConfig(val, 'dataSourceType')">
             <el-radio v-for="item in DataSourceTypeOptions" :key="item.value" :label="item.value" size="large">{{ item.label }}</el-radio>
@@ -28,11 +28,11 @@ import { ref, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { DataSourceTypeOptions } from './constant';
 import { DataSourceType } from '@sparking/common';
-import apis from '../../api';
+import apis from '@/api';
 
 const form = ref({
   systemName: '',
-  showPoint: undefined,
+  // showPoint: undefined,
   dataSourceType: undefined
 })
 
@@ -43,7 +43,7 @@ onMounted(() => {
 const init = async () => {
   const { systemName = '婷的空间', showPoint = true, dataSourceType } = await apis.getConfigMap();
   form.value.systemName = systemName;
-  form.value.showPoint = showPoint;
+  // form.value.showPoint = showPoint;
   form.value.dataSourceType = dataSourceType ?? DataSourceType.getDefault();
 };
 

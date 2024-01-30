@@ -1,11 +1,10 @@
 const List = () => import('../views/courseConfig/list.vue');
 const Edit = () => import('../views/courseConfig/edit.vue');
 
-const TodoList = () => import('../views/todoConfig/list.vue')
-const TodoEdit = () => import('../views/todoConfig/edit.vue');
+const ActivityList = () => import('../views/activityConfig/list.vue');
 
-const PointList = () => import('../views/pointConfig/list.vue');
-const exchangePointList = () => import('../views/pointConfig/exchange');
+const TodoList = () => import('../views/todoConfig/list.vue');
+const TodoEdit = () => import('../views/todoConfig/edit.vue');
 
 const BookList = () => import('../views/bookConfig/list.vue');
 const BookEdit = () => import('../views/bookConfig/edit.vue');
@@ -26,6 +25,13 @@ export const routes = [
       title: '待办管理'
     },
     component: TodoList,
+  },
+  {
+    path: '/activity',
+    meta: {
+      title: '活动管理',
+    },
+    component: ActivityList,
   },
   {
     path: '/todoAdd',
@@ -88,22 +94,6 @@ export const routes = [
       hidden: true
     },
     component: BookEdit,
-  },
-  {
-    path: '/point',
-    meta: {
-      title: '积分记录与兑换',
-      hiddenKey: 'showPoint'
-    },
-    component: PointList,
-  },
-  {
-    path: '/exchangePoint',
-    meta: {
-      title: '兑换活动',
-      hidden: true
-    },
-    component: exchangePointList,
   },
   {
     path: '/systemEdit',

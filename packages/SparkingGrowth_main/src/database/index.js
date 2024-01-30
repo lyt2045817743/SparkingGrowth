@@ -10,10 +10,6 @@
         keyPath: 'key'
       },
       {
-        name: 'point',
-        keyPath: 'id'
-      },
-      {
         name: 'activity',
         keyPath: 'id'
       },

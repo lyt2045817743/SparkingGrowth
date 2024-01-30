@@ -43,7 +43,7 @@ test('completed_todo', async ({ page }) => {
 
 test('todo_api', async ({ page }) => {
   await page.goto('http://127.0.0.1:5173/course_config/todo');
-  await page.locator('html').click();
+  await page.goto('http://127.0.0.1:5173/course_config/todo');
   // 新增待办
   await expect(page.getByRole('button', { name: '新增待办' })).toBeVisible();
   await page.getByRole('button', { name: '新增待办' }).click();
@@ -60,8 +60,6 @@ test('todo_api', async ({ page }) => {
   await page.getByRole('gridcell', { name: '28' }).locator('div').click();
   await page.getByPlaceholder('具体时间').click();
   await page.locator('li').filter({ hasText: '02:00' }).click();
-  await page.getByPlaceholder('请选择').click();
-  await page.locator('div:nth-child(5) > div:nth-child(3) > .el-form-item__content').click();
   await page.getByRole('button', { name: '提交' }).click();
   // 新增子待办
   await page.getByRole('button', { name: '新增子待办' }).click();
@@ -76,8 +74,6 @@ test('todo_api', async ({ page }) => {
   // 编辑
   await page.getByRole('cell', { name: '新增1' }).getByRole('img').click();
   await page.getByRole('button', { name: '编辑' }).nth(1).click();
-  await page.getByLabel('积分调整：').click();
-  await page.getByLabel('积分调整：').fill('2');
   await page.getByRole('button', { name: '提交' }).click();
   await page.getByRole('button', { name: '编辑' }).click();
   await page.getByRole('button', { name: '返回' }).click();

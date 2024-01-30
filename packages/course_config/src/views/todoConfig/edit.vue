@@ -47,11 +47,7 @@
             style="width: 250px"
             placeholder="请选择"
             :options="TypeCascadeOptions"
-            @change="onTypeChange"
           />
-        </el-form-item>
-        <el-form-item v-if="showPoint && form.type.length" label="积分调整：">
-          <el-input v-model="form.score" style="width: 100px" type="number" />
         </el-form-item>
         <div v-if="form.configType === '1'">
           <el-form-item
@@ -177,7 +173,6 @@ const deadlineDate = deadline
   : "";
 const deadlineTime = deadline ? "23:30" : "";
 
-const showPoint = ref(false);
 const todoList = ref([]);
 const form = ref({
   configType: configType ?? "1",
@@ -187,7 +182,6 @@ const form = ref({
   desc: "",
   type: [],
   cycleType: 0,
-  score: 0,
   childrenTodo: [],
 });
 
@@ -208,7 +202,6 @@ const handleEdit = (row, pageType) => {
 };
 
 onMounted(() => {
-  getPointFlag();
   if (pageType !== PageTypeMap.Add) {
     init();
   } else if (configType !== "1") {
@@ -216,11 +209,6 @@ onMounted(() => {
   }
   getTodoData();
 });
-
-const getPointFlag = async () => {
-  const config = (await api.getConfigByKey("showPoint")) ?? true;
-  showPoint.value = config;
-};
 
 const init = async () => {
   const {
@@ -231,14 +219,12 @@ const init = async () => {
     type,
     status,
     cycleType,
-    score,
     parentKey,
     key,
     isRoot,
   } = await api.getTodoById(id);
   const deadlineDate = deadline ? deadline.slice(0, 10) : "";
   const deadlineTime = deadline ? deadline.slice(11, 16) : "";
-  const scoreNew = score ?? type.reduce((a, b) => a + TodoTypeScore[b], 0);
   form.value = Object.assign(form.value, {
     content,
     createTime,
@@ -249,7 +235,6 @@ const init = async () => {
     deadlineTime,
     parentKey,
     cycleType: cycleType ?? 0,
-    score: scoreNew,
     key,
     isRoot,
   });
@@ -311,7 +296,6 @@ const onSubmit = async () => {
     deadlineDate,
     deadlineTime,
     cycleType,
-    score,
     childrenTodo,
     key: parentKey,
   } = form.value;
@@ -326,7 +310,6 @@ const onSubmit = async () => {
     deadline,
     status: 0,
     cycleType,
-    score: score ? Number(score) : 0,
     type:
       type.includes(TodoTypeMap.Undefined) || type.length === 0
         ? [TodoTypeMap.Undefined]
@@ -350,10 +333,6 @@ const onSubmit = async () => {
     type: "success",
   });
   router.push("/todo");
-};
-
-const onTypeChange = (value) => {
-  form.value.score = value.reduce((a, b) => a + TodoTypeScore[b], 0);
 };
 
 const onCancel = () => {

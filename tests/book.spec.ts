@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test('book_api', async ({ page }) => {
   await page.goto('http://127.0.0.1:5173/course_config/book');
+  await page.goto('http://127.0.0.1:5173/course_config/book');
   await page.locator('html').click();
   await page.getByRole('button', { name: '新增书籍' }).click();
   await page.getByLabel('书籍名称：').click();

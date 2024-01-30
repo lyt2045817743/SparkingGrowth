@@ -17,7 +17,7 @@ async function getPointList() {
       list[i].createTime = createTime ?? todo?.finishTime;
     } else if (eventType === PointEventTypeMap.Exchange) {
       const activity = await db.get(ActivityStoreName, eventId);
-      list[i].eventName = activity.name;
+      list[i].eventName = activity?.name ?? '原数据已删除';
     } else if (eventType === PointEventTypeMap.ExtraPoint) {
       const date = dayjs(createTime).format('M月D日');
       list[i].eventName = date + '积分补偿';
