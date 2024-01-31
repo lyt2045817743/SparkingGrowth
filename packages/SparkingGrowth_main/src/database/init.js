@@ -1,6 +1,5 @@
 import { openDB } from 'idb';
 import { DatabaseConfig } from './.';
-import DefaultCourseInfo from './defaultCourseData';
 import { setGlobalState } from '../utils';
 
 let db, curTransaction, getDb;
@@ -11,9 +10,7 @@ export async function initDatabase() {
       upgrade(curDB, oldVersion, newVersion, transaction, event) {
         db = curDB;
         curTransaction = transaction;
-        initCourseStore();
         initStudyLogStore();
-        initConfigStore();
         initBasicStore(basicStores);
       },
     })
@@ -21,14 +18,6 @@ export async function initDatabase() {
     return db;
   }
   getDb();
-}
-
-function initCourseStore() {
-  let courseStore;
-  if (!db.objectStoreNames.contains('course')) {
-    courseStore = db.createObjectStore('course', { keyPath: 'id', autoIncrement: true });
-    courseStore.add(DefaultCourseInfo);
-  }
 }
 
 function initStudyLogStore() {
@@ -40,19 +29,17 @@ function initStudyLogStore() {
   }
 }
 
-function initConfigStore() {
-  let configStore;
-  if (!db.objectStoreNames.contains('config')) {
-    configStore = db.createObjectStore('config', { keyPath: 'key' });
-    configStore.add({ key: 'currentCourseId', value: DefaultCourseInfo.id });
-  }
-}
-
 function initBasicStore(stores) {
   stores.forEach((item) => {
-    const { name, keyPath } = item;
+    const { name, keyPath, autoIncrement = true, initData } = item;
+    let store;
     if (!db.objectStoreNames.contains(name)) {
-      db.createObjectStore(name, { keyPath, autoIncrement: true });
+      store = db.createObjectStore(name, { keyPath, autoIncrement });
+      if (initData instanceof Array) {
+        initData.forEach((item) => {
+          store.add(item);
+        })
+      }
     }
   })
 }

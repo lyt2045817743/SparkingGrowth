@@ -1,4 +1,4 @@
-const defaultCourseInfo = {
+const course = [{
   id: 0,
   name: '现代 JavaScript 教程',
   url: 'https://zh.javascript.info/',
@@ -60,6 +60,104 @@ const defaultCourseInfo = {
     "Part2.4.3": "事件：change，input，cut，copy，paste",
     "Part2.3.5": "键盘：keydown 和 keyup"
   }
-}
+}]
 
-export default defaultCourseInfo;
+const config = [{
+  key: 'currentCourseId',
+  value: course[0].id
+}]
+
+const activity = [
+  {
+    id: 1,
+    score: 5,
+    name: '学习',
+    level: 1,
+    type: 'system',
+    resourceType: 'course',
+    createTime: Date.now()
+  },
+  {
+    id: 2,
+    score: 5,
+    name: '阅读',
+    level: 1,
+    type: 'system',
+    resourceType: 'book',
+    createTime: Date.now()
+  },
+  {
+    id: 3,
+    parentId: 1,
+    score: 5,
+    name: '视频学习',
+    level: 2,
+    resourceType: 'course',
+    createTime: Date.now(),
+  },
+  {
+    id: 4,
+    score: 5,
+    parentId: 1,
+    name: '书籍学习',
+    level: 2,
+    resourceType: 'course',
+    createTime: Date.now(),
+  },
+  {
+    id: 5,
+    score: 5,
+    parentId: 2,
+    resourceType: 'book',
+    name: '传记',
+    level: 2,
+    createTime: Date.now(),
+  },
+  {
+    id: 6,
+    score: 5,
+    parentId: 2,
+    resourceType: 'book',
+    name: '历史',
+    level: 2,
+    createTime: Date.now(),
+  },
+  {
+    id: 7,
+    score: 5,
+    parentId: 2,
+    resourceType: 'book',
+    name: '小说',
+    level: 2,
+    createTime: Date.now(),
+  },
+  {
+    id: 8,
+    score: 2,
+    name: '娱乐',
+    level: 1,
+    createTime: Date.now(),
+  },
+  {
+    id: 9,
+    score: 3,
+    parentId: 8,
+    name: '看电影',
+    level: 2,
+    createTime: Date.now(),
+  },
+  {
+    id: 10,
+    score: 1,
+    parentId: 8,
+    name: '刷短视频',
+    level: 2,
+    createTime: Date.now(),
+  },
+]
+
+export {
+  course,
+  config,
+  activity
+};

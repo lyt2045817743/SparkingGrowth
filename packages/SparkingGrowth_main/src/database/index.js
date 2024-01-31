@@ -1,4 +1,5 @@
   import { initDatabase, db, getDb } from "./init";
+  import { course, config, activity } from './defaultStoreData';
 
   // indexDB数据库信息配置
   const DatabaseConfig = {
@@ -6,16 +7,32 @@
     version: 6,
     basicStores: [
       {
+        name: 'course',
+        keyPath: 'id',
+        initData: course
+      },
+      {
         name: 'todo',
         keyPath: 'key'
       },
       {
         name: 'activity',
-        keyPath: 'id'
+        keyPath: 'id',
+        initData: activity
       },
       {
         name: 'book',
         keyPath: 'id'
+      },
+      {
+        name: 'dailyLog',
+        keyPath: 'id'
+      },
+      {
+        name: 'config',
+        keyPath: 'key',
+        autoIncrement: false,
+        initData: config
       }
     ]
   };
