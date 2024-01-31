@@ -11,7 +11,7 @@
           <el-table-column prop="name" label="资源名称" />
           <el-table-column prop="type" label="资源类型">
             <template #default="scope">
-              {{ CourseTitleMap[scope.row.type] }}
+              {{ activityCateTitleMap[scope.row.type] }}
             </template>
           </el-table-column>
           <el-table-column align="right">
@@ -40,13 +40,14 @@
 import { onMounted, ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
+import { getMapByOptions } from '@sparking/common';
 import api from '@/api';
-import { CourseTitleMap } from '../../common';
 
 const router = useRouter();
 
 const tableList = ref([]);
 const search = ref('');
+const activityCateTitleMap = ref([]);
 
 onMounted(() => {
   getData();
@@ -58,6 +59,8 @@ const updateView = () => {
 
 const getData = async () => {
   tableList.value = await api.getCourseList();
+  const cateData = await api.getActivityCateList('course');
+  activityCateTitleMap.value = getMapByOptions(cateData, { labelKey: 'name', valueKey: 'id' });
 }
 
 const handleDelete = async (row) => {

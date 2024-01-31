@@ -25,9 +25,15 @@ async function deleteActivity(key) {
   await db.delete(ActivityStoreName, key);
 }
 
+async function getActivityCateList(resourceType) {
+  const data = await getActivityList();
+  return data.filter((item) => item.level === 2 && item.resourceType === resourceType);
+}
+
 export {
   getActivityList,
   updateActivity,
   deleteActivity,
-  addActivity
+  addActivity,
+  getActivityCateList
 }

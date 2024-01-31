@@ -14,8 +14,9 @@
         </el-form-item>
         <el-form-item label="资源类型：" prop="type">
           <el-select v-model="form.type" placeholder="请选择">
-            <el-option v-for="(key, val) in CourseTitleMap" :key="key" :label="key" :value="Number(val)" />
+            <el-option v-for="item in cateOptions" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
+          <el-button style="margin-left: 10px;" type="primary" link @click="openCateManager">编辑分类</el-button>
         </el-form-item>
         <el-form-item label="是否为网络资源：" required>
           <el-radio-group v-model="form.hasUrl">
@@ -87,8 +88,8 @@
 import { reactive, ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
+import { getFullUrl } from '@sparking/common';
 import api from '@/api';
-import { CourseTitleMap } from '../../common';
 
 const route = useRoute();
 const router = useRouter();
@@ -113,7 +114,13 @@ onMounted(() => {
   if (pageType === 'edit') {
     init();
   }
+  getCateData();
 })
+
+const cateOptions = ref([]);
+const getCateData = async () => {
+  cateOptions.value = await api.getActivityCateList('course');
+}
 
 const init = async () => {
   const { name, url, type } = await api.getCourseById(id);
@@ -229,6 +236,12 @@ const onSubmitAndTry = async () => {
 
 const onCancel = () => {
   router.go(-1);
+}
+
+const openCateManager = () => {
+  const query = { level: 1, resourceType: 'course' };
+  const fullUrl = getFullUrl('/course_config/activityCate', { query });
+  window.open(fullUrl);
 }
 
 const validateCourseTitle = () => {
