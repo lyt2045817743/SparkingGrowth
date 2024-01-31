@@ -2,7 +2,7 @@ const course = [{
   id: 0,
   name: '现代 JavaScript 教程',
   url: 'https://zh.javascript.info/',
-  type: 1,
+  type: 11,
   partInfoList: [
     {
       id: 1,
@@ -79,7 +79,7 @@ const activity = [
   },
   {
     id: 2,
-    score: 5,
+    score: 4,
     name: '阅读',
     level: 1,
     type: 'system',
@@ -106,7 +106,7 @@ const activity = [
   },
   {
     id: 5,
-    score: 5,
+    score: 4,
     parentId: 2,
     resourceType: 'book',
     name: '传记',
@@ -115,7 +115,7 @@ const activity = [
   },
   {
     id: 6,
-    score: 5,
+    score: 4,
     parentId: 2,
     resourceType: 'book',
     name: '历史',
@@ -124,7 +124,7 @@ const activity = [
   },
   {
     id: 7,
-    score: 5,
+    score: 4,
     parentId: 2,
     resourceType: 'book',
     name: '小说',
@@ -148,10 +148,19 @@ const activity = [
   },
   {
     id: 10,
-    score: 1,
+    score: 0.5,
     parentId: 8,
     name: '刷短视频',
     level: 2,
+    createTime: Date.now(),
+  },
+  {
+    id: 11,
+    score: 5,
+    parentId: 1,
+    name: '在线教程',
+    level: 2,
+    resourceType: 'course',
     createTime: Date.now(),
   },
 ]

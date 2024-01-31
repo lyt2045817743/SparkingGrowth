@@ -34,6 +34,14 @@ export const routes = [
     component: ActivityList,
   },
   {
+    path: '/activityCate',
+    meta: {
+      title: '活动分类',
+      hidden: true
+    },
+    component: ActivityList,
+  },
+  {
     path: '/todoAdd',
     meta: {
       title: '添加待办',
