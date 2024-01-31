@@ -13,7 +13,7 @@
           <el-input v-model="form.name" style="width: 350px" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="资源类型：" prop="type">
-          <el-select v-model="form.type" placeholder="请选择">
+          <el-select v-model="form.type" filterable placeholder="请选择">
             <el-option v-for="item in cateOptions" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
           <el-button style="margin-left: 10px;" type="primary" link @click="openCateManager">编辑分类</el-button>

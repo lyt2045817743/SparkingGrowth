@@ -16,8 +16,8 @@
           <el-input v-model="form.author" style="width: 350px" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="类型：">
-          <el-select v-model="form.type" placeholder="请选择">
-            <el-option v-for="item in BooksTypeOptions" :key="item.value" :label="item.label" :value="+item.value" />
+          <el-select v-model="form.type" filterable placeholder="请选择">
+            <el-option v-for="item in cateOptions" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="书籍状态：">
@@ -50,7 +50,7 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import api from '@/api';
-import { BooksTypeOptions, BooksStatusOptions, BooksStatusMap } from './constant';
+import { BooksStatusOptions, BooksStatusMap } from './constant';
 
 const route = useRoute();
 const router = useRouter();
@@ -71,7 +71,13 @@ onMounted(() => {
   if (pageType === 'edit') {
     init();
   }
+  getCateData();
 })
+
+const cateOptions = ref([]);
+const getCateData = async () => {
+  cateOptions.value = await api.getActivityCateList('book');
+}
 
 const init = async () => {
   const { name, author, type, percentType, status, abandonReason, totalCount } = await api.getBookById(id);

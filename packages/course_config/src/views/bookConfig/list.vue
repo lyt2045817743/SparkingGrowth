@@ -17,7 +17,7 @@
           <el-table-column prop="author" label="作者" min-width="80" />
           <el-table-column prop="type" label="书籍类型" min-width="100">
             <template #default="scope">
-              {{ BooksTypeLabel[scope.row.type] ?? '--' }}
+              {{ booksCateMap[scope.row.type] ?? '--' }}
             </template>
           </el-table-column>
           <el-table-column prop="status" label="书籍状态" min-width="100">
@@ -68,8 +68,9 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { getMapByOptions } from '@sparking/common';
 import api from '@/api';
-import { BooksTypeLabel, BooksStatusLabel, BooksStatusMap } from './constant';
+import { BooksStatusLabel, BooksStatusMap } from './constant';
 import { ElMessage } from 'element-plus';
 
 const router = useRouter();
@@ -85,8 +86,11 @@ onMounted(() => {
   getData();
 })
 
+const booksCateMap = ref({});
 const getData = async () => {
   tableList.value = await api.getBookList();
+  const data = await api.getActivityCateList('book');
+  booksCateMap.value = getMapByOptions(data, { labelKey: 'name', valueKey: 'id' });
 }
 
 const getPercentStatus = (row) => {
