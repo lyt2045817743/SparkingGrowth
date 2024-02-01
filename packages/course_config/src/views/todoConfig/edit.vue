@@ -49,6 +49,7 @@
             placeholder="请选择"
             :options="typeCascadeOptions"
           />
+          <el-button style="margin-left: 10px;" type="primary" link @click="openCateManager">编辑活动</el-button>
         </el-form-item>
         <div v-if="form.configType === '1'">
           <el-form-item
@@ -285,6 +286,10 @@ const getCateData = async () => {
   }
   // console.log(parentData);
   typeCascadeOptions.value = baseOptions.concat(parentData);
+}
+
+const openCateManager = async () => {
+  window.open('/course_config/activity');
 }
 
 const updateChildTodo = async (parentTodo, parentKey) => {

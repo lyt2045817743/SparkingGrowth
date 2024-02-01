@@ -5,7 +5,7 @@
       <div class="external-events-title">事件类型选择：</div>
       <el-select
         v-model="currentDraggableEventType"
-        size="mini"
+        size="small"
         style="margin-top: 3px"
       >
         <el-option

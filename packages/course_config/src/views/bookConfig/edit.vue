@@ -19,6 +19,7 @@
           <el-select v-model="form.type" filterable placeholder="请选择">
             <el-option v-for="item in cateOptions" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
+          <el-button style="margin-left: 10px;" type="primary" link @click="openCateManager">编辑分类</el-button>
         </el-form-item>
         <el-form-item label="书籍状态：">
           <el-select v-model="form.status" placeholder="请选择">
@@ -49,6 +50,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
+import { getFullUrl } from '@sparking/common';
 import api from '@/api';
 import { BooksStatusOptions, BooksStatusMap } from './constant';
 
@@ -82,6 +84,12 @@ const getCateData = async () => {
 const init = async () => {
   const { name, author, type, percentType, status, abandonReason, totalCount } = await api.getBookById(id);
   form.value = Object.assign(form.value, { name, author, type, percentType, status, abandonReason, totalCount })
+}
+
+const openCateManager = async () => {
+  const query = { level: 1, resourceType: 'book' };
+  const fullUrl = getFullUrl('/course_config/activityCate', { query });
+  window.open(fullUrl);
 }
 
 const onSubmit = async () => {
