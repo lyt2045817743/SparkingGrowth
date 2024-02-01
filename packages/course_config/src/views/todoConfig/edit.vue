@@ -37,16 +37,17 @@
             （父待办内容：{{ parentInfo.content }}）
           </div>
         </el-form-item>
-        <el-form-item label="待办类型：">
+        <el-form-item label="关联活动/资源：">
           <el-cascader
             v-model="form.type"
             collapse-tags
             collapse-tags-tooltip
             :show-all-levels="false"
             :props="props"
+            filterable
             style="width: 250px"
             placeholder="请选择"
-            :options="TypeCascadeOptions"
+            :options="typeCascadeOptions"
           />
         </el-form-item>
         <div v-if="form.configType === '1'">
@@ -159,7 +160,7 @@ import {
   PageTypeLabel,
   PageTypeMap,
   TodoTypeMap,
-  TypeCascadeOptions,
+  TypeCascadeOptions as baseOptions,
 } from "@sparking/common";
 
 const route = useRoute();
@@ -179,14 +180,16 @@ const form = ref({
   deadlineDate,
   deadlineTime,
   desc: "",
-  type: [],
+  type: "",
   cycleType: 0,
   childrenTodo: [],
 });
 
 const props = {
-  multiple: true,
   emitPath: false,
+  checkStrictly: true,
+  value: 'id',
+  label: 'name'
 };
 
 const handleEdit = (row, pageType) => {
@@ -207,6 +210,7 @@ onMounted(() => {
     form.value.configType = "0";
   }
   getTodoData();
+  getCateData();
 });
 
 const init = async () => {
@@ -228,7 +232,7 @@ const init = async () => {
     content,
     createTime,
     desc,
-    type,
+    type: type[0],
     status,
     deadlineDate,
     deadlineTime,
@@ -262,6 +266,26 @@ const getTodoData = async () => {
   todoList.value = todoListTemp;
   form.value.childrenTodo = childTodoList;
 };
+
+const typeCascadeOptions = ref([]);
+const getCateData = async () => {
+  const activityData = await api.getActivityList();
+  const bookData = await api.getBookList();
+  const courseData = await api.getCourseList();
+  const parentData = activityData.filter((item) => item.level === 1);
+  const data = activityData.concat(bookData, courseData);
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].level === 1) continue;
+    const parentItem = data.find((item) => item.id === data[i].parentId || item.id === data[i].type) ?? {};
+    if (parentItem.children) {
+      parentItem.children.push(data[i]);
+    } else {
+      parentItem.children = [data[i]];
+    }
+  }
+  // console.log(parentData);
+  typeCascadeOptions.value = baseOptions.concat(parentData);
+}
 
 const updateChildTodo = async (parentTodo, parentKey) => {
   const { childrenTodo } = form.value;
@@ -309,10 +333,7 @@ const onSubmit = async () => {
     deadline,
     status: 0,
     cycleType,
-    type:
-      type.includes(TodoTypeMap.Undefined) || type.length === 0
-        ? [TodoTypeMap.Undefined]
-        : type,
+    type: type ? [type] : [TodoTypeMap.Undefined],
     desc,
     isRoot: Boolean(childrenTodo.length),
   };

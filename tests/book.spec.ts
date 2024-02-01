@@ -11,7 +11,7 @@ test('book_api', async ({ page }) => {
   await page.getByLabel('作者：').press('CapsLock');
   await page.getByLabel('作者：').fill('XX');
   await page.getByLabel('类型：').click();
-  await page.locator('li').filter({ hasText: '计算机' }).click();
+  await page.locator('li').filter({ hasText: '传记' }).click();
   await page.getByLabel('页数：').click();
   await page.getByLabel('页数：').fill('200');
   await page.getByRole('button', { name: '提交' }).click();

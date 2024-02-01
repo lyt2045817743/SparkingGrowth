@@ -51,7 +51,7 @@
           </el-table-column>
           <el-table-column
             prop="type"
-            label="分类"
+            label="关联活动/资源"
             :formatter="formatter"
             min-width="140"
           />
@@ -117,14 +117,14 @@
           style="width: 350px"
         />
       </el-form-item>
-      <el-form-item label="待办类型：">
+      <el-form-item label="关联活动/资源：">
         <el-cascader
           v-model="form.type"
           :show-all-levels="false"
           :props="props"
           style="width: 250px"
           placeholder="请选择"
-          :options="TypeCascadeOptions"
+          :options="typeCascadeOptions"
           @change="onTypeChange"
         />
       </el-form-item>
@@ -160,10 +160,11 @@ import {
   TodoTypeScore,
   TodoTypeLabel,
   TodoStatusMap,
-  TypeCascadeOptions,
+  TypeCascadeOptions as baseOptions,
   TodoTypeMap,
   PageTypeMap,
   formatCompletedTodo,
+  getMapByOptions,
 } from "@sparking/common";
 
 const router = useRouter();
@@ -175,7 +176,7 @@ const showDialog = ref(false);
 const form = ref({
   content: "",
   desc: "",
-  type: [],
+  type: '',
   score: undefined,
   deadlineTime: "",
   deadlineDate: "",
@@ -184,9 +185,13 @@ let totalList;
 
 const props = {
   emitPath: false,
+  checkStrictly: true,
+  value: 'id',
+  label: 'name'
 };
 
 onMounted(() => {
+  getCateData();
   getData(true);
 });
 
@@ -200,6 +205,28 @@ const getData = async (isInit) => {
   totalList = tableList.value;
   if (!isInit && onlyShowToday.value) showTheTodayTodo(true);
 };
+
+const todoTypeLabel = ref({});
+const typeCascadeOptions = ref([]);
+const getCateData = async () => {
+  const cateData = await api.getActivityList();
+  const bookData = await api.getBookList();
+  const courseData = await api.getCourseList();
+  const parentData = cateData.filter((item) => item.level === 1);
+  const data = cateData.concat(bookData, courseData);
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].level === 1) continue;
+    const parentItem = data.find((item) => item.id === data[i].parentId || item.id === data[i].type) ?? {};
+    if (parentItem.children) {
+      parentItem.children.push(data[i]);
+    } else {
+      parentItem.children = [data[i]];
+    }
+  }
+  // console.log(parentData);
+  typeCascadeOptions.value = baseOptions.concat(parentData);
+  todoTypeLabel.value = Object.assign(getMapByOptions(cateData, { labelKey: 'name', valueKey: 'id' }), TodoTypeLabel);
+}
 
 const formatData = (data) => {
   const parentData = [],
@@ -310,7 +337,7 @@ const showTheTodayTodo = (value) => {
 
 const formatter = (row) => {
   const { type } = row;
-  const types = type.map((item) => TodoTypeLabel[item]).join(",");
+  const types = type.map((item) => todoTypeLabel.value[item]).join(",");
   return `${types}`;
 };
 

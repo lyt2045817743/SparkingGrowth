@@ -7,7 +7,7 @@ test('course_api', async ({ page }) => {
   await page.getByPlaceholder('请输入', { exact: true }).click();
   await page.getByPlaceholder('请输入', { exact: true }).fill('新增资源');
   await page.getByPlaceholder('请选择').click();
-  await page.locator('li').filter({ hasText: '在线文档' }).click();
+  await page.locator('li').filter({ hasText: '在线教程' }).click();
   await page.getByText('是', { exact: true }).click();
   await page.getByLabel('资源链接(url)：').click();
   await page.getByLabel('资源链接(url)：').fill('https://www.baidu.com');
@@ -21,7 +21,7 @@ test('course_api', async ({ page }) => {
   await page.getByRole('menuitem', { name: '学习资源管理' }).click();
   await page.getByRole('button', { name: '编辑' }).nth(1).click();
   await page.getByPlaceholder('请选择').click();
-  await page.locator('li').filter({ hasText: /^书籍$/ }).click();
+  await page.locator('li').filter({ hasText: /^书籍学习$/ }).click();
   await page.getByRole('button', { name: '提交' }).click();
   await page.getByRole('button', { name: '删除' }).nth(1).click();
 });
