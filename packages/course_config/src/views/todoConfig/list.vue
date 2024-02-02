@@ -156,18 +156,17 @@ import { onMounted, ref } from "vue";
 import { ElMessage, dayjs } from "element-plus";
 import { useRouter } from "vue-router";
 import api from "@/api";
+import useActivityOption from "@/hooks/useActivityOption";
 import {
   TodoTypeScore,
-  TodoTypeLabel,
   TodoStatusMap,
-  TypeCascadeOptions as baseOptions,
   TodoTypeMap,
   PageTypeMap,
   formatCompletedTodo,
-  getMapByOptions,
 } from "@sparking/common";
 
 const router = useRouter();
+const { typeCascadeOptions, todoTypeLabel } = useActivityOption();
 
 const onlyShowToday = ref(false);
 const tableList = ref([]);
@@ -191,7 +190,6 @@ const props = {
 };
 
 onMounted(() => {
-  getCateData();
   getData(true);
 });
 
@@ -205,28 +203,6 @@ const getData = async (isInit) => {
   totalList = tableList.value;
   if (!isInit && onlyShowToday.value) showTheTodayTodo(true);
 };
-
-const todoTypeLabel = ref({});
-const typeCascadeOptions = ref([]);
-const getCateData = async () => {
-  const cateData = await api.getActivityList();
-  const bookData = await api.getBookList();
-  const courseData = await api.getCourseList();
-  const parentData = cateData.filter((item) => item.level === 1);
-  const data = cateData.concat(bookData, courseData);
-  for (let i = 0; i < data.length; i++) {
-    if (data[i].level === 1) continue;
-    const parentItem = data.find((item) => item.id === data[i].parentId || item.id === data[i].type) ?? {};
-    if (parentItem.children) {
-      parentItem.children.push(data[i]);
-    } else {
-      parentItem.children = [data[i]];
-    }
-  }
-  // console.log(parentData);
-  typeCascadeOptions.value = baseOptions.concat(parentData);
-  todoTypeLabel.value = Object.assign(getMapByOptions(cateData, { labelKey: 'name', valueKey: 'id' }), TodoTypeLabel);
-}
 
 const formatData = (data) => {
   const parentData = [],

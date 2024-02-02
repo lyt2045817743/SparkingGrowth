@@ -157,13 +157,14 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage, dayjs } from "element-plus";
 import api from "@/api";
+import useActivityOption from "@/hooks/useActivityOption";
 import {
   PageTypeLabel,
   PageTypeMap,
   TodoTypeMap,
-  TypeCascadeOptions as baseOptions,
 } from "@sparking/common";
 
+const { typeCascadeOptions } = useActivityOption();
 const route = useRoute();
 const router = useRouter();
 const { pageType: newPageType, id: newId, configType, deadline } = route.query;
@@ -211,7 +212,6 @@ onMounted(() => {
     form.value.configType = "0";
   }
   getTodoData();
-  getCateData();
 });
 
 const init = async () => {
@@ -267,26 +267,6 @@ const getTodoData = async () => {
   todoList.value = todoListTemp;
   form.value.childrenTodo = childTodoList;
 };
-
-const typeCascadeOptions = ref([]);
-const getCateData = async () => {
-  const activityData = await api.getActivityList();
-  const bookData = await api.getBookList();
-  const courseData = await api.getCourseList();
-  const parentData = activityData.filter((item) => item.level === 1);
-  const data = activityData.concat(bookData, courseData);
-  for (let i = 0; i < data.length; i++) {
-    if (data[i].level === 1) continue;
-    const parentItem = data.find((item) => item.id === data[i].parentId || item.id === data[i].type) ?? {};
-    if (parentItem.children) {
-      parentItem.children.push(data[i]);
-    } else {
-      parentItem.children = [data[i]];
-    }
-  }
-  // console.log(parentData);
-  typeCascadeOptions.value = baseOptions.concat(parentData);
-}
 
 const openCateManager = async () => {
   window.open('/course_config/activity');
