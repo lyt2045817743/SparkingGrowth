@@ -1168,7 +1168,7 @@
 
 "@sparking/common@git+https://github.com/lyt2045817743/SparkingGrowth_common.git":
   version "1.0.0"
-  resolved "git+https://github.com/lyt2045817743/SparkingGrowth_common.git#07ae62bf08a11f7faae376a597cfbc3c0cfbd923"
+  resolved "git+https://github.com/lyt2045817743/SparkingGrowth_common.git#7472d4a2faa977dfef9048ed01dbe5fbd8fbcfc3"
 
 "@types/body-parser@*":
   version "1.19.5"

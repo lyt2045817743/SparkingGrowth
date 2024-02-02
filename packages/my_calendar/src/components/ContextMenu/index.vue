@@ -56,6 +56,10 @@ function onMenuItemClick(item) {
 }
 
 function onContextMenu(e) {
+  if (!props.menuDataMap) {
+    return null;
+  }
+  
   const className = e.target.className;
   // console.log(className, e);
 

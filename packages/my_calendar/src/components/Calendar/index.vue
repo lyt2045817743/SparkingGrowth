@@ -35,6 +35,7 @@
     >
       <template #eventContent="arg">
         <div
+          v-if="config.calendarType === 'todo'"
           class="event-box"
           :class="[
             arg.event.classNames,
@@ -51,6 +52,9 @@
             <div :class="['event-title']">{{ arg.event.title }}</div>
           </el-tooltip>
           <div :class="['event-title']" v-else>{{ arg.event.title }}</div>
+        </div>
+        <div v-else>
+          {{ arg.event.title }}-{{ arg.event.extendedProps.score }}
         </div>
       </template>
     </FullCalendar>
@@ -130,6 +134,8 @@ const calendarOptions = ref({
   events: getEvents,
   eventDrop: props.config.eventDrop,
   drop: props.config.drop,
+  select: props.config.select,
+  unselectAuto: props.config.unselectAuto,
 });
 
 const draggableEvents = ref([]);

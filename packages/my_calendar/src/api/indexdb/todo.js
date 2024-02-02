@@ -1,3 +1,4 @@
+import { dayjs } from 'element-plus';
 import { TodoStatusMap } from '@sparking/common';
 import { db } from '../../utils/globalState';
 
@@ -15,7 +16,14 @@ async function getChildTodoList() {
   return Promise.resolve(list);
 }
 
+async function getSameDateTodoList(date = new Date()) {
+  let list = await getChildTodoList();
+  list = list.filter((item) => item.deadline && dayjs(date).isSame(item.deadline, 'day'));
+  return Promise.resolve(list);
+}
+
 export {
   getUnscheduledTodoList,
-  getChildTodoList
+  getChildTodoList,
+  getSameDateTodoList
 }

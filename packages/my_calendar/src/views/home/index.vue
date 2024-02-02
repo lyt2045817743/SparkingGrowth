@@ -2,11 +2,72 @@
   <div class="container">
     <Calendar v-if="currentViewType === CalendarViewType.Month" ref="todoCalendarRef" :config="configs.monthView"
       @loadData="loadTodoData" @loadDraggableData="loadUnscheduledTodo" />
-    <Calendar v-else :config="configs.weekView" />
+    <Calendar v-else :config="configs.weekView" @loadData="loadDailyData" />
     <el-select style="position: absolute;top: 10px;width: 200px; right: 0" v-model="currentViewType">
       <el-option label="待办日历" :value="CalendarViewType.Month" />
       <el-option label="时间追踪日历" :value="CalendarViewType.Week" />
     </el-select>
+    <el-dialog v-model="dailyDialogVisible" title="添加一条记录">
+      <el-form :model="form" :label-width="formLabelWidth">
+        <el-form-item label="时间范围：" required>
+          <el-date-picker v-model="form.date" type="date" placeholder="日期" style="width: 200px" />
+          <el-time-select v-model="form.startTime" start="00:00" step="00:15" end="23:45" placeholder="开始时间"
+            style="width: 150px;margin-left: 10px" />
+          <span class="text-split">-</span>
+          <el-time-select v-model="form.endTime" start="00:00" step="00:15" end="23:45" placeholder="结束时间"
+            style="width: 150px" />
+        </el-form-item>
+        <el-form-item label="关联类型：" required>
+          <el-radio-group v-model="form.relationType">
+            <el-radio :label="1">关联活动</el-radio>
+            <el-radio :label="2">关联待办</el-radio>
+            <el-radio :label="3">都不关联</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item v-if="form.relationType === 1" label="选择活动：" required>
+          <el-cascader v-model="form.relationId" collapse-tags collapse-tags-tooltip :show-all-levels="false"
+            :props="cascadeProps" filterable style="width: 250px" placeholder="请选择" :options="typeCascadeOptions" />
+          <el-button style="margin-left: 10px;" type="primary" link @click="openCateManager">编辑活动</el-button>
+        </el-form-item>
+        <el-form-item v-if="form.relationType === 2" label="选择待办" required>
+          <el-select v-model="form.relationId" style="width: 250px" placeholder="请选择" filterable
+            no-data-text="仅支持选择当天的待办">
+            <el-option v-for="item in todoOptions" :key="item.key" :label="item.content" :value="item.key" />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="form.relationType === 3" label="记录描述：" required>
+          <el-input
+            v-model="form.content"
+            style="width: 350px"
+            placeholder="请输入"
+          />
+        </el-form-item>
+        <el-form-item label="评分：" required>
+          <div>
+            <div v-for="item in scoreConfig" :key="item.field" class="score-item-box">
+              <span>{{ item.label }}：</span>
+              <el-rate v-model="form[item.field]" @change="onChangeTotalScore" allow-half show-text show-score :disabled="item.readonly"
+                text-color="#ff9900" score-template="{value}分" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" />
+            </div>
+          </div>
+          <el-input
+            v-model="form.desc"
+            placeholder="请输入评分留言"
+            type="textarea"
+            :rows="4"
+            style="width: 700px"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dailyDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="onSubmitOuter">
+            提交
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -18,9 +79,29 @@ import { TargetClassNameMap } from '../../components/ContextMenu/config';
 import { dayjs } from 'element-plus';
 import { TodoStatusMap, formatCompletedTodo, getFullUrl } from '@sparking/common';
 import api from '@/api';
+import useDailyDialog from './hooks/useDailyDialog';
+
+const {
+  formLabelWidth,
+  typeCascadeOptions,
+  todoOptions,
+  form,
+  scoreConfig,
+  cascadeProps,
+  onSubmit,
+  openCateManager,
+  initForm,
+  onChangeTotalScore
+} = useDailyDialog();
 
 const todoCalendarRef = ref(null);
-const currentViewType = ref(CalendarViewType.Month);
+const currentViewType = ref(CalendarViewType.Week);
+
+const dailyDialogVisible = ref(false);
+const onDailyCalendarSelect = (info) => {
+  dailyDialogVisible.value = true;
+  initForm(info);
+}
 
 const judgeIsFinish = (targetEle) => {
   if (!targetEle) { return false; }
@@ -39,6 +120,7 @@ const onTodoEventDrop = (info) => {
 const configs = {
   monthView: {
     initialView: [CalendarViewType.Month],
+    calendarType: 'todo',
     showDraggableBox: true,
     menuDataMap: {
       [TargetClassNameMap.Event]: [
@@ -116,7 +198,10 @@ const configs = {
     }
   },
   weekView: {
-    initialView: [CalendarViewType.Week]
+    initialView: [CalendarViewType.Week],
+    calendarType: 'daily',
+    select: onDailyCalendarSelect,
+    unselectAuto: false,
   }
 }
 
@@ -165,6 +250,17 @@ const loadTodoData = async (successCb) => {
   successCb(calendarData);
 }
 
+const loadDailyData = async (successCb) => {
+  // const data = await api.getDailyLogList();
+  // console.log(data);
+
+  // const calendarData = data.map((item) => {
+  //   return formatCalendarTodoData(item);
+  // })
+
+  successCb([]);
+}
+
 const loadUnscheduledTodo = async (successCb) => {
   const data = await api.getUnscheduledTodoList();
   successCb(data)
@@ -173,6 +269,11 @@ const loadUnscheduledTodo = async (successCb) => {
 const pushTodoDetail = (query) => {
   const fullUrl = getFullUrl('/course_config/todoEdit', { query });
   window.open(fullUrl);
+}
+
+const onSubmitOuter = () => {
+  dailyDialogVisible.value = false;
+  onSubmit();
 }
 </script>
 
@@ -183,5 +284,15 @@ const pushTodoDetail = (query) => {
   // overflow: hidden;
   width: calc(100% - 20px);
   position: relative;
+
+  .text-split {
+    text-align: center;
+    width: 20px;
+  }
+
+  .score-item-box {
+    display: flex;
+    align-items: center;
+  }
 }
 </style>
