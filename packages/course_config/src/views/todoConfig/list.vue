@@ -100,7 +100,7 @@
     v-model="showDialog"
     :title="`【${currentParent?.content}】新增子待办：`"
   >
-    <el-form :model="form">
+    <el-form :model="form" label-width="120px">
       <el-form-item label="待办内容：" required>
         <el-input
           v-model="form.content"
@@ -122,6 +122,7 @@
           v-model="form.type"
           :show-all-levels="false"
           :props="props"
+          filterable
           style="width: 250px"
           placeholder="请选择"
           :options="typeCascadeOptions"
