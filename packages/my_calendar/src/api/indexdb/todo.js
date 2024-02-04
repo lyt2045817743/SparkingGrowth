@@ -1,6 +1,5 @@
 import { dayjs } from 'element-plus';
-import { TodoStatusMap } from '@sparking/common';
-import { db } from '../../utils/globalState';
+import { TodoStatusMap, db } from '@sparking/common';
 
 export const TodoStoreName = 'todo';
 
@@ -22,8 +21,14 @@ async function getSameDateTodoList(date = new Date()) {
   return Promise.resolve(list);
 }
 
+async function getTodoById(key) {
+  const todo = db.get(TodoStoreName, key);
+  return Promise.resolve(todo);
+}
+
 export {
   getUnscheduledTodoList,
   getChildTodoList,
-  getSameDateTodoList
+  getSameDateTodoList,
+  getTodoById
 }

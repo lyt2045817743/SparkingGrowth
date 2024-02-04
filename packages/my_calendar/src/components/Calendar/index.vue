@@ -54,7 +54,10 @@
           <div :class="['event-title']" v-else>{{ arg.event.title }}</div>
         </div>
         <div v-else>
-          {{ arg.event.title }}-{{ arg.event.extendedProps.score }}
+          <div :class="isShortTime(arg.event.start, arg.event.end) ? 'flex' : ''">
+            <div>{{ `${formatTime(arg.event.start)} ~ ${formatTime(arg.event.end)}` }}</div>
+            <div :style="isShortTime(arg.event.start, arg.event.end) ? 'margin-left: 10px' : ''">{{ arg.event.title }}  {{ `  ${arg.event.extendedProps.score || ''}` }}</div>
+          </div>
         </div>
       </template>
     </FullCalendar>
@@ -135,7 +138,7 @@ const calendarOptions = ref({
   eventDrop: props.config.eventDrop,
   drop: props.config.drop,
   select: props.config.select,
-  unselectAuto: props.config.unselectAuto,
+  // unselectAuto: props.config.unselectAuto,
 });
 
 const draggableEvents = ref([]);
@@ -149,6 +152,14 @@ onMounted(() => {
     });
   }
 });
+
+function formatTime(target) {
+  return dayjs(target).format('HH:mm');
+}
+
+function isShortTime(start, end) {
+  return dayjs(start).add(30, 'minutes').valueOf() >= dayjs(end).valueOf();
+}
 
 function onLoadUnscheduledTodo() {
   emits("loadDraggableData", (data) => {
@@ -253,6 +264,12 @@ defineExpose({
         background: red;
       }
     }
+  }
+
+
+  .flex {
+    display: flex;
+    align-items: center;
   }
 
   .event-title {

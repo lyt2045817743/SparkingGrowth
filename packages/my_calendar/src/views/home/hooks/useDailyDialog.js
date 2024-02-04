@@ -54,14 +54,14 @@ export default function useDailyDialog () {
   const typeCascadeOptions = ref([]);
   const getActivityData = async () => {
     const { options } = await getActivityOptions();
-    typeCascadeOptions.value = options;
+    typeCascadeOptions.value = options.slice(1);
   }
   
-  const onSubmit = () => {
-    console.log(form);
+  const onSubmit = async (successCb) => {
+    // console.log(form);
     const { content, relationType, relationId, startTime, endTime, date, desc, meanScore, moodScore, efficiencyScore } = form;
-    console.log({
-      content: relationType === 3 ? relationType : '',
+    const dailyLog = {
+      content,
       relationType,
       relationId,
       startTime: `${date} ${startTime}:00`,
@@ -70,7 +70,9 @@ export default function useDailyDialog () {
       meanScore,
       moodScore,
       efficiencyScore
-    });
+    };
+    await api.addDailyLog(dailyLog);
+    successCb();
   }
 
   const openCateManager = () => {

@@ -2,7 +2,7 @@
   <div class="container">
     <Calendar v-if="currentViewType === CalendarViewType.Month" ref="todoCalendarRef" :config="configs.monthView"
       @loadData="loadTodoData" @loadDraggableData="loadUnscheduledTodo" />
-    <Calendar v-else :config="configs.weekView" @loadData="loadDailyData" />
+    <Calendar v-else ref="dailyCalendarRef" :config="configs.weekView" @loadData="loadDailyData" />
     <el-select style="position: absolute;top: 10px;width: 200px; right: 0" v-model="currentViewType">
       <el-option label="待办日历" :value="CalendarViewType.Month" />
       <el-option label="时间追踪日历" :value="CalendarViewType.Week" />
@@ -35,7 +35,7 @@
             <el-option v-for="item in todoOptions" :key="item.key" :label="item.content" :value="item.key" />
           </el-select>
         </el-form-item>
-        <el-form-item v-if="form.relationType === 3" label="记录描述：" required>
+        <el-form-item label="记录描述：" :required="form.relationType === 3">
           <el-input
             v-model="form.content"
             style="width: 350px"
@@ -61,7 +61,7 @@
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dailyDialogVisible = false">取消</el-button>
+          <el-button @click="onCancel">取消</el-button>
           <el-button type="primary" @click="onSubmitOuter">
             提交
           </el-button>
@@ -76,7 +76,7 @@ import { ref } from 'vue';
 import Calendar from '../../components/Calendar/index.vue';
 import { CalendarViewType } from '../../components/Calendar/constant';
 import { TargetClassNameMap } from '../../components/ContextMenu/config';
-import { dayjs } from 'element-plus';
+import { dayjs, ElMessage } from 'element-plus';
 import { TodoStatusMap, formatCompletedTodo, getFullUrl } from '@sparking/common';
 import api from '@/api';
 import useDailyDialog from './hooks/useDailyDialog';
@@ -95,6 +95,7 @@ const {
 } = useDailyDialog();
 
 const todoCalendarRef = ref(null);
+const dailyCalendarRef = ref(null);
 const currentViewType = ref(CalendarViewType.Week);
 
 const dailyDialogVisible = ref(false);
@@ -251,14 +252,8 @@ const loadTodoData = async (successCb) => {
 }
 
 const loadDailyData = async (successCb) => {
-  // const data = await api.getDailyLogList();
-  // console.log(data);
-
-  // const calendarData = data.map((item) => {
-  //   return formatCalendarTodoData(item);
-  // })
-
-  successCb([]);
+  const data = await api.getDailyLogList();
+  successCb(data);
 }
 
 const loadUnscheduledTodo = async (successCb) => {
@@ -271,9 +266,17 @@ const pushTodoDetail = (query) => {
   window.open(fullUrl);
 }
 
+const onCancel = () => {
+  dailyDialogVisible.value = false;
+  dailyCalendarRef.value.onRefreshEvents();
+}
+
 const onSubmitOuter = () => {
   dailyDialogVisible.value = false;
-  onSubmit();
+  onSubmit(() => {
+    ElMessage.success('添加成功');
+    dailyCalendarRef.value.onRefreshEvents();
+  });
 }
 </script>
 
