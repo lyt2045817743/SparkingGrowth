@@ -92,7 +92,7 @@ const calendarOptions = ref({
     right: "",
   },
   views: {
-    day: {
+    week: {
       titleFormat: { year: "numeric", month: "2-digit" },
       nowIndicator: true,
     },
@@ -103,7 +103,7 @@ const calendarOptions = ref({
   initialView: props.config.initialView ? props.config.initialView[0] : "",
   initialEvents: [],
   // 拖拽粒度
-  snapDuration: "00:15:00",
+  snapDuration: "00:30:00",
   // 时间网格的时间间隔
   slotDuration: "01:00:00",
   firstDay: 0,

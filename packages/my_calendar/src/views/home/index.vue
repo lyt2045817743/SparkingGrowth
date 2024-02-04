@@ -199,7 +199,7 @@ const configs = {
     }
   },
   weekView: {
-    initialView: [CalendarViewType.Day],
+    initialView: [CalendarViewType.Week],
     calendarType: 'daily',
     select: onDailyCalendarSelect,
     unselectAuto: false,
