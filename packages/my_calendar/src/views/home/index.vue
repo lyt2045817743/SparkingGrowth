@@ -19,8 +19,8 @@
         </el-form-item>
         <el-form-item label="关联类型：" required>
           <el-radio-group v-model="form.relationType">
-            <el-radio :label="1">关联活动</el-radio>
             <el-radio :label="2">关联待办</el-radio>
+            <el-radio :label="1">关联活动</el-radio>
             <el-radio :label="3">都不关联</el-radio>
           </el-radio-group>
         </el-form-item>
@@ -31,7 +31,7 @@
         </el-form-item>
         <el-form-item v-if="form.relationType === 2" label="选择待办" required>
           <el-select v-model="form.relationId" style="width: 250px" placeholder="请选择" filterable
-            no-data-text="仅支持选择当天的待办">
+            no-data-text="仅支持选择当天未完成的待办">
             <el-option v-for="item in todoOptions" :key="item.key" :label="item.content" :value="item.key" />
           </el-select>
         </el-form-item>

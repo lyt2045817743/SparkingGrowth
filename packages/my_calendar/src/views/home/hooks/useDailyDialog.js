@@ -1,6 +1,6 @@
 import { ref, reactive, onMounted, nextTick } from 'vue';
 import { dayjs } from 'element-plus';
-import { getActivityOptions } from '@sparking/common';
+import { getActivityOptions, TodoStatusMap } from '@sparking/common';
 import api from '@/api';
 
 export default function useDailyDialog () {
@@ -37,7 +37,7 @@ export default function useDailyDialog () {
     date: '',
     startTime: '',
     endTime: '',
-    relationType: 1,
+    relationType: 2,
     desc: '',
   })
   
@@ -72,6 +72,10 @@ export default function useDailyDialog () {
       efficiencyScore
     };
     await api.addDailyLog(dailyLog);
+    // 待办自动完成
+    if (relationType === 2) {
+      await api.updateTodo(relationId, { status: TodoStatusMap.Done })
+    }
     successCb();
   }
 
