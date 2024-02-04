@@ -1,4 +1,5 @@
 export const CalendarViewType = {
   Week: 'timeGridWeek',
-  Month: 'dayGridMonth'
+  Month: 'dayGridMonth',
+  Day: 'timeGridDay',
 }

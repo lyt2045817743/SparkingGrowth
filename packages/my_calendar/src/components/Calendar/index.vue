@@ -119,7 +119,7 @@ const calendarOptions = ref({
   eventOrder: props.config.eventOrder ?? [],
   eventOrderStrict: true,
   // 默认滚动到的时间点
-  scrollTime: dayjs().format("HH:mm"),
+  scrollTime: props.config.scrollTime,
   buttonText: {
     month: "待办日历",
     week: "时间追踪日历",
