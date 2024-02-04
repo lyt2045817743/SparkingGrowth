@@ -203,7 +203,14 @@ const configs = {
     calendarType: 'daily',
     select: onDailyCalendarSelect,
     unselectAuto: false,
-    scrollTime: '08:00'
+    scrollTime: '08:00',
+    selectAllow: (selectInfo) => {
+      if (dayjs(selectInfo.end).valueOf() > dayjs().add(10, 'minute').valueOf()) {
+        ElMessage.warning('时间追踪日历只能记录之前发生的事件');
+        return false;
+      }
+      return true;
+    }
   }
 }
 

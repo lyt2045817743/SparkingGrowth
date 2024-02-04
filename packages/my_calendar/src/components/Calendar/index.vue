@@ -92,7 +92,7 @@ const calendarOptions = ref({
     right: "",
   },
   views: {
-    week: {
+    day: {
       titleFormat: { year: "numeric", month: "2-digit" },
       nowIndicator: true,
     },
@@ -115,6 +115,7 @@ const calendarOptions = ref({
   weekends: true,
   displayEventTime: false,
   select: handleDateSelect,
+  selectAllow: props.config.selectAllow,
   eventClick: handleEventClick,
   eventOrder: props.config.eventOrder ?? [],
   eventOrderStrict: true,
