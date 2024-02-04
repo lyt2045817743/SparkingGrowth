@@ -96,7 +96,7 @@ const {
 
 const todoCalendarRef = ref(null);
 const dailyCalendarRef = ref(null);
-const currentViewType = ref(CalendarViewType.Week);
+const currentViewType = ref(CalendarViewType.Month);
 
 const dailyDialogVisible = ref(false);
 const onDailyCalendarSelect = (info) => {
