@@ -17,7 +17,7 @@ async function getChildTodoList() {
 
 async function getSameDateTodoList(date = new Date()) {
   let list = await getChildTodoList();
-  list = list.filter((item) => item.deadline && dayjs(date).isSame(item.deadline, 'day') && ![TodoStatusMap.Done, TodoStatusMap.DoneButOverdue].includes(item.status));
+  list = list.filter((item) => item.deadline && dayjs(date).isSame(item.deadline, 'day'));
   return Promise.resolve(list);
 }
 
