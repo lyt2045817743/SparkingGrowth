@@ -114,7 +114,7 @@ const calendarOptions = ref({
   dayMaxEvents: true,
   weekends: true,
   displayEventTime: false,
-  select: handleDateSelect,
+  // select: handleDateSelect,
   selectAllow: props.config.selectAllow,
   eventClick: handleEventClick,
   eventOrder: props.config.eventOrder ?? [],
@@ -138,7 +138,7 @@ const calendarOptions = ref({
   events: getEvents,
   eventDrop: props.config.eventDrop,
   drop: props.config.drop,
-  select: props.config.select,
+  select: props.config.select ?? handleDateSelect,
   // unselectAuto: props.config.unselectAuto,
 });
 
