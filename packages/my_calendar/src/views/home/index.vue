@@ -5,7 +5,7 @@
     <Calendar v-else ref="dailyCalendarRef" :config="configs.weekView" @loadData="loadDailyData" />
     <el-select style="position: absolute;top: 10px;width: 200px; right: 0" v-model="currentViewType">
       <el-option label="待办日历" :value="CalendarViewType.Month" />
-      <el-option label="时间追踪日历" :value="CalendarViewType.Week" />
+      <el-option label="事件记录日历" :value="CalendarViewType.Week" />
     </el-select>
     <el-dialog v-model="dailyDialogVisible" title="添加一条记录">
       <el-form :model="form" :label-width="formLabelWidth">
@@ -204,13 +204,13 @@ const configs = {
     select: onDailyCalendarSelect,
     unselectAuto: false,
     scrollTime: '08:00',
-    selectAllow: (selectInfo) => {
-      if (dayjs(selectInfo.end).valueOf() > dayjs().add(10, 'minute').valueOf()) {
-        ElMessage.warning('时间追踪日历只能记录之前发生的事件');
-        return false;
-      }
-      return true;
-    }
+    // selectAllow: (selectInfo) => {
+    //   if (dayjs(selectInfo.end).valueOf() > dayjs().add(10, 'minute').valueOf()) {
+    //     ElMessage.warning('时间追踪日历只能记录之前发生的事件');
+    //     return false;
+    //   }
+    //   return true;
+    // }
   }
 }
 

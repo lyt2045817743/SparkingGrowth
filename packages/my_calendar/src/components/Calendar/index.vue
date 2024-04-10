@@ -123,7 +123,7 @@ const calendarOptions = ref({
   scrollTime: props.config.scrollTime,
   buttonText: {
     month: "待办日历",
-    week: "时间追踪日历",
+    week: "事件记录日历",
   },
   // y轴上显示的时间文本格式
   slotLabelFormat: {
