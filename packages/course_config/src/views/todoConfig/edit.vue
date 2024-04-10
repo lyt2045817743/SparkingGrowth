@@ -82,7 +82,7 @@
               placeholder="具体时间"
             />
           </el-form-item>
-          <!-- <el-form-item label="是否循环：">
+          <el-form-item label="是否循环：">
             <el-select v-model="form.cycleType" placeholder="请选择">
               <el-option
                 v-for="item in CycleOptions"
@@ -91,7 +91,7 @@
                 :value="+item.value"
               />
             </el-select>
-          </el-form-item> -->
+          </el-form-item>
           <el-form-item v-if="!form.parentKey" label="关联子待办：">
             <div v-if="pageType === PageTypeMap.View">
               <el-table
@@ -162,6 +162,7 @@ import {
   PageTypeLabel,
   PageTypeMap,
   TodoTypeMap,
+  CycleOptions,
 } from "@sparking/common";
 
 const { typeCascadeOptions } = useActivityOption();

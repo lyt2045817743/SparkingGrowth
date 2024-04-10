@@ -13,7 +13,7 @@
           />
         </div>
         <div style="display: flex; align-items: center">
-          <!-- <el-button :icon="Refresh" round @click="onRefreshCycleTodo">刷新循环待办</el-button> -->
+          <el-button :icon="Refresh" round @click="onRefreshCycleTodo">刷新循环待办</el-button>
           <el-button class="add-btn" type="primary" round @click="handleAdd"
             >新增待办</el-button
           >
@@ -164,6 +164,7 @@ import {
   TodoTypeMap,
   PageTypeMap,
   formatCompletedTodo,
+  CycleMap
 } from "@sparking/common";
 
 const router = useRouter();
@@ -276,20 +277,24 @@ const onTypeChange = (value) => {
   form.value.score = TodoTypeScore[value];
 };
 
-// const onRefreshCycleTodo = async () => {
-//   const now = Date.now();
-//   const data = await api.getTodoList();
-//   for (let i = 0; i< data.length; i++) {
-//     const { key, cycleType } = data[i];
-//     const deadline = dayjs(data[i].deadline).valueOf();
-//     if ([CycleMap.Everyday].includes(cycleType) && now > deadline) {
-//       const todoInfo =  { status: TodoStatusMap.Undo, deadline: dayjs(now).add(1, 'day').format('YYYY-MM-DD 00:00:00') };
-//       await api.updateTodo(key, todoInfo);
-//     }
-//   }
-//   updateView();
-//   ElMessage.success('刷新完成');
-// }
+const onRefreshCycleTodo = async () => {
+  const now = Date.now();
+  const data = await api.getTodoList();
+  for (let i = 0; i< data.length; i++) {
+    const { key, cycleType } = data[i];
+    const deadline = dayjs(data[i].deadline).valueOf();
+    if ([CycleMap.Everyday].includes(cycleType) && now > deadline) {
+      let newDeadLine = deadline;
+      while(now > newDeadLine) {
+        newDeadLine = dayjs(newDeadLine).add(1, 'day').valueOf();
+      }
+      const todoInfo =  { status: TodoStatusMap.Undo, deadline: dayjs(newDeadLine).format('YYYY-MM-DD HH:mm:ss') };
+      await api.updateTodo(key, todoInfo);
+    }
+  }
+  updateView();
+  ElMessage.success('刷新完成');
+}
 
 const showTheTodayTodo = (value) => {
   onlyShowToday.value = value;
