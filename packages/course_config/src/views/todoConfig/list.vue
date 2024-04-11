@@ -200,10 +200,13 @@ const updateView = () => {
 };
 
 const getData = async (isInit) => {
-  const data = await api.getTodoList();
-  tableList.value = formatData(data);
-  totalList = tableList.value;
-  if (!isInit && onlyShowToday.value) showTheTodayTodo(true);
+  totalList = await api.getTodoList();
+
+  if (!isInit && onlyShowToday.value) {
+    showTheTodayTodo(true);
+    return;
+  }
+  tableList.value = formatData(totalList);
 };
 
 const formatData = (data) => {
@@ -313,7 +316,7 @@ const showTheTodayTodo = (value) => {
       );
     });
   } else {
-    tableList.value = totalList;
+    tableList.value = formatData(totalList);
   }
 };
 
