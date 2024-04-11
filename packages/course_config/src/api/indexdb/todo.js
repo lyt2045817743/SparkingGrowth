@@ -21,6 +21,11 @@ async function getTodoList() {
   return Promise.resolve(list);
 }
 
+async function getAllTodoList() {
+  let list = await db.getAll(TodoStoreName);
+  return Promise.resolve(list);
+}
+
 async function getTodoById(key) {
   const todo = db.get(TodoStoreName, key);
   return Promise.resolve(todo);
@@ -28,6 +33,7 @@ async function getTodoById(key) {
 
 export {
   getTodoList,
+  getAllTodoList,
   getTodoById,
   sortFunc,
 }

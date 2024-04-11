@@ -279,7 +279,7 @@ const onTypeChange = (value) => {
 
 const onRefreshCycleTodo = async () => {
   const now = Date.now();
-  const data = await api.getTodoList();
+  const data = await api.getAllTodoList();
   for (let i = 0; i< data.length; i++) {
     const { key, cycleType } = data[i];
     const deadline = dayjs(data[i].deadline).valueOf();
