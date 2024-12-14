@@ -32,7 +32,9 @@ onMounted(() => {
 });
 
 function hideMenu() {
-  document.getElementById("contextMenu").style.display = "none";
+  if (document.getElementById("contextMenu")) {
+    document.getElementById("contextMenu").style.display = "none";
+  }
   showMenu.value = false;
 }
 
@@ -88,7 +90,7 @@ defineExpose({
 });
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 ul {
   list-style: none;
   margin: 0;

@@ -4,7 +4,7 @@ const { name } = require('./package.json');
 const port = 63001;
 
 // 资源文件路径处理
-let publicPath = `//localhost:${port}`;
+let publicPath = `${process.env.APP_HOST}:${port}`;
 
 module.exports = {
   publicPath,
@@ -34,10 +34,10 @@ module.exports = {
     }
   },
 
-  pluginOptions: {
-    'style-resources-loader': {
-      preProcessor: 'scss',
-      patterns: [path.resolve(__dirname, 'src/style/_variables.scss')]
-    }
-  }
+  // pluginOptions: {
+  //   'style-resources-loader': {
+  //     preProcessor: 'scss',
+  //     patterns: [path.resolve(__dirname, 'src/style/_variables.scss')]
+  //   }
+  // }
 };

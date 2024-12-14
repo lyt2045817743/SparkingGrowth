@@ -4,7 +4,7 @@ const { name } = require('./package.json');
 const port = 60001;
 
 // 资源文件路径处理
-let publicPath = `//localhost:${port}`;
+let publicPath = `${process.env.APP_HOST}:${port}`;
 
 module.exports = {
   publicPath,

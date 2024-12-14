@@ -288,11 +288,10 @@ const onSubmitOuter = () => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .container {
   margin: 20px auto;
   height: calc(100vh - 100px);
-  // overflow: hidden;
   width: calc(100% - 20px);
   position: relative;
 

@@ -1,16 +1,10 @@
 const { exec } = require('child_process');
-
-const projects = [
-  { name: 'what_to_study_today', port: 62001 },
-  { name: 'course_config', port: 60001 },
-  { name: 'my_calendar', port: 63001 },
-  { name: 'sparkingGrowth_main', port: 5173 },
-];
+const { projects } = require('./constant/index.cjs')
 
 // 启动每个项目
 function startProject(project) {
   return new Promise((resolve, reject) => {
-    exec(`cd packages/${project.name} && yarn serve -- --port ${project.port}`, (error, stdout, stderr) => {
+    exec(`cd packages/${project.name} && pnpm serve`, (error, stdout, stderr) => {
       if (error) {
         reject(`Error starting ${project.name}: ${error.message}`);
         return;
@@ -24,7 +18,7 @@ function startProject(project) {
 // 安装每个项目的依赖
 function installProject(project) {
   return new Promise((resolve, reject) => {
-    exec(`cd packages/${project.name} && yarn install`, (error, stdout, stderr) => {
+    exec(`cd packages/${project.name} && pnpm install`, (error, stdout, stderr) => {
       if (error) {
         reject(`Error installing dependencies for ${project.name}: ${error.message}`);
         return;

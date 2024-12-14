@@ -11,6 +11,7 @@
     "@sparking/common": "git+https://github.com/lyt2045817743/SparkingGrowth_common.git",
     "chinese-workday": "^1.9.0",
     "core-js": "^3.6.5",
+    "dayjs": "^1.11.13",
     "element-plus": "^2.3.9",
     "vue": "^3.0.0",
     "vue-router": "^4.1.6"

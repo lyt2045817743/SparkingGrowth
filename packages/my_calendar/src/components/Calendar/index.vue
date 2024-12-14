@@ -200,7 +200,7 @@ defineExpose({
 });
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .container {
   display: flex;
   font-size: 14px;
