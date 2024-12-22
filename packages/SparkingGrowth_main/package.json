@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "element-plus": "^2.9.1",
     "idb": "^7.1.1",
     "qiankun": "^2.10.5",
     "vue": "^3.2.47",
