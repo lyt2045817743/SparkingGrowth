@@ -4,7 +4,8 @@
   "description": "> 【婷的空间】目前包括两个系统。1.今天学什么？2. 内容配置后台",
   "main": "index.js",
   "scripts": {
-    "startAll": "node scripts/startAllProcess.cjs"
+    "startAll": "node scripts/startAllProcess.cjs",
+    "buildAll": "node scripts/buildAllProcess.cjs"
   },
   "keywords": [],
   "author": "",
