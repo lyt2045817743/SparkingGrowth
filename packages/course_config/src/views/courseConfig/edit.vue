@@ -314,4 +314,7 @@ input {
 .main {
   padding-top: 0;
 }
+.el-select {
+  width: 300px;
+}
 </style>

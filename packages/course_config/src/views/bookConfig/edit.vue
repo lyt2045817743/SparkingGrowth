@@ -144,6 +144,10 @@ const onCancel = () => {
   padding-top: 0;
 }
 
+.el-select {
+  width: 300px;
+}
+
 .text-split {
   text-align: center;
   width: 50px;

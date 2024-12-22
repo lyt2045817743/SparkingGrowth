@@ -71,7 +71,7 @@
               v-model="form.deadlineDate"
               type="date"
               placeholder="截止日期"
-              style="width: 200px"
+              style="width: 300px"
             />
             <span class="text-split">-</span>
             <el-time-select
@@ -370,5 +370,8 @@ const onCancel = () => {
 .link-style {
   display: inline-block;
   cursor: pointer;
+}
+.el-select {
+  width: 300px;
 }
 </style>
